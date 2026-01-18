@@ -170,70 +170,25 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | TBD | Pending |
-| AUTH-02 | TBD | Pending |
-| AUTH-03 | TBD | Pending |
-| AUTH-04 | TBD | Pending |
-| AUTH-05 | TBD | Pending |
-| CAPT-01 | TBD | Pending |
-| CAPT-02 | TBD | Pending |
-| CAPT-03 | TBD | Pending |
-| CAPT-04 | TBD | Pending |
-| CAPT-05 | TBD | Pending |
-| CAPT-06 | TBD | Pending |
-| CAPT-07 | TBD | Pending |
-| CAPT-08 | TBD | Pending |
-| SUMM-01 | TBD | Pending |
-| SUMM-02 | TBD | Pending |
-| SUMM-03 | TBD | Pending |
-| SUMM-04 | TBD | Pending |
-| SUMM-05 | TBD | Pending |
-| SUMM-06 | TBD | Pending |
-| SUMM-07 | TBD | Pending |
-| SUMM-08 | TBD | Pending |
-| PLAY-01 | TBD | Pending |
-| PLAY-02 | TBD | Pending |
-| PLAY-03 | TBD | Pending |
-| PLAY-04 | TBD | Pending |
-| PLAY-05 | TBD | Pending |
-| PLAY-06 | TBD | Pending |
-| PLAY-07 | TBD | Pending |
-| PLAY-08 | TBD | Pending |
-| HABT-01 | TBD | Pending |
-| HABT-02 | TBD | Pending |
-| HABT-03 | TBD | Pending |
-| HABT-04 | TBD | Pending |
-| HABT-05 | TBD | Pending |
-| HABT-06 | TBD | Pending |
-| HABT-07 | TBD | Pending |
-| HABT-08 | TBD | Pending |
-| HABT-09 | TBD | Pending |
-| HABT-10 | TBD | Pending |
-| HABT-11 | TBD | Pending |
-| HABT-12 | TBD | Pending |
-| HABT-13 | TBD | Pending |
-| SUBS-01 | TBD | Pending |
-| SUBS-02 | TBD | Pending |
-| SUBS-03 | TBD | Pending |
-| SUBS-04 | TBD | Pending |
-| SUBS-05 | TBD | Pending |
-| SUBS-06 | TBD | Pending |
-| SUBS-07 | TBD | Pending |
-| SUBS-08 | TBD | Pending |
-| SUBS-09 | TBD | Pending |
-| SUBS-10 | TBD | Pending |
-| INFR-01 | TBD | Pending |
-| INFR-02 | TBD | Pending |
-| INFR-03 | TBD | Pending |
-| INFR-04 | TBD | Pending |
-| INFR-05 | TBD | Pending |
-| INFR-06 | TBD | Pending |
-| INFR-07 | TBD | Pending |
+| AUTH-01 to AUTH-12 | Phase 2 | Pending |
+| CAPT-01 to CAPT-07, CAPT-11 | Phase 3 | Pending |
+| CAPT-08 to CAPT-10, CAPT-12 to CAPT-16 | Phase 4 | Pending |
+| SUMM-01 to SUMM-04, SUMM-09 to SUMM-11 | Phase 5 | Pending |
+| PLAY-01 to PLAY-12 | Phase 6 | Pending |
+| SUMM-05 to SUMM-08 | Phase 7 | Pending |
+| SUBS-01 to SUBS-13, INFR-06 to INFR-07 | Phase 8 | Pending |
+| HABT-01 to HABT-04 | Phase 9 | Pending |
+| HABT-05 to HABT-17 | Phase 10 | Pending |
+| INFR-08 to INFR-10 | Phase 11 | Pending |
+| LEGA-01 to LEGA-06 | Phase 12 | Pending |
+| INFR-01 to INFR-02 | Phase 1 | Pending |
+| INFR-03, INFR-05 | Phase 4 | Pending |
+| INFR-04 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 85 total
-- Mapped to phases: 0
-- Unmapped: 85 ⚠️
+- Mapped to phases: 85
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-01-18*
