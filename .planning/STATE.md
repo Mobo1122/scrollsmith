@@ -14,8 +14,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-18)
 
 **Phase:** 1 of 12 (Foundation)
 **Goal:** Establish iOS SwiftUI app with SwiftData and FastAPI backend with PostgreSQL
-**Progress:** 12% (1/8 plans)
-**Plans:** 1/8 complete
+**Progress:** 25% (2/8 plans)
+**Plans:** 2/8 complete
 
 ## Milestone Progress
 
@@ -27,7 +27,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-18)
 
 | Phase | Status | Progress |
 |-------|--------|----------|
-| 1 - Foundation | ● In Progress | 1/8 plans |
+| 1 - Foundation | ● In Progress | 2/8 plans |
 | 2 - Authentication | ○ Pending | 0/6 plans |
 | 3 - Video Capture (iOS) | ○ Pending | 0/7 plans |
 | 4 - Transcription | ○ Pending | 0/6 plans |
@@ -40,7 +40,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-18)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █░░░░░░░░░ 1% (1/76 plans)
+**Overall Progress:** ██░░░░░░░░ 3% (2/76 plans)
 
 ## Requirements Coverage
 
@@ -52,6 +52,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-18)
 
 ## Recent Activity
 
+- 2026-01-19: Completed 01-01-PLAN.md (Backend Foundation)
 - 2026-01-19: Completed 01-02-PLAN.md (iOS Foundation)
 - 2026-01-18: Project initialized
 - 2026-01-18: Research completed (Stack, Features, Architecture, Pitfalls)
@@ -62,6 +63,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-18)
 
 | Decision | Phase | Rationale | Status |
 |----------|-------|-----------|--------|
+| UUID primary keys for all models | 01-01 | Better for distributed systems, prevents enumeration | ✓ Implemented |
+| Async SQLAlchemy throughout | 01-01 | Better scalability for I/O-bound operations | ✓ Implemented |
+| Track migration files in git | 01-01 | Essential for database version control in team environments | ✓ Implemented |
+| Python 3.9 Optional[] syntax | 01-01 | Ensures compatibility with macOS default Python | ✓ Implemented |
 | SwiftData unidirectional relationships | 01-02 | Avoids circular reference macro errors in SwiftData | ✓ Implemented |
 | Actor-based API client | 01-02 | Thread-safety without manual locks | ✓ Implemented |
 | Remove explicit foreign key UUIDs | 01-02 | SwiftData manages relationships automatically | ✓ Implemented |
