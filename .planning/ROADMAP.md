@@ -11,7 +11,7 @@
 
 | # | Phase | Goal | Requirements | Plans |
 |---|-------|------|--------------|-------|
-| 1 | Foundation | Backend + iOS project scaffolding, database, deployment | 2 (INFR) | 0/8 |
+| 1 | Foundation | Backend + iOS project scaffolding, database, deployment | 2 (INFR) | 4 plans |
 | 2 | Authentication | Email/password + Apple Sign In with verification and password reset | 12 (AUTH) | 0/6 |
 | 3 | Video Capture (iOS) | Camera roll, URL paste, Share Extension with permissions | 8 (CAPT) | 0/7 |
 | 4 | Transcription | On-device (WhisperKit/Speech) + backend (Whisper/YouTube API) | 8 (CAPT) | 0/6 |
@@ -45,15 +45,13 @@
 
 **Dependencies:** None (foundation phase)
 
-**Plans:** 0/8
-- [ ] Initialize FastAPI project with async SQLAlchemy 2.0
-- [ ] Create PostgreSQL database schema and Alembic migrations
-- [ ] Deploy backend to Railway with PostgreSQL add-on
-- [ ] Set up environment variables and secrets management
-- [ ] Create iOS project with SwiftUI and SwiftData
-- [ ] Define SwiftData models (User, Video, Habit, Playbook)
-- [ ] Set up iOS networking layer with URLSession
-- [ ] Verify end-to-end connectivity (iOS → Backend → Database)
+**Plans:** 4 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Backend Foundation (async SQLAlchemy, models, Alembic, health endpoint)
+- [ ] 01-02-PLAN.md — iOS Foundation (SwiftUI + SwiftData models, networking layer)
+- [ ] 01-03-PLAN.md — Railway Deployment (deploy backend, configure PostgreSQL)
+- [ ] 01-04-PLAN.md — End-to-End Verification (test iOS -> Backend -> Database)
 
 ---
 
@@ -459,4 +457,4 @@ All 85 v1 requirements are now mapped to phases 1-12.
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-18 after initial creation*
+*Last updated: 2026-01-19 after Phase 1 planning*
