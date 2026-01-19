@@ -1,5 +1,4 @@
 import asyncio
-import ssl
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -72,20 +71,10 @@ async def run_async_migrations() -> None:
     and associate a connection with the context.
 
     """
-    # Configure SSL for Railway's public Postgres proxy
-    ssl_context = ssl.create_default_context()
-    ssl_context.check_hostname = False
-    ssl_context.verify_mode = ssl.CERT_NONE
-
-    # Get the database URL to check if it's Railway
-    db_url = config.get_main_option("sqlalchemy.url") or ""
-    connect_args = {"ssl": ssl_context} if "railway" in db_url else {}
-
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
-        connect_args=connect_args,
     )
 
     async with connectable.connect() as connection:
