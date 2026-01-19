@@ -30,8 +30,7 @@ env/
 ENV/
 
 # Alembic
-alembic/versions/*.py
-!alembic/versions/.gitkeep
+# Note: Migration files ARE tracked for proper version control
 
 # IDE
 .vscode/
