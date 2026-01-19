@@ -1,5 +1,6 @@
 """Async SQLAlchemy 2.0 database setup."""
 
+import ssl
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import (
@@ -11,6 +12,12 @@ from sqlalchemy.orm import DeclarativeBase
 
 from app.core.config import settings
 
+# Configure SSL for Railway's public Postgres proxy
+# Railway requires SSL but uses a self-signed cert, so we need to disable verification
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
+
 # Create async engine with connection pool
 async_engine = create_async_engine(
     settings.DATABASE_URL,
@@ -18,6 +25,7 @@ async_engine = create_async_engine(
     pool_size=5,
     max_overflow=10,
     pool_pre_ping=True,  # Verify connections before using
+    connect_args={"ssl": ssl_context} if "railway" in settings.DATABASE_URL else {},
 )
 
 # Create async session maker
