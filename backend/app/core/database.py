@@ -11,17 +11,6 @@ from sqlalchemy.orm import DeclarativeBase
 
 from app.core.config import settings
 
-# Determine if we need SSL based on the database URL
-# Railway's public proxy (maglev.proxy.rlwy.net) requires SSL
-# Railway's internal networking (*.railway.internal) doesn't
-_needs_ssl = "proxy.rlwy.net" in settings.DATABASE_URL or "maglev" in settings.DATABASE_URL
-
-# Configure SSL for public connections
-# Using "prefer" tells asyncpg to try SSL but accept non-SSL if server doesn't support
-_connect_args = {}
-if _needs_ssl:
-    _connect_args = {"ssl": "prefer"}
-
 # Create async engine with connection pool
 async_engine = create_async_engine(
     settings.DATABASE_URL,
@@ -29,7 +18,6 @@ async_engine = create_async_engine(
     pool_size=5,
     max_overflow=10,
     pool_pre_ping=True,  # Verify connections before using
-    connect_args=_connect_args,
 )
 
 # Create async session maker
