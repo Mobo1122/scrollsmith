@@ -91,6 +91,41 @@ class AuthViewModel: ObservableObject {
         isLoading = false
     }
 
+    /// Sign in with Apple.
+    func signInWithApple() async {
+        guard !isLoading else { return }
+
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            // Get identity token from Apple
+            let appleResult = try await AppleSignInService.shared.signIn()
+
+            // Send to backend for verification
+            let user = try await authService.signInWithApple(
+                identityToken: appleResult.identityToken,
+                email: appleResult.email,
+                fullName: appleResult.fullName
+            )
+
+            currentUser = user
+            authState = .authenticated
+        } catch let error as AppleSignInError {
+            if case .canceled = error {
+                // User canceled - don't show error
+            } else {
+                errorMessage = error.localizedDescription
+            }
+        } catch let error as AuthError {
+            errorMessage = error.localizedDescription
+        } catch {
+            errorMessage = "Apple Sign In failed. Please try again."
+        }
+
+        isLoading = false
+    }
+
     /// Logout the current user.
     func logout() async {
         guard !isLoading else { return }

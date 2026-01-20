@@ -100,6 +100,25 @@ struct LoginView: View {
                     .foregroundColor(.blue)
             }
 
+            // Divider with "or"
+            HStack {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 1)
+
+                Text("or")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 1)
+            }
+            .padding(.vertical, 8)
+
+            // Apple Sign In
+            AppleSignInButton()
+
             Spacer()
 
             // Switch to register

@@ -54,6 +54,35 @@ actor AuthService {
         return try await fetchCurrentUser()
     }
 
+    /// Sign in with Apple.
+    ///
+    /// Sends the Apple identity token to the backend for verification.
+    /// The backend will create a new user or return the existing one.
+    func signInWithApple(identityToken: String, email: String?, fullName: String?) async throws -> UserResponse {
+        let url = URL(string: "\(baseURL)/api/v1/auth/apple")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        var body: [String: Any] = ["identity_token": identityToken]
+        if let email = email {
+            body["email"] = email
+        }
+        if let fullName = fullName {
+            body["full_name"] = fullName
+        }
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, response) = try await session.data(for: request)
+        try validateResponse(response)
+
+        let tokens = try JSONDecoder().decode(AuthTokens.self, from: data)
+        try await keychain.saveTokens(tokens)
+
+        return try await fetchCurrentUser()
+    }
+
     /// Logout the current user.
     func logout() async throws {
         // Revoke refresh token on server
