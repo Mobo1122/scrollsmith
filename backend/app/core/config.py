@@ -1,19 +1,40 @@
 """Application configuration using Pydantic Settings v2."""
 
-from pydantic import field_validator
+import os
+from typing import Optional
+
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    # Database
+    # Database - can be set directly or built from PG* variables
     DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost:5432/scrollsmith"
+
+    # Individual PG variables (Railway sets these)
+    PGHOST: Optional[str] = None
+    PGPORT: Optional[str] = None
+    PGUSER: Optional[str] = None
+    PGPASSWORD: Optional[str] = None
+    PGDATABASE: Optional[str] = None
 
     # Application
     ENVIRONMENT: str = "development"
     APP_NAME: str = "Scrollsmith"
     APP_VERSION: str = "0.1.0"
+
+    @model_validator(mode="after")
+    def build_database_url_from_pg_vars(self) -> "Settings":
+        """Build DATABASE_URL from individual PG* variables if they exist."""
+        # If all PG variables are set, build the URL from them
+        if all([self.PGHOST, self.PGPORT, self.PGUSER, self.PGPASSWORD, self.PGDATABASE]):
+            self.DATABASE_URL = (
+                f"postgresql+asyncpg://{self.PGUSER}:{self.PGPASSWORD}"
+                f"@{self.PGHOST}:{self.PGPORT}/{self.PGDATABASE}"
+            )
+        return self
 
     @field_validator("DATABASE_URL", mode="after")
     @classmethod
