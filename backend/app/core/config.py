@@ -24,6 +24,19 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     APP_NAME: str = "Scrollsmith"
     APP_VERSION: str = "0.1.0"
+    APP_URL: str = "http://localhost:8000"
+
+    # JWT Authentication
+    JWT_SECRET: str = "dev-secret-key-change-in-production"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
+    # Email (Resend)
+    RESEND_API_KEY: Optional[str] = None
+
+    # Apple Sign In
+    APPLE_BUNDLE_ID: str = "com.scrollsmith.app"
 
     @model_validator(mode="after")
     def build_database_url_from_pg_vars(self) -> "Settings":

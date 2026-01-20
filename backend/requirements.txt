@@ -7,3 +7,12 @@ alembic>=1.13.0
 pydantic>=2.0.0
 pydantic-settings>=2.0.0
 python-dotenv>=1.0.0
+
+# Authentication
+PyJWT>=2.8.0
+pwdlib[argon2]>=0.2.0
+cryptography>=41.0.0
+python-multipart>=0.0.6
+
+# Email
+resend>=2.0.0
