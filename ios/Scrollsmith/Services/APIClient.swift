@@ -6,7 +6,7 @@ actor APIClient {
     private let baseURL: String
     private let session: URLSession
 
-    init(baseURL: String = "http://localhost:8000") {
+    init(baseURL: String = "https://backend-production-d73a.up.railway.app") {
         self.baseURL = baseURL
         self.session = URLSession.shared
     }
