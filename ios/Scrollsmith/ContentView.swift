@@ -1,61 +1,124 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var healthStatus: String = "Not checked"
-    @State private var isLoading: Bool = false
+    @EnvironmentObject var authViewModel: AuthViewModel
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Scrollsmith")
-                .font(.largeTitle)
-                .bold()
+        Group {
+            switch authViewModel.authState {
+            case .loading:
+                // Show loading while checking auth state
+                ProgressView("Loading...")
 
-            Text("Foundation Phase Test")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+            case .unauthenticated:
+                // Show login/register screens
+                AuthContainerView()
 
-            Divider()
+            case .authenticated:
+                // Show main app content
+                HomeView()
+            }
+        }
+    }
+}
 
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Backend Health:")
-                    .font(.headline)
+/// Main app home view shown after authentication.
+struct HomeView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @State private var healthStatus: String = "Not checked"
+    @State private var isCheckingHealth: Bool = false
 
-                Text(healthStatus)
-                    .foregroundColor(healthStatus.contains("healthy") ? .green : .primary)
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 20) {
+                // User info
+                if let user = authViewModel.currentUser {
+                    VStack(spacing: 4) {
+                        Text("Welcome!")
+                            .font(.title2)
+                            .bold()
+
+                        Text(user.email)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+
+                        if !user.emailVerified {
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.orange)
+                                Text("Email not verified")
+                                    .font(.caption)
+                            }
+                            .padding(.top, 8)
+
+                            Button("Resend verification email") {
+                                Task {
+                                    await authViewModel.resendVerification()
+                                }
+                            }
+                            .font(.caption)
+                        }
+                    }
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color.gray.opacity(0.1))
-                    .cornerRadius(8)
-            }
-
-            Button(action: {
-                Task {
-                    await checkHealth()
+                    .cornerRadius(12)
                 }
-            }) {
-                HStack {
-                    if isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
+
+                Divider()
+
+                // Backend health check (for testing)
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Backend Health:")
+                        .font(.headline)
+
+                    Text(healthStatus)
+                        .foregroundColor(healthStatus.contains("healthy") ? .green : .primary)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+                }
+
+                Button(action: {
+                    Task {
+                        await checkHealth()
                     }
-                    Text("Check Backend Health")
+                }) {
+                    HStack {
+                        if isCheckingHealth {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        }
+                        Text("Check Backend Health")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-            }
-            .disabled(isLoading)
+                .disabled(isCheckingHealth)
 
-            Spacer()
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Scrollsmith")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Logout") {
+                        Task {
+                            await authViewModel.logout()
+                        }
+                    }
+                }
+            }
         }
-        .padding()
     }
 
     @MainActor
     func checkHealth() async {
-        isLoading = true
+        isCheckingHealth = true
         healthStatus = "Checking..."
 
         do {
@@ -65,10 +128,11 @@ struct ContentView: View {
             healthStatus = "✗ Error: \(error.localizedDescription)"
         }
 
-        isLoading = false
+        isCheckingHealth = false
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(AuthViewModel())
 }
