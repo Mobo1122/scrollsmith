@@ -1,6 +1,5 @@
 """Async SQLAlchemy 2.0 database setup."""
 
-import ssl
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import (
@@ -17,13 +16,11 @@ from app.core.config import settings
 # Railway's internal networking (*.railway.internal) doesn't
 _needs_ssl = "proxy.rlwy.net" in settings.DATABASE_URL or "maglev" in settings.DATABASE_URL
 
-# Configure SSL context for public connections
+# Configure SSL for public connections
+# Using "prefer" tells asyncpg to try SSL but accept non-SSL if server doesn't support
 _connect_args = {}
 if _needs_ssl:
-    _ssl_context = ssl.create_default_context()
-    _ssl_context.check_hostname = False
-    _ssl_context.verify_mode = ssl.CERT_NONE
-    _connect_args = {"ssl": _ssl_context}
+    _connect_args = {"ssl": "prefer"}
 
 # Create async engine with connection pool
 async_engine = create_async_engine(
