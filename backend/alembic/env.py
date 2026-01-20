@@ -1,4 +1,5 @@
 import asyncio
+import ssl
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -71,10 +72,22 @@ async def run_async_migrations() -> None:
     and associate a connection with the context.
 
     """
+    # Determine if we need SSL based on the database URL
+    db_url = config.get_main_option("sqlalchemy.url") or ""
+    needs_ssl = "proxy.rlwy.net" in db_url or "maglev" in db_url
+
+    connect_args = {}
+    if needs_ssl:
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        connect_args = {"ssl": ssl_context}
+
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args=connect_args,
     )
 
     async with connectable.connect() as connection:
