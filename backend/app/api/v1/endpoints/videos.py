@@ -331,9 +331,14 @@ async def summarize_video(
             )
 
     # Check if summary already exists (and not regenerating)
+    # User-edited summaries are ALWAYS returned from cache unless regenerate=true
+    # This protects user modifications from being accidentally overwritten
     if not request.regenerate:
         cached_data = None
         tags = None
+
+        if video.user_edited_summary:
+            logger.info(f"Returning user-edited summary for video {video_id} (use regenerate=true to overwrite)")
 
         if request.format == "bullets" and video.summary_bullets and video.tags:
             cached_data = json.loads(video.summary_bullets)
@@ -359,6 +364,11 @@ async def summarize_video(
     # Generate summary based on format
     try:
         logger.info(f"Generating {request.format} summary for video {video_id}")
+
+        # Clear user_edited flag when regenerating (user explicitly requested new AI summary)
+        if request.regenerate and video.user_edited_summary:
+            logger.info(f"Clearing user_edited flag for video {video_id} (regenerate=true)")
+            video.user_edited_summary = False
 
         if request.format == "bullets":
             summary = await summarization_service.generate_bullet_summary(
