@@ -16,7 +16,7 @@
 | 3 | Video Capture (iOS) | Camera roll, YouTube URL paste, Share Extension with permissions | 7 (CAPT) | 0/6 |
 | 4 | Transcription | Backend (Whisper/AssemblyAI) + YouTube captions (TikTok/IG deferred to v2) | 7 (CAPT) | 0/4 |
 | 5 | AI Summarization | Claude integration for bullets, steps, cards, tags | 11 (SUMM) | 6 plans |
-| 6 | Playbooks & Organization | CRUD Playbooks, video assignment, search, bulk operations | 12 (PLAY) | 7 plans |
+| 6 | Playbooks & Organization | CRUD Playbooks, video assignment, search, bulk operations | 12 (PLAY) | ✓ 7 plans |
 | 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 8 (SUMM subset) | 0/5 |
 | 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 13 (SUBS) | 0/8 |
 | 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 0/5 |
@@ -483,4 +483,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-23 - Phase 6 planned (7 plans in 3 waves)*
+*Last updated: 2026-01-23 - Phase 6 complete (7/7 plans, verified)*
