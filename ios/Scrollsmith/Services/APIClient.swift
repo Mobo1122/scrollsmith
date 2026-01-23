@@ -712,8 +712,35 @@ struct VideoDTO: Codable, Identifiable {
     let id: UUID
     let sourceUrl: String?
     let summaryBullets: String?
+    let summarySteps: String?       // Pro tier: JSON string of StepChecklist
+    let summaryCards: String?       // Pro tier: JSON string of CardsSummary
+    let userEditedSummary: Bool?    // Indicates user edited the summary
     let tags: [String]?
     let createdAt: Date
+}
+
+// MARK: - VideoDTO Parsing Helpers
+
+extension VideoDTO {
+    /// Parses summary_bullets JSON string into array of strings.
+    var parsedBullets: [String]? {
+        guard let json = summaryBullets else { return nil }
+        return try? JSONDecoder().decode([String].self, from: Data(json.utf8))
+    }
+
+    /// Parses summary_steps JSON string into StepChecklist.
+    var parsedSteps: StepChecklist? {
+        guard let json = summarySteps else { return nil }
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try? decoder.decode(StepChecklist.self, from: Data(json.utf8))
+    }
+
+    /// Parses summary_cards JSON string into CardsSummary.
+    var parsedCards: CardsSummary? {
+        guard let json = summaryCards else { return nil }
+        return try? JSONDecoder().decode(CardsSummary.self, from: Data(json.utf8))
+    }
 }
 
 struct VideoListResponse: Codable {
@@ -727,10 +754,37 @@ struct VideoSearchResult: Codable, Identifiable {
     let id: UUID
     let sourceUrl: String?
     let summaryBullets: String?
+    let summarySteps: String?       // Pro tier: JSON string of StepChecklist
+    let summaryCards: String?       // Pro tier: JSON string of CardsSummary
+    let userEditedSummary: Bool?    // Indicates user edited the summary
     let tags: [String]?
     let createdAt: Date
     let rank: Double
     let highlight: String?
+}
+
+// MARK: - VideoSearchResult Parsing Helpers
+
+extension VideoSearchResult {
+    /// Parses summary_bullets JSON string into array of strings.
+    var parsedBullets: [String]? {
+        guard let json = summaryBullets else { return nil }
+        return try? JSONDecoder().decode([String].self, from: Data(json.utf8))
+    }
+
+    /// Parses summary_steps JSON string into StepChecklist.
+    var parsedSteps: StepChecklist? {
+        guard let json = summarySteps else { return nil }
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try? decoder.decode(StepChecklist.self, from: Data(json.utf8))
+    }
+
+    /// Parses summary_cards JSON string into CardsSummary.
+    var parsedCards: CardsSummary? {
+        guard let json = summaryCards else { return nil }
+        return try? JSONDecoder().decode(CardsSummary.self, from: Data(json.utf8))
+    }
 }
 
 struct VideoSearchResponse: Codable {
