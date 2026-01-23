@@ -23,7 +23,9 @@ from app.schemas.video import (
     SummarizeRequest,
     SummarizeResponse,
     TranscriptQuality,
+    UpdateSummaryRequest,
 )
+from app.schemas.summary import BulletSummary, StepChecklist, CardsSummary
 from app.services.youtube_captions import (
     youtube_captions_service,
     YouTubeCaptionsError,
@@ -471,6 +473,129 @@ async def summarize_video(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
+
+
+@router.patch("/{video_id}/summary", response_model=VideoResponse)
+async def update_summary(
+    video_id: UUID,
+    request: UpdateSummaryRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Video:
+    """Manually update AI-generated video summary fields.
+
+    Allows users to edit AI-generated summaries and tags. Supports partial
+    updates - only provided fields will be modified.
+
+    **Important behavior:**
+    - Sets user_edited_summary=True to protect edits from auto-regeneration
+    - POST /summarize with regenerate=false will return cached (edited) summary
+    - POST /summarize with regenerate=true will overwrite edits and clear flag
+
+    Note: This endpoint edits existing AI-generated summaries. To generate
+    summaries initially, use POST /videos/{id}/summarize.
+
+    Args:
+        video_id: Video to update
+        request: Fields to update (all optional)
+
+    Returns:
+        Updated video record
+
+    Raises:
+        404: Video not found or not owned by user
+        400: Invalid summary structure (steps/cards don't match schema)
+    """
+    import json
+
+    # Fetch video
+    result = await db.execute(
+        select(Video).where(
+            Video.id == video_id,
+            Video.user_id == current_user.id
+        )
+    )
+    video = result.scalar_one_or_none()
+
+    if video is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Video not found"
+        )
+
+    # Track which fields are being updated
+    updates = []
+
+    # Update bullets (stored as JSON with tags)
+    if request.bullets is not None:
+        if len(request.bullets) < 3:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Bullets must contain at least 3 items"
+            )
+
+        # Reconstruct BulletSummary structure
+        bullet_summary = BulletSummary(
+            bullets=request.bullets,
+            tags=request.tags if request.tags is not None else video.tags or []
+        )
+        video.summary_bullets = bullet_summary.model_dump_json()
+        video.tags = bullet_summary.tags
+        updates.append("bullets")
+
+    # Update tags independently (if bullets not updated)
+    elif request.tags is not None:
+        video.tags = request.tags
+        # Also update bullets JSON if it exists (to keep tags in sync)
+        if video.summary_bullets:
+            bullet_data = json.loads(video.summary_bullets)
+            bullet_data["tags"] = request.tags
+            video.summary_bullets = json.dumps(bullet_data)
+        updates.append("tags")
+
+    # Update step checklist (Pro tier) with schema validation
+    if request.steps is not None:
+        try:
+            # Validate against StepChecklist schema
+            step_checklist = StepChecklist(**request.steps)
+            video.summary_steps = step_checklist.model_dump_json()
+            updates.append("steps")
+        except Exception as e:
+            # Return clear error message for schema validation failures
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Each step requires non-empty text: {str(e)}"
+            )
+
+    # Update cards (Pro tier) with schema validation
+    if request.cards is not None:
+        try:
+            # Validate against CardsSummary schema
+            cards_summary = CardsSummary(**request.cards)
+            video.summary_cards = cards_summary.model_dump_json()
+            updates.append("cards")
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid cards structure: {str(e)}"
+            )
+
+    if not updates:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No fields to update. Provide at least one field: bullets, tags, steps, or cards."
+        )
+
+    # Mark as user-edited to prevent auto-regeneration
+    video.user_edited_summary = True
+
+    # Save changes
+    await db.commit()
+    await db.refresh(video)
+
+    logger.info(f"Updated summary for video {video_id}: {', '.join(updates)} (user_edited=True)")
+
+    return video
 
 
 @router.get("/{video_id}", response_model=VideoResponse)
