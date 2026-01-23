@@ -49,7 +49,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ████░░░░░░ 46% (27/59 plans)
+**Overall Progress:** ████░░░░░░ 47% (28/59 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,6 +63,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: Completed Plan 06-02 iOS SwiftData Models (work in 06-01)
 - 2026-01-23: Completed Plan 06-01 Schema Migration (many-to-many + FTS)
 - 2026-01-23: **Completed Phase 5 AI Summarization** (6/6 plans, all 8 requirements verified)
 - 2026-01-23: **Completed Phase 4 Transcription** (server-side v1 architecture)
@@ -130,15 +131,16 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Next Actions
 
-**Primary:** Phase 6 Playbooks & Organization (Plan 02)
+**Primary:** Phase 6 Playbooks & Organization (Plan 03)
 **Goal:** Playbook CRUD API endpoints
 **Tasks:**
 1. ~~Backend: Schema migration (many-to-many + FTS)~~ - DONE (06-01)
-2. Backend: Playbook CRUD API endpoints
-3. Backend: Bulk operations API (delete, move)
-4. iOS: Playbook list and detail views
-5. iOS: Video grid with selection mode
-6. iOS: Search UI with real-time results
+2. ~~iOS: SwiftData models update~~ - DONE (06-02, work in 06-01)
+3. Backend: Playbook CRUD API endpoints
+4. Backend: Bulk operations API (delete, move)
+5. iOS: Playbook list and detail views
+6. iOS: Video grid with selection mode
+7. iOS: Search UI with real-time results
 
 ## Manual Xcode Setup Required
 
