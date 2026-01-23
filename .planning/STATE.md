@@ -8,7 +8,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 6 Playbooks & Organization
+**Current focus:** Phase 7 Summary Display
 
 ## Architecture Note (2026-01-23)
 
@@ -21,18 +21,18 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Current Phase
 
-**Phase:** 6 of 12 (Playbooks & Organization) - COMPLETE
-**Goal:** CRUD Playbooks, video assignment, search, deletion, and bulk operations
-**Progress:** 100% (7/7 plans)
-**Plans:** 7/7 complete
+**Phase:** 7 of 12 (Summary Display) - IN PROGRESS
+**Goal:** Display AI summaries in iOS with multiple formats
+**Progress:** 40% (2/5 plans)
+**Plans:** 2/5 complete
 
 ## Milestone Progress
 
 **Milestone:** v1
 **Total Phases:** 12
 **Completed:** 6
-**In Progress:** 0
-**Pending:** 6
+**In Progress:** 1
+**Pending:** 5
 
 | Phase | Status | Progress |
 |-------|--------|----------|
@@ -42,14 +42,14 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
 | 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
-| 7 - Summary Display | ○ Pending | 0/5 plans |
+| 7 - Summary Display | ◐ In Progress | 2/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
 | 10 - Habit Tracking | ○ Pending | 0/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █████░░░░░ 55% (33/60 plans)
+**Overall Progress:** ██████░░░░ 58% (35/60 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,6 +63,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: Completed Plan 07-02 Deep Links & Inline Player (2 tasks, 2min)
 - 2026-01-23: **Completed Phase 6 Playbooks & Organization** (7/7 plans)
 - 2026-01-23: Completed Plan 06-07 iOS Video UI (3 tasks, 6min)
 - 2026-01-23: Completed Plan 06-06 iOS Playbook UI (3 tasks, 4min)
@@ -147,18 +148,19 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 250ms search debounce | 06-07 | Balance responsiveness vs API load | ✓ Implemented |
 | FlowLayout for tag chips | 06-07 | Natural wrapping of tag chips | ✓ Implemented |
 | 20 tag maximum | 06-07 | Prevent UI clutter, reasonable limit | ✓ Implemented |
+| HTTPS-only deep links | 07-02 | URL schemes change frequently; HTTPS reliably triggers app interception | ✓ Implemented |
+| Thumbnail-first video loading | 07-02 | Faster initial display, saves memory until playback requested | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Phase 7 Summary Display
+**Primary:** Phase 7 Summary Display (continuing)
 **Goal:** Display AI summaries in iOS with multiple formats
-**Tasks:**
-1. Summary display view with format switching
-2. Share/export functionality
-3. Video detail view integration
-4. Summary regeneration UI
+**Remaining plans:**
+1. 07-03: Summary display views (bullets, steps, cards)
+2. 07-04: Format switching and Pro tier gating
+3. 07-05: Video detail integration
 
-**Completed:** Phase 6 Playbooks & Organization (6/6 plans)
+**Completed:** Plans 07-01 (iOS models) and 07-02 (deep links)
 
 ## Manual Xcode Setup Required
 
