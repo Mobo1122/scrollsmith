@@ -1,7 +1,7 @@
 """Video request/response schemas."""
 
 from datetime import datetime
-from typing import Optional, List
+from typing import Literal, Optional, List
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -49,3 +49,24 @@ class VideoListResponse(BaseModel):
     """List of videos response."""
     videos: List[VideoResponse]
     total: int
+
+
+class SummarizeRequest(BaseModel):
+    """Request to generate summary for a video."""
+    format: Literal["bullets", "steps", "cards"] = Field(
+        default="bullets",
+        description="Summary format: bullets (free), steps/cards (Pro)"
+    )
+    regenerate: bool = Field(
+        default=False,
+        description="Force regeneration even if summary exists"
+    )
+
+
+class SummarizeResponse(BaseModel):
+    """Response from summarize endpoint."""
+    video_id: UUID
+    format: str
+    cached: bool = Field(description="Whether this was retrieved from cache")
+    summary: dict = Field(description="Summary content (structure depends on format)")
+    tags: Optional[List[str]] = None
