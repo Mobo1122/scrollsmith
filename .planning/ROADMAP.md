@@ -15,7 +15,7 @@
 | 2 | Authentication | Email/password + Apple Sign In with verification and password reset | 12 (AUTH) | 0/6 |
 | 3 | Video Capture (iOS) | Camera roll, YouTube URL paste, Share Extension with permissions | 7 (CAPT) | 0/6 |
 | 4 | Transcription | Backend (Whisper/AssemblyAI) + YouTube captions (TikTok/IG deferred to v2) | 7 (CAPT) | 0/4 |
-| 5 | AI Summarization | Claude integration for bullets, steps, cards, tags | 11 (SUMM) | 5 plans |
+| 5 | AI Summarization | Claude integration for bullets, steps, cards, tags | 11 (SUMM) | 6 plans |
 | 6 | Playbooks & Organization | CRUD Playbooks, video assignment, search, bulk operations | 12 (PLAY) | 0/6 |
 | 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 8 (SUMM subset) | 0/5 |
 | 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 13 (SUBS) | 0/8 |
@@ -196,17 +196,19 @@ Plans:
 6. Backend detects low-confidence transcripts and warns user
 7. User can edit summaries manually in-app
 8. Summaries are cached—never regenerated unnecessarily
+9. User-edited summaries are protected from auto-regeneration
 
 **Dependencies:** Phase 4 (transcripts must exist), Phase 2 (user tier determines formats)
 
-**Plans:** 5 plans
+**Plans:** 6 plans
 
 Plans:
 - [ ] 05-01-PLAN.md — Claude API service + Pydantic schemas (foundation)
 - [ ] 05-02-PLAN.md — Bullet summaries + auto-tagging (free tier, Haiku)
-- [ ] 05-03-PLAN.md — Pro formats (steps + cards) with tier gating (Sonnet)
-- [ ] 05-04-PLAN.md — Regeneration + quality checks with prompt caching
-- [ ] 05-05-PLAN.md — Manual editing endpoint (PATCH /videos/{id}/summary)
+- [ ] 05-03-PLAN.md — Add Pro summary fields to Video model + tier gating
+- [ ] 05-04-PLAN.md — Pro format generation (steps + cards) with Sonnet
+- [ ] 05-05-PLAN.md — Regeneration + quality checks with prompt caching
+- [ ] 05-06-PLAN.md — Manual editing endpoint with user_edited protection
 
 ---
 
@@ -478,4 +480,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-23 - deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)*
+*Last updated: 2026-01-23 - Phase 5 plans updated (split Plan 03, now 6 plans total)*
