@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 6 of 12 (Playbooks & Organization)
 **Goal:** CRUD Playbooks, video assignment, search, deletion, and bulk operations
-**Progress:** 0% (0/6 plans)
-**Plans:** 0/6 complete
+**Progress:** 33% (2/6 plans)
+**Plans:** 2/6 complete
 
 ## Milestone Progress
 
@@ -41,7 +41,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
-| 6 - Playbooks & Organization | ◐ In Progress | 0/6 plans |
+| 6 - Playbooks & Organization | ◐ In Progress | 2/6 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
@@ -49,7 +49,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ████░░░░░░ 44% (26/59 plans)
+**Overall Progress:** ████░░░░░░ 46% (27/59 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,6 +63,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: Completed Plan 06-01 Schema Migration (many-to-many + FTS)
 - 2026-01-23: **Completed Phase 5 AI Summarization** (6/6 plans, all 8 requirements verified)
 - 2026-01-23: **Completed Phase 4 Transcription** (server-side v1 architecture)
 - 2026-01-23: Connected Railway to GitHub for auto-deploy
@@ -122,14 +123,18 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Quality warnings in response | 05-05 | iOS can show quality warning regardless of cache status | ✓ Implemented |
 | user_edited_summary flag | 05-06 | Protects user edits from auto-regeneration unless regenerate=true | ✓ Implemented |
 | Partial updates for summary editing | 05-06 | PATCH endpoint supports editing only specific fields | ✓ Implemented |
+| video_playbooks association table | 06-01 | Many-to-many relationship with added_at for join date sorting | ✓ Implemented |
+| is_system flag on Playbook | 06-01 | Protects Favorites playbook from deletion | ✓ Implemented |
+| Weighted tsvector for search | 06-01 | tags=A, summary=B, transcript=C - prioritized full-text search | ✓ Implemented |
+| GIN index on search_vector | 06-01 | Sub-millisecond full-text search performance | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Phase 6 Playbooks & Organization
-**Goal:** CRUD Playbooks, video assignment, search, deletion, and bulk operations
+**Primary:** Phase 6 Playbooks & Organization (Plan 02)
+**Goal:** Playbook CRUD API endpoints
 **Tasks:**
-1. Backend: Playbook CRUD API endpoints
-2. Backend: PostgreSQL full-text search indexes (GIN)
+1. ~~Backend: Schema migration (many-to-many + FTS)~~ - DONE (06-01)
+2. Backend: Playbook CRUD API endpoints
 3. Backend: Bulk operations API (delete, move)
 4. iOS: Playbook list and detail views
 5. iOS: Video grid with selection mode
