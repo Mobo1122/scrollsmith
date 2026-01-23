@@ -202,6 +202,428 @@ actor APIClient {
         return (data, response)
     }
 
+    // MARK: - Playbooks
+
+    /// Fetches all Playbooks for the current user.
+    func getPlaybooks() async throws -> [PlaybookDTO] {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/playbooks") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "GET"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+
+        let listResponse = try decoder.decode(PlaybookListResponse.self, from: data)
+        return listResponse.playbooks
+    }
+
+    /// Creates a new Playbook.
+    func createPlaybook(name: String, icon: String? = nil) async throws -> PlaybookDTO {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/playbooks") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body = CreatePlaybookRequest(name: name, icon: icon)
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(PlaybookDTO.self, from: data)
+    }
+
+    /// Updates an existing Playbook.
+    func updatePlaybook(id: UUID, name: String?, icon: String? = nil) async throws -> PlaybookDTO {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/playbooks/\(id.uuidString.lowercased())") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "PATCH"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body = UpdatePlaybookRequest(name: name, icon: icon)
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(PlaybookDTO.self, from: data)
+    }
+
+    /// Deletes a Playbook.
+    func deletePlaybook(id: UUID) async throws {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/playbooks/\(id.uuidString.lowercased())") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "DELETE"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (_, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+    }
+
+    /// Assigns a Video to a Playbook.
+    func assignVideoToPlaybook(videoId: UUID, playbookId: UUID) async throws {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/\(videoId.uuidString.lowercased())/playbooks") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body = ["playbook_id": playbookId.uuidString.lowercased()]
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (_, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+    }
+
+    /// Removes a Video from a Playbook.
+    func removeVideoFromPlaybook(videoId: UUID, playbookId: UUID) async throws {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/\(videoId.uuidString.lowercased())/playbooks/\(playbookId.uuidString.lowercased())") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "DELETE"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (_, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+    }
+
+    /// Fetches videos, optionally filtered by Playbook or uncategorized.
+    func getVideos(playbookId: UUID? = nil, uncategorized: Bool = false) async throws -> [VideoDTO] {
+        var urlString = "\(baseURL)/api/v1/videos"
+        var queryItems: [String] = []
+
+        if let playbookId = playbookId {
+            queryItems.append("playbook_id=\(playbookId.uuidString.lowercased())")
+        }
+        if uncategorized {
+            queryItems.append("uncategorized=true")
+        }
+
+        if !queryItems.isEmpty {
+            urlString += "?" + queryItems.joined(separator: "&")
+        }
+
+        guard let endpoint = URL(string: urlString) else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "GET"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+
+        let listResponse = try decoder.decode(VideoListResponse.self, from: data)
+        return listResponse.videos
+    }
+
+    // MARK: - Video Search
+
+    /// Searches videos using full-text search.
+    func searchVideos(query: String, playbookId: UUID? = nil) async throws -> [VideoSearchResult] {
+        guard let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            throw APIError.invalidURL
+        }
+
+        var urlString = "\(baseURL)/api/v1/videos/search?q=\(encodedQuery)"
+
+        if let playbookId = playbookId {
+            urlString += "&playbook_id=\(playbookId.uuidString.lowercased())"
+        }
+
+        guard let endpoint = URL(string: urlString) else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "GET"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+
+        let searchResponse = try decoder.decode(VideoSearchResponse.self, from: data)
+        return searchResponse.videos
+    }
+
+    // MARK: - Bulk Operations
+
+    /// Deletes multiple videos.
+    func bulkDeleteVideos(ids: [UUID]) async throws -> BulkDeleteResponse {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/bulk-delete") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body = ["video_ids": ids.map { $0.uuidString.lowercased() }]
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(BulkDeleteResponse.self, from: data)
+    }
+
+    /// Moves multiple videos to a Playbook.
+    func bulkMoveVideos(ids: [UUID], to playbookId: UUID) async throws -> BulkMoveResponse {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/bulk-move") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body: [String: Any] = [
+            "video_ids": ids.map { $0.uuidString.lowercased() },
+            "playbook_id": playbookId.uuidString.lowercased()
+        ]
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(BulkMoveResponse.self, from: data)
+    }
+
+    /// Adds multiple videos to Favorites.
+    func bulkAddToFavorites(ids: [UUID]) async throws -> BulkMoveResponse {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/bulk-add-to-favorites") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body = ["video_ids": ids.map { $0.uuidString.lowercased() }]
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(BulkMoveResponse.self, from: data)
+    }
+
+    // MARK: - Video CRUD
+
+    /// Deletes a single video.
+    func deleteVideo(id: UUID) async throws {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/\(id.uuidString.lowercased())") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "DELETE"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (_, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+    }
+
+    /// Updates tags for a video.
+    func updateVideoTags(videoId: UUID, tags: [String]) async throws -> UpdateTagsResponse {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/\(videoId.uuidString.lowercased())/tags") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "PATCH"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body = UpdateTagsRequest(tags: tags)
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(UpdateTagsResponse.self, from: data)
+    }
+
     // MARK: - Private
 
     private func getAccessToken() async -> String? {
@@ -255,4 +677,88 @@ struct VideoCreateResponse: Codable {
     let summaryBullets: String?
     let tags: [String]?
     let createdAt: Date
+}
+
+// MARK: - Playbook DTOs
+
+struct PlaybookDTO: Codable, Identifiable {
+    let id: UUID
+    let name: String
+    let icon: String?
+    let isSystem: Bool
+    let videoCount: Int
+    let createdAt: Date
+    let updatedAt: Date
+}
+
+struct PlaybookListResponse: Codable {
+    let playbooks: [PlaybookDTO]
+    let total: Int
+}
+
+struct CreatePlaybookRequest: Codable {
+    let name: String
+    let icon: String?
+}
+
+struct UpdatePlaybookRequest: Codable {
+    let name: String?
+    let icon: String?
+}
+
+// MARK: - Video DTOs
+
+struct VideoDTO: Codable, Identifiable {
+    let id: UUID
+    let sourceUrl: String?
+    let summaryBullets: String?
+    let tags: [String]?
+    let createdAt: Date
+}
+
+struct VideoListResponse: Codable {
+    let videos: [VideoDTO]
+    let total: Int
+}
+
+// MARK: - Search DTOs
+
+struct VideoSearchResult: Codable, Identifiable {
+    let id: UUID
+    let sourceUrl: String?
+    let summaryBullets: String?
+    let tags: [String]?
+    let createdAt: Date
+    let rank: Double
+    let highlight: String?
+}
+
+struct VideoSearchResponse: Codable {
+    let videos: [VideoSearchResult]
+    let query: String
+    let total: Int
+}
+
+// MARK: - Bulk Operation DTOs
+
+struct BulkDeleteResponse: Codable {
+    let deletedCount: Int
+    let videoIds: [UUID]
+}
+
+struct BulkMoveResponse: Codable {
+    let movedCount: Int
+    let playbookId: UUID
+    let videoIds: [UUID]
+}
+
+// MARK: - Tag Update DTOs
+
+struct UpdateTagsRequest: Codable {
+    let tags: [String]
+}
+
+struct UpdateTagsResponse: Codable {
+    let id: UUID
+    let tags: [String]
 }
