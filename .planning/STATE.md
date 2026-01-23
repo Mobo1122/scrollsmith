@@ -21,17 +21,17 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Current Phase
 
-**Phase:** 6 of 12 (Playbooks & Organization)
+**Phase:** 6 of 12 (Playbooks & Organization) - COMPLETE
 **Goal:** CRUD Playbooks, video assignment, search, deletion, and bulk operations
-**Progress:** 83% (5/6 plans)
-**Plans:** 5/6 complete
+**Progress:** 100% (6/6 plans)
+**Plans:** 6/6 complete
 
 ## Milestone Progress
 
 **Milestone:** v1
 **Total Phases:** 12
-**Completed:** 5
-**In Progress:** 1
+**Completed:** 6
+**In Progress:** 0
 **Pending:** 6
 
 | Phase | Status | Progress |
@@ -41,7 +41,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
-| 6 - Playbooks & Organization | ◐ In Progress | 5/6 plans |
+| 6 - Playbooks & Organization | ✓ Complete | 6/6 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
@@ -49,7 +49,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █████░░░░░ 53% (31/59 plans)
+**Overall Progress:** █████░░░░░ 54% (32/59 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,6 +63,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: **Completed Phase 6 Playbooks & Organization** (6/6 plans)
+- 2026-01-23: Completed Plan 06-06 iOS Playbook UI (3 tasks, 4min)
 - 2026-01-23: Completed Plan 06-05 Bulk Operations API (3 tasks, 8min)
 - 2026-01-23: Completed Plan 06-04 Video Search & Organization API (4 tasks)
 - 2026-01-23: Completed Plan 06-03 Playbook CRUD API (3 tasks, 3min)
@@ -137,18 +139,21 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Bulk delete with RETURNING | 06-05 | Efficiently returns deleted IDs without separate query | ✓ Implemented |
 | ON CONFLICT DO NOTHING for bulk move | 06-05 | Idempotent bulk operations handle duplicates | ✓ Implemented |
 | Max 100 videos per bulk request | 06-05 | Prevents excessive load while allowing meaningful batches | ✓ Implemented |
+| @Observable for PlaybookViewModel | 06-06 | iOS 17+ macro simpler than ObservableObject | ✓ Implemented |
+| lastSelectedPlaybookId | 06-06 | 'Remember last selected' behavior for batch operations | ✓ Implemented |
+| Horizontal chip picker | 06-06 | Quick Playbook selection without navigation | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Phase 6 Playbooks & Organization (Plan 06)
-**Goal:** iOS Playbook UI and search
+**Primary:** Phase 7 Summary Display
+**Goal:** Display AI summaries in iOS with multiple formats
 **Tasks:**
-1. ~~Backend: Schema migration (many-to-many + FTS)~~ - DONE (06-01)
-2. ~~iOS: SwiftData models update~~ - DONE (06-02, work in 06-01)
-3. ~~Backend: Playbook CRUD API endpoints~~ - DONE (06-03)
-4. ~~Backend: Video search, assignment, tag editing~~ - DONE (06-04)
-5. ~~Backend: Bulk operations API (delete, move)~~ - DONE (06-05)
-6. iOS: Playbook list and detail views, Video grid with selection mode, Search UI
+1. Summary display view with format switching
+2. Share/export functionality
+3. Video detail view integration
+4. Summary regeneration UI
+
+**Completed:** Phase 6 Playbooks & Organization (6/6 plans)
 
 ## Manual Xcode Setup Required
 
