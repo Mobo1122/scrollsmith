@@ -17,7 +17,7 @@
 | 4 | Transcription | Backend (Whisper/AssemblyAI) + YouTube captions (TikTok/IG deferred to v2) | 7 (CAPT) | 0/4 |
 | 5 | AI Summarization | Claude integration for bullets, steps, cards, tags | 11 (SUMM) | 6 plans |
 | 6 | Playbooks & Organization | CRUD Playbooks, video assignment, search, bulk operations | 12 (PLAY) | ✓ 7 plans |
-| 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 8 (SUMM subset) | 0/5 |
+| 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 4 (SUMM-05 to SUMM-08) | 5 plans |
 | 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 13 (SUBS) | 0/8 |
 | 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 0/5 |
 | 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | 0/7 |
@@ -274,12 +274,14 @@ Plans:
 
 **Dependencies:** Phase 5 (summaries must exist), Phase 8 (Pro tier check)
 
-**Plans:** 0/5
-- [ ] iOS: Bullet summary view with markdown rendering
-- [ ] iOS: Step-by-step checklist view with timestamp jump buttons
-- [ ] iOS: Swipeable card view with gesture handling
-- [ ] iOS: Deep-linking to TikTok/IG/YouTube URLs and Photos app
-- [ ] iOS: Pro tier UI gating for step-by-step and cards
+**Plans:** 5 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — iOS Summary models + SummaryViewModel (Wave 1)
+- [ ] 07-02-PLAN.md — DeepLinkService + InlineVideoPlayerView (Wave 1)
+- [ ] 07-03-PLAN.md — BulletSummaryView + StepChecklistView (Wave 2)
+- [ ] 07-04-PLAN.md — CardStackView + SwipeableCardView (Wave 2)
+- [ ] 07-05-PLAN.md — SummaryDisplayView container + Pro tier gating (Wave 3)
 
 ---
 
@@ -483,4 +485,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-23 - Phase 6 complete (7/7 plans, verified)*
+*Last updated: 2026-01-23 - Phase 7 planned (5 plans in 3 waves)*
