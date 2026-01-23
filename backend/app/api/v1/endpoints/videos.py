@@ -20,6 +20,8 @@ from app.schemas.video import (
     VideoCreateRequest,
     VideoResponse,
     VideoListResponse,
+    SummarizeRequest,
+    SummarizeResponse,
 )
 from app.services.youtube_captions import (
     youtube_captions_service,
@@ -31,8 +33,15 @@ from app.services.youtube_captions import (
 from app.services.transcription import (
     transcription_service,
     TranscriptionError,
-    NoAPIKeyError,
+    NoAPIKeyError as TranscriptionNoAPIKeyError,
     TranscriptionFailedError,
+)
+from app.services.summarization import (
+    summarization_service,
+    SummarizationError,
+    NoAPIKeyError as SummarizationNoAPIKeyError,
+    TranscriptTooShortError,
+    SummarizationFailedError,
 )
 
 logger = logging.getLogger(__name__)
@@ -122,7 +131,7 @@ async def transcribe_audio(
 
         return video
 
-    except NoAPIKeyError as e:
+    except TranscriptionNoAPIKeyError as e:
         logger.error(f"Transcription API not configured: {e}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -231,6 +240,133 @@ async def create_video(
     logger.info(f"Created video {video.id} for user {current_user.id} from {request.platform}")
 
     return video
+
+
+@router.post("/{video_id}/summarize", response_model=SummarizeResponse)
+async def summarize_video(
+    video_id: UUID,
+    request: SummarizeRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> SummarizeResponse:
+    """Generate AI summary for a video.
+
+    v1: Supports bullets format for all users (free tier).
+    Plans 03-04 will add Pro formats (steps, cards) with tier gating.
+
+    Args:
+        video_id: Video to summarize
+        request: Summary options (format, regenerate flag)
+
+    Returns:
+        Generated or cached summary
+
+    Raises:
+        404: Video not found or not owned by user
+        400: Video has no transcript
+        403: Pro format requested by free user (added in Plan 03)
+        503: Claude API not configured
+        500: Summarization failed
+    """
+    import json
+
+    # Check if Claude API is configured
+    if not summarization_service.is_available:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="AI summarization service not configured. Contact support."
+        )
+
+    # Fetch video
+    result = await db.execute(
+        select(Video).where(
+            Video.id == video_id,
+            Video.user_id == current_user.id
+        )
+    )
+    video = result.scalar_one_or_none()
+
+    if video is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Video not found"
+        )
+
+    if not video.transcript:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Video has no transcript. Transcription must complete first."
+        )
+
+    # For now, only support bullets format (Plan 03 adds Pro formats)
+    if request.format != "bullets":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Format '{request.format}' not yet implemented. Only 'bullets' supported in this release."
+        )
+
+    # Check if summary already exists (and not regenerating)
+    if not request.regenerate and video.summary_bullets and video.tags:
+        cached_summary = json.loads(video.summary_bullets)
+        return SummarizeResponse(
+            video_id=video.id,
+            format="bullets",
+            cached=True,
+            summary=cached_summary,
+            tags=video.tags,
+        )
+
+    # Generate bullet summary
+    try:
+        logger.info(f"Generating bullet summary for video {video_id}")
+
+        summary = await summarization_service.generate_bullet_summary(
+            transcript=video.transcript,
+            use_caching=request.regenerate,  # Use caching for regeneration requests
+        )
+
+        # Save to database
+        video.summary_bullets = summary.model_dump_json()
+        video.tags = summary.tags
+        await db.commit()
+        await db.refresh(video)
+
+        logger.info(f"Saved summary for video {video_id}: {len(summary.bullets)} bullets, {len(summary.tags)} tags")
+
+        return SummarizeResponse(
+            video_id=video.id,
+            format="bullets",
+            cached=False,
+            summary=summary.model_dump(),
+            tags=summary.tags,
+        )
+
+    except TranscriptTooShortError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+    except SummarizationNoAPIKeyError:
+        logger.error("Claude API not configured")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="AI summarization service not configured"
+        )
+
+    except SummarizationFailedError as e:
+        logger.error(f"Summarization failed for video {video_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Summarization failed: {str(e)}"
+        )
+
+    except SummarizationError as e:
+        logger.error(f"Summarization error for video {video_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
 
 
 @router.get("/{video_id}", response_model=VideoResponse)
