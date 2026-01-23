@@ -15,7 +15,7 @@
 | 2 | Authentication | Email/password + Apple Sign In with verification and password reset | 12 (AUTH) | 0/6 |
 | 3 | Video Capture (iOS) | Camera roll, YouTube URL paste, Share Extension with permissions | 7 (CAPT) | 0/6 |
 | 4 | Transcription | Backend (Whisper/AssemblyAI) + YouTube captions (TikTok/IG deferred to v2) | 7 (CAPT) | 0/4 |
-| 5 | AI Summarization | Claude integration for bullets, steps, cards, tags | 11 (SUMM) | 0/7 |
+| 5 | AI Summarization | Claude integration for bullets, steps, cards, tags | 11 (SUMM) | 5 plans |
 | 6 | Playbooks & Organization | CRUD Playbooks, video assignment, search, bulk operations | 12 (PLAY) | 0/6 |
 | 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 8 (SUMM subset) | 0/5 |
 | 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 13 (SUBS) | 0/8 |
@@ -199,14 +199,14 @@ Plans:
 
 **Dependencies:** Phase 4 (transcripts must exist), Phase 2 (user tier determines formats)
 
-**Plans:** 0/7
-- [ ] Backend: Claude API integration with async calls
-- [ ] Backend: Prompt engineering for bullet summaries
-- [ ] Backend: Prompt engineering for step-by-step with timestamp extraction
-- [ ] Backend: Prompt engineering for card format generation
-- [ ] Backend: Tag generation prompt with keyword extraction
-- [ ] Backend: Summary regeneration endpoint with quality checks
-- [ ] iOS: Manual summary editing UI
+**Plans:** 5 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Claude API service + Pydantic schemas (foundation)
+- [ ] 05-02-PLAN.md — Bullet summaries + auto-tagging (free tier, Haiku)
+- [ ] 05-03-PLAN.md — Pro formats (steps + cards) with tier gating (Sonnet)
+- [ ] 05-04-PLAN.md — Regeneration + quality checks with prompt caching
+- [ ] 05-05-PLAN.md — Manual editing endpoint (PATCH /videos/{id}/summary)
 
 ---
 
