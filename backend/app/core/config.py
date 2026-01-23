@@ -47,6 +47,9 @@ class Settings(BaseSettings):
     # AssemblyAI (alternative transcription)
     ASSEMBLYAI_API_KEY: Optional[str] = None
 
+    # Anthropic Claude API (AI summarization)
+    ANTHROPIC_API_KEY: Optional[str] = None
+
     @model_validator(mode="after")
     def build_database_url_from_pg_vars(self) -> "Settings":
         """Build DATABASE_URL from individual PG* variables if they exist."""

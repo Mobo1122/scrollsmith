@@ -1,5 +1,8 @@
 """Authentication request/response schemas."""
 
+from __future__ import annotations
+
+from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -35,8 +38,8 @@ class AppleSignIn(BaseModel):
     """Schema for Apple Sign In request."""
 
     identity_token: str
-    email: EmailStr | None = None
-    full_name: str | None = None
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = None
 
 
 class VerifyEmail(BaseModel):
