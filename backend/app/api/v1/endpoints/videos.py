@@ -1067,3 +1067,169 @@ async def bulk_delete_videos(
         deleted_count=len(deleted_ids),
         video_ids=deleted_ids,
     )
+
+
+@router.post("/bulk-move", response_model=BulkMoveResponse)
+async def bulk_move_to_playbook(
+    request: BulkMoveRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> BulkMoveResponse:
+    """Move multiple videos to a Playbook.
+
+    Adds videos to target Playbook (videos may already be in other Playbooks).
+    Only moves videos owned by the current user.
+    Maximum 100 videos per request.
+
+    Operation handles duplicates gracefully - if video is already in
+    the Playbook, it's silently skipped (ON CONFLICT DO NOTHING).
+
+    Args:
+        request: List of video IDs and target Playbook ID
+
+    Returns:
+        Count and IDs of moved videos, plus target Playbook ID
+
+    Raises:
+        404: Playbook not found or no matching videos found
+    """
+    # Verify Playbook exists and belongs to user
+    playbook_result = await db.execute(
+        select(Playbook).where(
+            Playbook.id == request.playbook_id,
+            Playbook.user_id == current_user.id
+        )
+    )
+    playbook = playbook_result.scalar_one_or_none()
+    if playbook is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Playbook not found"
+        )
+
+    # Verify videos belong to user
+    videos_result = await db.execute(
+        select(Video.id).where(
+            Video.id.in_(request.video_ids),
+            Video.user_id == current_user.id
+        )
+    )
+    valid_video_ids = [row[0] for row in videos_result.fetchall()]
+
+    if not valid_video_ids:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No matching videos found"
+        )
+
+    # Bulk insert associations (ON CONFLICT DO NOTHING for existing)
+    for video_id in valid_video_ids:
+        await db.execute(
+            text("""
+                INSERT INTO video_playbooks (video_id, playbook_id)
+                VALUES (:video_id, :playbook_id)
+                ON CONFLICT DO NOTHING
+            """),
+            {"video_id": video_id, "playbook_id": request.playbook_id}
+        )
+
+    # Update Playbook's updated_at for sorting
+    await db.execute(
+        text("UPDATE playbooks SET updated_at = now() WHERE id = :playbook_id"),
+        {"playbook_id": request.playbook_id}
+    )
+
+    await db.commit()
+
+    logger.info(f"Bulk moved {len(valid_video_ids)} videos to playbook {request.playbook_id}")
+
+    return BulkMoveResponse(
+        moved_count=len(valid_video_ids),
+        playbook_id=request.playbook_id,
+        video_ids=valid_video_ids,
+    )
+
+
+@router.post("/bulk-add-to-favorites", response_model=BulkMoveResponse)
+async def bulk_add_to_favorites(
+    request: BulkAddToFavoritesRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> BulkMoveResponse:
+    """Add multiple videos to Favorites Playbook.
+
+    Convenience endpoint that finds user's Favorites Playbook automatically.
+    Creates Favorites Playbook if somehow missing (shouldn't happen normally).
+
+    Args:
+        request: List of video IDs to add to Favorites (1-100)
+
+    Returns:
+        Count and IDs of moved videos, plus Favorites Playbook ID
+
+    Raises:
+        404: No matching videos found
+    """
+    # Find user's Favorites Playbook
+    favorites_result = await db.execute(
+        select(Playbook).where(
+            Playbook.user_id == current_user.id,
+            Playbook.is_system == True,
+            Playbook.name == "Favorites"
+        )
+    )
+    favorites = favorites_result.scalar_one_or_none()
+
+    if favorites is None:
+        # Create Favorites if somehow missing
+        favorites = Playbook(
+            user_id=current_user.id,
+            name="Favorites",
+            icon="star.fill",
+            is_system=True,
+        )
+        db.add(favorites)
+        await db.commit()
+        await db.refresh(favorites)
+        logger.info(f"Created missing Favorites playbook for user {current_user.id}")
+
+    # Verify videos belong to user
+    videos_result = await db.execute(
+        select(Video.id).where(
+            Video.id.in_(request.video_ids),
+            Video.user_id == current_user.id
+        )
+    )
+    valid_video_ids = [row[0] for row in videos_result.fetchall()]
+
+    if not valid_video_ids:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No matching videos found"
+        )
+
+    # Bulk insert to Favorites
+    for video_id in valid_video_ids:
+        await db.execute(
+            text("""
+                INSERT INTO video_playbooks (video_id, playbook_id)
+                VALUES (:video_id, :playbook_id)
+                ON CONFLICT DO NOTHING
+            """),
+            {"video_id": video_id, "playbook_id": favorites.id}
+        )
+
+    await db.execute(
+        text("UPDATE playbooks SET updated_at = now() WHERE id = :playbook_id"),
+        {"playbook_id": favorites.id}
+    )
+
+    await db.commit()
+
+    logger.info(f"Bulk added {len(valid_video_ids)} videos to Favorites")
+
+    return BulkMoveResponse(
+        moved_count=len(valid_video_ids),
+        playbook_id=favorites.id,
+        video_ids=valid_video_ids,
+    )
