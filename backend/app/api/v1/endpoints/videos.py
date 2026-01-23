@@ -364,13 +364,66 @@ async def summarize_video(
                 tags=summary.tags,
             )
 
-        elif request.format in ["steps", "cards"]:
-            # Pro format generation implemented in Plan 04
-            # Tier gating above ensures free users never reach here
-            logger.info(f"Pro format '{request.format}' requested by user {current_user.id} (tier: {current_user.subscription_tier})")
-            raise HTTPException(
-                status_code=status.HTTP_501_NOT_IMPLEMENTED,
-                detail=f"Format '{request.format}' generation not yet implemented. Coming in next release."
+        elif request.format == "steps":
+            summary = await summarization_service.generate_step_checklist(
+                transcript=video.transcript,
+                use_caching=request.regenerate,
+            )
+            video.summary_steps = summary.model_dump_json()
+            # Tags come from bullets (generate bullets first if not present)
+            if not video.tags:
+                logger.info("Generating tags alongside steps (bullets not yet generated)")
+                bullets = await summarization_service.generate_bullet_summary(
+                    transcript=video.transcript,
+                    use_caching=False,
+                )
+                video.summary_bullets = bullets.model_dump_json()
+                video.tags = bullets.tags
+            summary_dict = summary.model_dump()
+            tags = video.tags
+
+            await db.commit()
+            await db.refresh(video)
+
+            logger.info(f"Saved steps summary for video {video_id}: {len(summary.steps)} steps")
+
+            return SummarizeResponse(
+                video_id=video.id,
+                format=request.format,
+                cached=False,
+                summary=summary_dict,
+                tags=tags,
+            )
+
+        elif request.format == "cards":
+            summary = await summarization_service.generate_cards(
+                transcript=video.transcript,
+                use_caching=request.regenerate,
+            )
+            video.summary_cards = summary.model_dump_json()
+            # Tags come from bullets
+            if not video.tags:
+                logger.info("Generating tags alongside cards (bullets not yet generated)")
+                bullets = await summarization_service.generate_bullet_summary(
+                    transcript=video.transcript,
+                    use_caching=False,
+                )
+                video.summary_bullets = bullets.model_dump_json()
+                video.tags = bullets.tags
+            summary_dict = summary.model_dump()
+            tags = video.tags
+
+            await db.commit()
+            await db.refresh(video)
+
+            logger.info(f"Saved cards summary for video {video_id}: {len(summary.cards)} cards")
+
+            return SummarizeResponse(
+                video_id=video.id,
+                format=request.format,
+                cached=False,
+                summary=summary_dict,
+                tags=tags,
             )
 
     except TranscriptTooShortError as e:
