@@ -50,6 +50,14 @@ class Video(Base):
         Text,
         nullable=True,
     )
+    summary_steps: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable=True,
+    )
+    summary_cards: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable=True,
+    )
     tags: Mapped[Optional[List[str]]] = mapped_column(
         ARRAY(String),
         nullable=True,

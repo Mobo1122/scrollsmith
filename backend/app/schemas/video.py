@@ -38,6 +38,8 @@ class VideoResponse(BaseModel):
     source_url: Optional[str] = None
     transcript: Optional[str] = None
     summary_bullets: Optional[str] = None
+    summary_steps: Optional[str] = None
+    summary_cards: Optional[str] = None
     tags: Optional[List[str]] = None
     created_at: datetime
 
