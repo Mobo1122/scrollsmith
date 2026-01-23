@@ -1,10 +1,10 @@
 """Video request/response schemas."""
 
 from datetime import datetime
-from typing import Literal, Optional, List
+from typing import Literal, Optional, List, Any
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class YouTubeCaptionsRequest(BaseModel):
@@ -132,3 +132,116 @@ class UpdateSummaryRequest(BaseModel):
                 "tags": ["productivity", "habits", "mindset"]
             }
         }
+
+
+class VideoSearchResult(BaseModel):
+    """Single search result with highlight."""
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    source_url: Optional[str]
+    summary_bullets: Optional[str]
+    tags: Optional[List[str]]
+    created_at: datetime
+    rank: float  # Search relevance score
+    highlight: Optional[str]  # Matched text with <mark> tags
+
+
+class VideoSearchResponse(BaseModel):
+    """Search results response."""
+    videos: List[VideoSearchResult]
+    query: str
+    total: int
+
+
+class VideoAssignPlaybookRequest(BaseModel):
+    """Request to assign video to Playbook."""
+    playbook_id: UUID
+
+
+class VideoPlaybooksResponse(BaseModel):
+    """Response listing Playbooks a video belongs to."""
+    video_id: UUID
+    playbook_ids: List[UUID]
+
+
+class VideoUpdateTagsRequest(BaseModel):
+    """Request to update video tags."""
+    tags: List[str] = Field(..., max_length=20)  # Max 20 tags per video
+
+
+class VideoUpdateTagsResponse(BaseModel):
+    """Response after updating tags."""
+    id: UUID
+    tags: List[str]
+
+
+# ============================================================
+# Bulk Operations Schemas
+# ============================================================
+
+
+class BulkDeleteRequest(BaseModel):
+    """Request to delete multiple videos at once.
+
+    Maximum 100 videos per request to prevent excessive load.
+    """
+
+    video_ids: List[UUID] = Field(
+        ...,
+        min_length=1,
+        max_length=100,
+        description="List of video IDs to delete (1-100)",
+    )
+
+
+class BulkDeleteResponse(BaseModel):
+    """Response after bulk delete operation.
+
+    Returns the count of actually deleted videos and their IDs.
+    Only videos owned by the user are deleted.
+    """
+
+    deleted_count: int = Field(description="Number of videos actually deleted")
+    video_ids: List[UUID] = Field(description="IDs of deleted videos")
+
+
+class BulkMoveRequest(BaseModel):
+    """Request to move videos to a Playbook.
+
+    Adds videos to the target Playbook. Videos can be in multiple
+    Playbooks simultaneously (many-to-many relationship).
+    """
+
+    video_ids: List[UUID] = Field(
+        ...,
+        min_length=1,
+        max_length=100,
+        description="List of video IDs to move (1-100)",
+    )
+    playbook_id: UUID = Field(description="Target Playbook ID")
+
+
+class BulkMoveResponse(BaseModel):
+    """Response after bulk move operation.
+
+    Returns the count of moved videos and the target Playbook.
+    """
+
+    moved_count: int = Field(description="Number of videos actually moved")
+    playbook_id: UUID = Field(description="Target Playbook ID")
+    video_ids: List[UUID] = Field(description="IDs of moved videos")
+
+
+class BulkAddToFavoritesRequest(BaseModel):
+    """Request to add videos to Favorites Playbook.
+
+    Convenience schema for the add-to-favorites shortcut.
+    """
+
+    video_ids: List[UUID] = Field(
+        ...,
+        min_length=1,
+        max_length=100,
+        description="List of video IDs to add to Favorites (1-100)",
+    )
