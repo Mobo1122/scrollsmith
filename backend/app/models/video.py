@@ -5,14 +5,14 @@ from datetime import datetime
 from typing import List, Optional, TYPE_CHECKING
 
 from sqlalchemy import String, Text, DateTime, func, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID, ARRAY
+from sqlalchemy.dialects.postgresql import UUID, ARRAY, TSVECTOR
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 
 if TYPE_CHECKING:
     from app.models.user import User
-    from app.models.playbook import Playbook
+    from app.models.playbook import Playbook, video_playbooks
     from app.models.habit import Habit
 
 
@@ -30,12 +30,6 @@ class Video(Base):
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
-        index=True,
-    )
-    playbook_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("playbooks.id", ondelete="SET NULL"),
-        nullable=True,
         index=True,
     )
     source_url: Mapped[Optional[str]] = mapped_column(
@@ -66,6 +60,11 @@ class Video(Base):
         ARRAY(String),
         nullable=True,
     )
+    # Full-text search vector (generated column in PostgreSQL)
+    search_vector: Mapped[Optional[str]] = mapped_column(
+        TSVECTOR,
+        nullable=True,
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -77,8 +76,9 @@ class Video(Base):
         "User",
         back_populates="videos",
     )
-    playbook: Mapped[Optional["Playbook"]] = relationship(
+    playbooks: Mapped[List["Playbook"]] = relationship(
         "Playbook",
+        secondary="video_playbooks",
         back_populates="videos",
     )
     habits: Mapped[List["Habit"]] = relationship(
