@@ -7,6 +7,13 @@ from app.schemas.auth import (
     UserLogin,
 )
 from app.schemas.user import UserResponse
+from app.schemas.playbook import (
+    PlaybookCreate,
+    PlaybookUpdate,
+    PlaybookResponse,
+    PlaybookListResponse,
+    PlaybookDeleteResponse,
+)
 
 __all__ = [
     "Token",
@@ -14,4 +21,9 @@ __all__ = [
     "UserCreate",
     "UserLogin",
     "UserResponse",
+    "PlaybookCreate",
+    "PlaybookUpdate",
+    "PlaybookResponse",
+    "PlaybookListResponse",
+    "PlaybookDeleteResponse",
 ]
