@@ -863,31 +863,87 @@ async def get_video(
 async def list_videos(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
+    playbook_id: Optional[UUID] = Query(None, description="Filter by Playbook ID"),
+    uncategorized: bool = Query(False, description="Show only videos not in any Playbook"),
     skip: int = Query(0, ge=0, description="Number of videos to skip"),
     limit: int = Query(20, ge=1, le=100, description="Maximum number of videos to return"),
 ) -> VideoListResponse:
-    """List all videos for the current user.
+    """List videos with optional Playbook filtering.
 
-    Returns videos sorted by creation date (newest first).
+    - No filters: all user's videos
+    - playbook_id: videos in specific Playbook
+    - uncategorized=true: videos not in any Playbook
     """
-    # Get total count
-    count_result = await db.execute(
-        select(func.count()).select_from(Video).where(Video.user_id == current_user.id)
-    )
+    if uncategorized:
+        # Videos with no Playbook associations
+        count_query = text("""
+            SELECT COUNT(*) FROM videos v
+            WHERE v.user_id = :user_id
+              AND NOT EXISTS (SELECT 1 FROM video_playbooks vp WHERE vp.video_id = v.id)
+        """)
+        videos_query = text("""
+            SELECT v.* FROM videos v
+            WHERE v.user_id = :user_id
+              AND NOT EXISTS (SELECT 1 FROM video_playbooks vp WHERE vp.video_id = v.id)
+            ORDER BY v.created_at DESC
+            LIMIT :limit OFFSET :skip
+        """)
+        params = {"user_id": current_user.id, "limit": limit, "skip": skip}
+    elif playbook_id:
+        # Videos in specific Playbook
+        count_query = text("""
+            SELECT COUNT(*) FROM videos v
+            JOIN video_playbooks vp ON vp.video_id = v.id
+            WHERE v.user_id = :user_id AND vp.playbook_id = :playbook_id
+        """)
+        videos_query = text("""
+            SELECT v.* FROM videos v
+            JOIN video_playbooks vp ON vp.video_id = v.id
+            WHERE v.user_id = :user_id AND vp.playbook_id = :playbook_id
+            ORDER BY v.created_at DESC
+            LIMIT :limit OFFSET :skip
+        """)
+        params = {"user_id": current_user.id, "playbook_id": playbook_id, "limit": limit, "skip": skip}
+    else:
+        # All videos (original behavior)
+        count_result = await db.execute(
+            select(func.count()).select_from(Video).where(Video.user_id == current_user.id)
+        )
+        total = count_result.scalar_one()
+
+        result = await db.execute(
+            select(Video)
+            .where(Video.user_id == current_user.id)
+            .order_by(Video.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+        )
+        videos = result.scalars().all()
+
+        return VideoListResponse(
+            videos=[VideoResponse.model_validate(v) for v in videos],
+            total=total
+        )
+
+    # Execute for filtered queries
+    count_result = await db.execute(count_query, params)
     total = count_result.scalar_one()
 
-    # Get videos
-    result = await db.execute(
-        select(Video)
-        .where(Video.user_id == current_user.id)
-        .order_by(Video.created_at.desc())
-        .offset(skip)
-        .limit(limit)
-    )
-    videos = result.scalars().all()
+    videos_result = await db.execute(videos_query, params)
+    videos = videos_result.mappings().all()
 
     return VideoListResponse(
-        videos=[VideoResponse.model_validate(v) for v in videos],
+        videos=[VideoResponse(
+            id=v["id"],
+            source_url=v["source_url"],
+            transcript=v["transcript"],
+            summary_bullets=v["summary_bullets"],
+            summary_steps=v["summary_steps"],
+            summary_cards=v["summary_cards"],
+            tags=v["tags"],
+            created_at=v["created_at"],
+            user_edited_summary=v["user_edited_summary"],
+        ) for v in videos],
         total=total
     )
 
