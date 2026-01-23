@@ -252,7 +252,7 @@ async def summarize_video(
     """Generate AI summary for a video.
 
     v1: Supports bullets format for all users (free tier).
-    Plans 03-04 will add Pro formats (steps, cards) with tier gating.
+    Pro formats (steps, cards) require Pro subscription.
 
     Args:
         video_id: Video to summarize
@@ -264,7 +264,8 @@ async def summarize_video(
     Raises:
         404: Video not found or not owned by user
         400: Video has no transcript
-        403: Pro format requested by free user (added in Plan 03)
+        403: Pro format requested by free user
+        501: Pro format generation not yet implemented
         503: Claude API not configured
         500: Summarization failed
     """
@@ -298,48 +299,79 @@ async def summarize_video(
             detail="Video has no transcript. Transcription must complete first."
         )
 
-    # For now, only support bullets format (Plan 03 adds Pro formats)
-    if request.format != "bullets":
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Format '{request.format}' not yet implemented. Only 'bullets' supported in this release."
-        )
+    # Tier-based feature gating for Pro formats
+    if request.format in ["steps", "cards"]:
+        if current_user.subscription_tier == "free":
+            logger.info(f"Free user {current_user.id} attempted Pro format '{request.format}'")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail={
+                    "error": "pro_required",
+                    "message": f"{request.format.capitalize()} format requires Pro subscription",
+                    "upgrade_url": "/subscribe/pro",  # TODO Phase 8: Replace with actual upgrade URL
+                    "format_requested": request.format
+                }
+            )
 
     # Check if summary already exists (and not regenerating)
-    if not request.regenerate and video.summary_bullets and video.tags:
-        cached_summary = json.loads(video.summary_bullets)
-        return SummarizeResponse(
-            video_id=video.id,
-            format="bullets",
-            cached=True,
-            summary=cached_summary,
-            tags=video.tags,
-        )
+    if not request.regenerate:
+        cached_data = None
+        tags = None
 
-    # Generate bullet summary
+        if request.format == "bullets" and video.summary_bullets and video.tags:
+            cached_data = json.loads(video.summary_bullets)
+            tags = video.tags
+        elif request.format == "steps" and video.summary_steps:
+            cached_data = json.loads(video.summary_steps)
+            tags = video.tags  # Tags from bullets (always generated first)
+        elif request.format == "cards" and video.summary_cards:
+            cached_data = json.loads(video.summary_cards)
+            tags = video.tags
+
+        if cached_data:
+            logger.info(f"Returning cached {request.format} summary for video {video_id}")
+            return SummarizeResponse(
+                video_id=video.id,
+                format=request.format,
+                cached=True,
+                summary=cached_data,
+                tags=tags,
+            )
+
+    # Generate summary based on format
     try:
-        logger.info(f"Generating bullet summary for video {video_id}")
+        logger.info(f"Generating {request.format} summary for video {video_id}")
 
-        summary = await summarization_service.generate_bullet_summary(
-            transcript=video.transcript,
-            use_caching=request.regenerate,  # Use caching for regeneration requests
-        )
+        if request.format == "bullets":
+            summary = await summarization_service.generate_bullet_summary(
+                transcript=video.transcript,
+                use_caching=request.regenerate,
+            )
 
-        # Save to database
-        video.summary_bullets = summary.model_dump_json()
-        video.tags = summary.tags
-        await db.commit()
-        await db.refresh(video)
+            # Save to database
+            video.summary_bullets = summary.model_dump_json()
+            video.tags = summary.tags
+            await db.commit()
+            await db.refresh(video)
 
-        logger.info(f"Saved summary for video {video_id}: {len(summary.bullets)} bullets, {len(summary.tags)} tags")
+            logger.info(f"Saved bullet summary for video {video_id}: {len(summary.bullets)} bullets, {len(summary.tags)} tags")
 
-        return SummarizeResponse(
-            video_id=video.id,
-            format="bullets",
-            cached=False,
-            summary=summary.model_dump(),
-            tags=summary.tags,
-        )
+            return SummarizeResponse(
+                video_id=video.id,
+                format="bullets",
+                cached=False,
+                summary=summary.model_dump(),
+                tags=summary.tags,
+            )
+
+        elif request.format in ["steps", "cards"]:
+            # Pro format generation implemented in Plan 04
+            # Tier gating above ensures free users never reach here
+            logger.info(f"Pro format '{request.format}' requested by user {current_user.id} (tier: {current_user.subscription_tier})")
+            raise HTTPException(
+                status_code=status.HTTP_501_NOT_IMPLEMENTED,
+                detail=f"Format '{request.format}' generation not yet implemented. Coming in next release."
+            )
 
     except TranscriptTooShortError as e:
         raise HTTPException(
