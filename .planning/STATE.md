@@ -8,39 +8,39 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 4 Transcription - server-side transcription (simplified for macOS 13 dev environment)
+**Current focus:** Phase 5 AI Summarization
 
-## Architecture Change (2026-01-23)
+## Architecture Note (2026-01-23)
 
 **TikTok/Instagram URL support deferred to v2** due to macOS 13 dev environment (WhisperKit requires macOS 14+).
 
 **v1 Transcription Strategy:**
-- **Camera roll uploads:** iOS uploads video → Backend transcribes via Whisper/AssemblyAI → Delete file
+- **Camera roll uploads:** iOS extracts audio → Backend transcribes via Whisper/AssemblyAI
 - **YouTube URLs:** Fetch captions via youtube-transcript-api → Show "unavailable" if no captions
 - **TikTok/IG URLs:** Not supported in v1 (users download to camera roll instead)
 
 ## Current Phase
 
-**Phase:** 4 of 12 (Transcription) - **NEEDS RE-IMPLEMENTATION**
-**Goal:** Server-side transcription for camera roll uploads, YouTube caption fetching
-**Progress:** 0% (0/4 plans) - previous Phase 4 code needs removal/replacement
-**Plans:** 0/4 complete
+**Phase:** 5 of 12 (AI Summarization)
+**Goal:** Generate bullet-point summaries from transcripts using GPT-4
+**Progress:** 0% (0/7 plans)
+**Plans:** 0/7 complete
 
 ## Milestone Progress
 
 **Milestone:** v1
 **Total Phases:** 12
 **Completed:** 4
-**In Progress:** 0
-**Pending:** 8
+**In Progress:** 1
+**Pending:** 7
 
 | Phase | Status | Progress |
 |-------|--------|----------|
 | 1 - Foundation | ✓ Complete | 4/4 plans |
 | 2 - Authentication | ✓ Complete | 6/6 plans |
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
-| 4 - Transcription | ⟳ Rework | 0/4 plans (simplified for v1) |
-| 5 - AI Summarization | ○ Pending | 0/7 plans |
+| 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
+| 5 - AI Summarization | ◐ In Progress | 0/7 plans |
 | 6 - Playbooks & Organization | ○ Pending | 0/6 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
@@ -49,23 +49,22 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ██░░░░░░░░ 25% (16/63 plans) - adjusted for simplified Phase 3-4
+**Overall Progress:** ███░░░░░░░ 33% (20/59 plans)
 
 ## Requirements Coverage
 
 **Total v1 Requirements:** 85
 **Mapped to Phases:** 85
 **In Progress:** 0
-**Completed:** 32 (INFR-01, INFR-02, INFR-03, INFR-05, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16)
+**Completed:** 36 (INFR-01 through INFR-05, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, TRANS-01 through TRANS-04)
 **Unmapped:** 0 ✓
 
 ## Recent Activity
 
-- 2026-01-23: **Architecture change:** Deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)
-- 2026-01-23: Phase 4 rework started - removing on-device transcription, adding server-side
-- 2026-01-21: Completed Phase 4 Transcription (original implementation - now being reworked)
-- 2026-01-21: Completed Phase 3 Video Capture (all 7 plans)
-- 2026-01-20: Started Phase 3 Video Capture
+- 2026-01-23: **Completed Phase 4 Transcription** (server-side v1 architecture)
+- 2026-01-23: Connected Railway to GitHub for auto-deploy
+- 2026-01-23: Architecture change: Deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)
+- 2026-01-21: Completed Phase 3 Video Capture (all 6 plans)
 - 2026-01-20: Completed Phase 2 Authentication (all 6 plans)
 - 2026-01-20: Completed Phase 1 Foundation (all 4 plans)
 - 2026-01-18: Project initialized
@@ -106,20 +105,20 @@ Add these to Railway for Phase 4 transcription:
 | App Groups for Share Extension | 03-05 | Required for shared SwiftData container | ✓ Implemented |
 | ~~On-device transcription for TikTok/IG~~ | 04-01 | **DEFERRED TO v2** - macOS 14+ required for WhisperKit toolchain | ✗ Removed |
 | ~~WhisperKit for iOS 17+~~ | 04-03 | **DEFERRED TO v2** - macOS 14+ required for WhisperKit toolchain | ✗ Removed |
-| Server-side Whisper/AssemblyAI | 04-01 | Backend transcribes camera roll uploads, simpler iOS code | ○ Pending |
+| Server-side Whisper/AssemblyAI | 04-01 | Backend transcribes camera roll uploads, simpler iOS code | ✓ Implemented |
 | youtube-transcript-api | 04-05 | No API key required, no rate limits, instant captions | ✓ Implemented |
+| Railway GitHub auto-deploy | 04-01 | Connected Railway to GitHub with root dir set to `backend` | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Rework Phase 4 Transcription for server-side approach
+**Primary:** Phase 5 AI Summarization
+**Goal:** Generate bullet-point summaries from transcripts
 **Tasks:**
-1. Remove iOS WhisperKit/Speech services (defer to v2)
-2. Remove iOS MediaDownloadService (defer to v2)
-3. Update TranscriptionOrchestrator for server-side only
-4. Hide TikTok/IG URL paste UI in CaptureView (YouTube only for v1)
-5. Add backend video file upload endpoint with Whisper/AssemblyAI
-6. Update iOS APIClient for file upload with progress
-**Next:** After Phase 4 rework, continue to Phase 5 AI Summarization
+1. Add GPT-4 summarization endpoint to backend
+2. Create summary generation service
+3. Update Video model with summary fields
+4. Add iOS summary display UI
+5. Integrate summarization into transcription flow
 
 ## Manual Xcode Setup Required
 
