@@ -85,3 +85,50 @@ class SummarizeResponse(BaseModel):
         None,
         description="Quality assessment of transcript (included if quality is marginal/poor)"
     )
+
+
+class UpdateSummaryRequest(BaseModel):
+    """Request to manually update AI-generated video summary fields.
+
+    All fields are optional - only provided fields will be updated.
+    This allows partial updates (e.g., edit only tags, or only bullets).
+
+    Note: This endpoint is for EDITING AI-generated summaries, not creating
+    summaries from scratch. Users must generate summaries via POST /videos/{id}/summarize
+    before they can edit them.
+
+    Validation: The API validates the overall structure (array of objects with
+    required fields) and returns clear error messages. Example error:
+    {"detail": "Each step requires non-empty text"}
+    """
+    bullets: Optional[List[str]] = Field(
+        None,
+        min_length=1,
+        max_length=15,
+        description="Updated bullet points (3-15 bullets)"
+    )
+    tags: Optional[List[str]] = Field(
+        None,
+        max_length=10,
+        description="Updated tags (up to 10 tags)"
+    )
+    steps: Optional[dict] = Field(
+        None,
+        description="Updated step checklist (must match StepChecklist schema structure)"
+    )
+    cards: Optional[dict] = Field(
+        None,
+        description="Updated cards (must match CardsSummary schema structure)"
+    )
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "bullets": [
+                    "Key insight 1",
+                    "Key insight 2",
+                    "Key insight 3"
+                ],
+                "tags": ["productivity", "habits", "mindset"]
+            }
+        }
