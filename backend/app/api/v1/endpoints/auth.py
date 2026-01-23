@@ -19,7 +19,7 @@ from app.core.security import (
     is_refresh_token,
     verify_password,
 )
-from app.models import RefreshToken, User
+from app.models import Playbook, RefreshToken, User
 from app.schemas.auth import (
     AppleSignIn,
     ForgotPassword,
@@ -89,6 +89,15 @@ async def register(
 
     db.add(user)
     await db.flush()  # Get user.id
+
+    # Create default Favorites Playbook
+    favorites = Playbook(
+        user_id=user.id,
+        name="Favorites",
+        icon="star.fill",  # SF Symbol name
+        is_system=True,
+    )
+    db.add(favorites)
 
     # Create tokens
     access_token = create_access_token(user.id)
@@ -383,6 +392,15 @@ async def apple_sign_in(
             )
             db.add(user)
             await db.flush()
+
+            # Create default Favorites Playbook for new user
+            favorites = Playbook(
+                user_id=user.id,
+                name="Favorites",
+                icon="star.fill",  # SF Symbol name
+                is_system=True,
+            )
+            db.add(favorites)
 
     # Create tokens
     access_token = create_access_token(user.id)
