@@ -18,7 +18,7 @@ from tenacity import (
 )
 
 from app.core.config import settings
-from app.schemas.summary import BulletSummary, StepChecklist, CardsSummary
+from app.schemas.summary import BulletSummary, StepChecklist, StepChecklistItem, CardsSummary, SwipeableCard
 
 logger = logging.getLogger(__name__)
 
@@ -223,6 +223,260 @@ class SummarizationService:
         except Exception as e:
             logger.error(f"Bullet summary generation failed: {e}")
             raise SummarizationFailedError(f"Failed to generate summary: {str(e)}")
+
+
+    async def generate_step_checklist(
+        self,
+        transcript: str,
+        use_caching: bool = False
+    ) -> StepChecklist:
+        """Generate step-by-step checklist with timestamps (Pro tier).
+
+        Uses Claude Sonnet 4.5 for better understanding of sequential instructions
+        and timestamp extraction.
+
+        Args:
+            transcript: Video transcript text
+            use_caching: Whether to use prompt caching (for regeneration)
+
+        Returns:
+            StepChecklist with numbered steps and optional timestamps
+
+        Raises:
+            TranscriptTooShortError: If transcript < 50 words
+            NoAPIKeyError: If ANTHROPIC_API_KEY not configured
+            SummarizationFailedError: If Claude API call fails
+        """
+        self._validate_transcript(transcript, min_words=50)
+
+        system_content = [
+            {
+                "type": "text",
+                "text": (
+                    "You are a video summarization assistant. Extract actionable steps "
+                    "from instructional video transcripts. Format as a numbered checklist "
+                    "with clear, concrete instructions. Include timestamps (in seconds) "
+                    "when steps are explicitly mentioned in the transcript. If the video "
+                    "includes time estimates, extract the total duration. Focus on "
+                    "sequential, actionable steps that a user can follow."
+                ),
+            }
+        ]
+
+        if use_caching and len(transcript.split()) > 500:
+            system_content.append({
+                "type": "text",
+                "text": f"Transcript:\n\n{transcript}",
+                "cache_control": {"type": "ephemeral"}
+            })
+            user_message = "Extract step-by-step instructions with timestamps where mentioned."
+        else:
+            user_message = f"Extract actionable steps from this transcript:\n\n{transcript}"
+
+        try:
+            response = await self._call_claude(
+                model="claude-sonnet-4-5-20250514",  # Sonnet for better reasoning
+                max_tokens=4096,  # More tokens for detailed steps
+                system=system_content,
+                messages=[{"role": "user", "content": user_message}],
+            )
+
+            # Parse response into StepChecklist using Pydantic
+            import json
+            import re
+
+            response_text = response.content[0].text
+
+            # Try to find JSON in the response
+            json_match = re.search(r'\{[\s\S]*\}', response_text)
+            if json_match:
+                parsed_data = json.loads(json_match.group())
+                result = StepChecklist(**parsed_data)
+            else:
+                # Fallback: parse structured text response
+                lines = response_text.strip().split('\n')
+                steps = []
+                title = "Step-by-Step Guide"
+
+                for line in lines:
+                    line = line.strip()
+                    # Check for title
+                    if line.startswith('#') or line.startswith('**') and len(steps) == 0:
+                        title = line.strip('#* ').strip()
+                        continue
+                    # Check for numbered step
+                    if line and (line[0].isdigit() or line.startswith('-') or line.startswith('*')):
+                        step_text = line.lstrip('0123456789.-*) ').strip()
+                        if step_text and len(step_text) >= 10:
+                            steps.append(StepChecklistItem(
+                                step_number=len(steps) + 1,
+                                instruction=step_text,
+                                timestamp_seconds=None
+                            ))
+
+                if not steps:
+                    # Last resort: treat each line as a step
+                    for i, line in enumerate(lines[:20], 1):
+                        if line.strip() and len(line.strip()) >= 10:
+                            steps.append(StepChecklistItem(
+                                step_number=i,
+                                instruction=line.strip(),
+                                timestamp_seconds=None
+                            ))
+
+                result = StepChecklist(
+                    title=title[:100] if title else "Step-by-Step Guide",
+                    steps=steps[:20] if steps else [StepChecklistItem(step_number=1, instruction="Review the video content", timestamp_seconds=None)],
+                    estimated_duration_minutes=None
+                )
+
+            logger.info(f"Generated step checklist: {len(result.steps)} steps")
+            return result
+
+        except Exception as e:
+            logger.error(f"Step checklist generation failed: {e}")
+            raise SummarizationFailedError(f"Failed to generate checklist: {str(e)}")
+
+    async def generate_cards(
+        self,
+        transcript: str,
+        use_caching: bool = False
+    ) -> CardsSummary:
+        """Generate swipeable cards format (Pro tier).
+
+        Uses Claude Sonnet 4.5 for nuanced categorization into tips, warnings,
+        insights, and actions.
+
+        Args:
+            transcript: Video transcript text
+            use_caching: Whether to use prompt caching (for regeneration)
+
+        Returns:
+            CardsSummary with 3-12 categorized cards
+
+        Raises:
+            TranscriptTooShortError: If transcript < 50 words
+            NoAPIKeyError: If ANTHROPIC_API_KEY not configured
+            SummarizationFailedError: If Claude API call fails
+        """
+        self._validate_transcript(transcript, min_words=50)
+
+        system_content = [
+            {
+                "type": "text",
+                "text": (
+                    "You are a video summarization assistant. Create engaging, swipeable "
+                    "summary cards from video transcripts. Each card should contain one "
+                    "key insight, tip, warning, or action item. "
+                    "\n\n"
+                    "Card categories:\n"
+                    "- tip: Helpful advice or best practice\n"
+                    "- warning: Caution, common mistake, or pitfall to avoid\n"
+                    "- insight: Key learning, revelation, or understanding\n"
+                    "- action: Specific action item or next step\n"
+                    "\n"
+                    "Keep cards concise (max 300 characters) and ADHD-friendly. "
+                    "Aim for 3-12 cards depending on content richness. "
+                    "Return as JSON with format: {\"cards\": [{\"title\": \"...\", \"content\": \"...\", \"category\": \"tip|warning|insight|action\"}, ...]}"
+                ),
+            }
+        ]
+
+        if use_caching and len(transcript.split()) > 500:
+            system_content.append({
+                "type": "text",
+                "text": f"Transcript:\n\n{transcript}",
+                "cache_control": {"type": "ephemeral"}
+            })
+            user_message = "Create summary cards from the transcript."
+        else:
+            user_message = f"Create engaging summary cards from this transcript:\n\n{transcript}"
+
+        try:
+            response = await self._call_claude(
+                model="claude-sonnet-4-5-20250514",  # Sonnet for better categorization
+                max_tokens=4096,
+                system=system_content,
+                messages=[{"role": "user", "content": user_message}],
+            )
+
+            # Parse response into CardsSummary using Pydantic
+            import json
+            import re
+
+            response_text = response.content[0].text
+
+            # Try to find JSON in the response
+            json_match = re.search(r'\{[\s\S]*\}', response_text)
+            if json_match:
+                parsed_data = json.loads(json_match.group())
+                result = CardsSummary(**parsed_data)
+            else:
+                # Fallback: parse structured text response
+                lines = response_text.strip().split('\n')
+                cards = []
+                current_card = {"title": "", "content": "", "category": "insight"}
+
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        if current_card["title"] and current_card["content"]:
+                            cards.append(SwipeableCard(**current_card))
+                            current_card = {"title": "", "content": "", "category": "insight"}
+                        continue
+
+                    # Detect category keywords
+                    lower_line = line.lower()
+                    if 'tip:' in lower_line or lower_line.startswith('tip'):
+                        current_card["category"] = "tip"
+                    elif 'warning:' in lower_line or lower_line.startswith('warning'):
+                        current_card["category"] = "warning"
+                    elif 'action:' in lower_line or lower_line.startswith('action'):
+                        current_card["category"] = "action"
+                    elif 'insight:' in lower_line or lower_line.startswith('insight'):
+                        current_card["category"] = "insight"
+
+                    # Check for title (bold or heading)
+                    if line.startswith('**') or line.startswith('#'):
+                        title = line.strip('#* ').strip(':')
+                        if title and len(title) <= 60:
+                            current_card["title"] = title[:60]
+                    elif not current_card["title"] and len(line) <= 60:
+                        current_card["title"] = line[:60]
+                    else:
+                        if current_card["content"]:
+                            current_card["content"] += " " + line
+                        else:
+                            current_card["content"] = line
+
+                # Don't forget last card
+                if current_card["title"] and current_card["content"]:
+                    cards.append(SwipeableCard(**current_card))
+
+                if not cards:
+                    # Last resort: create cards from lines
+                    for i, line in enumerate(lines[:12]):
+                        if line.strip() and len(line.strip()) >= 10:
+                            cards.append(SwipeableCard(
+                                title=f"Insight {i+1}",
+                                content=line.strip()[:300],
+                                category="insight"
+                            ))
+
+                result = CardsSummary(
+                    cards=cards[:12] if len(cards) >= 3 else [
+                        SwipeableCard(title="Key Takeaway", content="Review the video for main insights", category="insight"),
+                        SwipeableCard(title="Action Item", content="Apply the learnings from this video", category="action"),
+                        SwipeableCard(title="Remember", content="Practice makes perfect", category="tip"),
+                    ]
+                )
+
+            logger.info(f"Generated cards summary: {len(result.cards)} cards")
+            return result
+
+        except Exception as e:
+            logger.error(f"Cards generation failed: {e}")
+            raise SummarizationFailedError(f"Failed to generate cards: {str(e)}")
 
 
 # Singleton instance
