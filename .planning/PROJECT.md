@@ -49,21 +49,28 @@ Turn video hoarding into action—users extract value from saved videos through 
 - PostgreSQL database for structured data
 - RevenueCat for subscription management (Apple IAP)
 
-**Video Processing Strategy:**
-- URL-based videos (TikTok/IG/YouTube): Extract metadata + transcript only, no video storage
-  - YouTube: Use YouTube API for captions when available
-  - TikTok/IG: On-device transcription (iOS 18+ Whisper, iOS 17 Apple Speech Framework), send transcript to backend
-- Camera-roll uploads: Upload → transcribe → summarize → immediately delete from server
-  - User retains original in Photos app
-  - Store only transcript + summaries
+**Video Processing Strategy (v1):**
+- **Camera-roll uploads** (including downloaded TikTok/IG/YouTube Shorts):
+  - iOS uploads video/audio file to backend
+  - Backend transcribes via OpenAI Whisper API or AssemblyAI
+  - Backend deletes file immediately after transcription
+  - Store only transcript + summaries + metadata
+- **YouTube URLs:**
+  - Backend fetches captions via youtube-transcript-api (no API key needed)
+  - If no captions available, show "Transcript unavailable" message
+- **TikTok/Instagram URLs:** **DEFERRED TO v2**
+  - Requires macOS 14+ for WhisperKit toolchain (dev machine is macOS 13)
+  - For v1, users download TikTok/IG videos to camera roll and upload from there
 
 **AI Stack:**
-- OpenAI Whisper for audio transcription (camera-roll uploads)
+- OpenAI Whisper API or AssemblyAI for audio transcription (camera-roll uploads only)
+- youtube-transcript-api for YouTube captions (free, no API key)
 - Anthropic Claude for summaries, tags, habit extraction, weekly synthesis
 
 **Privacy-First:**
 - Minimal server-side video storage (transcripts and metadata only)
-- On-device processing where possible (TikTok/IG transcription)
+- Video files deleted immediately after transcription
+- v2 will add on-device WhisperKit transcription for TikTok/IG URLs
 
 ## Constraints
 
@@ -80,10 +87,12 @@ Turn video hoarding into action—users extract value from saved videos through 
 |----------|-----------|---------|
 | SwiftUI native (not React Native) | Best iOS performance, access to latest Apple frameworks, pure native experience | — Pending |
 | Transcript-only storage for URL videos | Privacy-friendly, cost-efficient, lean architecture | — Pending |
-| Hybrid transcription (YouTube API + on-device) | Leverage free captions when available, on-device for privacy on TikTok/IG | — Pending |
+| Server-side transcription for v1 | macOS 13 dev environment cannot build WhisperKit (requires macOS 14+) | — Active |
+| TikTok/IG URL support deferred to v2 | On-device WhisperKit requires macOS 14+ toolchain; users download to camera roll for v1 | — Active |
+| youtube-transcript-api for YouTube | No API key needed, free captions, handles rate limits gracefully | — Active |
 | RevenueCat for subscriptions | Simplifies IAP implementation, handles receipt validation, analytics | — Pending |
 | Python/FastAPI backend | Team familiarity, excellent async support, good LLM integration ecosystem | — Pending |
 | Free tier at 10 videos/month | Enough to prove value without being punitive, drives Pro conversion | — Pending |
 
 ---
-*Last updated: 2026-01-18 after initialization*
+*Last updated: 2026-01-23 - deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)*

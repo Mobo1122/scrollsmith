@@ -24,21 +24,21 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Video Capture
 
-- [ ] **CAPT-01**: User can upload video from camera roll via PhotosPicker
+- [ ] **CAPT-01**: User can upload video from camera roll via PhotosPicker (including downloaded Reels/Shorts)
 - [ ] **CAPT-02**: App requests camera roll access permission with clear purpose
 - [ ] **CAPT-03**: App shows error message if non-video media selected
 - [ ] **CAPT-04**: User can preview video thumbnail before processing
-- [ ] **CAPT-05**: User can paste TikTok/Instagram/YouTube URL to import video
-- [ ] **CAPT-06**: App validates URL format and shows error for invalid links
+- [ ] **CAPT-05**: User can paste YouTube URL to fetch captions (TikTok/IG URL deferred to v2)
+- [ ] **CAPT-06**: App validates YouTube URL format and shows error for invalid links
 - [ ] **CAPT-07**: User can share video to Scrollsmith via iOS Share Sheet from other apps
-- [ ] **CAPT-08**: App transcribes TikTok/Instagram URLs on-device (WhisperKit iOS 18+, Apple Speech iOS 17)
-- [ ] **CAPT-09**: App transcribes camera roll uploads via backend (OpenAI Whisper API)
-- [ ] **CAPT-10**: App fetches YouTube captions via YouTube Data API when available
+- [x] **CAPT-08**: ~~On-device transcription~~ **DEFERRED TO v2** (requires macOS 14+ for WhisperKit toolchain)
+- [ ] **CAPT-09**: App transcribes camera roll uploads via backend (OpenAI Whisper API or AssemblyAI)
+- [ ] **CAPT-10**: App fetches YouTube captions via youtube-transcript-api when available
 - [ ] **CAPT-11**: App shows progress indicator during video upload
 - [ ] **CAPT-12**: App shows progress indicator during transcription
 - [ ] **CAPT-13**: App handles network errors during upload with retry option
-- [ ] **CAPT-14**: App handles YouTube API rate limit errors gracefully with fallback
-- [ ] **CAPT-15**: App stores transcript and metadata only (no permanent video storage for URL imports)
+- [ ] **CAPT-14**: App shows "Transcript unavailable" for YouTube videos without captions (no fallback in v1)
+- [ ] **CAPT-15**: App stores transcript and metadata only (no permanent video storage)
 - [ ] **CAPT-16**: App deletes uploaded video file from server after transcription completes
 
 ### Summarization
@@ -132,6 +132,16 @@ Requirements for initial release. Each maps to roadmap phases.
 
 Deferred to future release. Tracked but not in current roadmap.
 
+### TikTok/Instagram URL Support (v2)
+
+- **TIKT-01**: User can paste TikTok URL to import video
+- **TIKT-02**: User can paste Instagram Reels URL to import video
+- **TIKT-03**: iOS downloads media from TikTok/IG URLs on-device
+- **TIKT-04**: iOS transcribes TikTok/IG videos on-device using WhisperKit (iOS 17+)
+- **TIKT-05**: iOS fallback to Apple Speech Framework for older devices
+
+**Note:** Requires macOS 14+ development environment for WhisperKit toolchain. For v1, users should download TikTok/IG videos to camera roll and upload from there.
+
 ### Weekly Synthesis
 
 - **SYNT-01**: App generates weekly digest email summarizing saved content patterns
@@ -192,4 +202,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-01-18*
-*Last updated: 2026-01-18 after initial definition*
+*Last updated: 2026-01-23 - deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)*

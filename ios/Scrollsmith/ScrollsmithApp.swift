@@ -4,6 +4,11 @@ import SwiftData
 @main
 struct ScrollsmithApp: App {
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var uploadQueueService = UploadQueueService.shared
+    @Environment(\.scenePhase) private var scenePhase
+
+    /// Shared model container for extension communication.
+    private let sharedContainer = SharedModelContainer.shared
 
     init() {
         // Clear stale Keychain items on first launch after reinstall
@@ -15,8 +20,24 @@ struct ScrollsmithApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(authViewModel)
+                .environmentObject(uploadQueueService)
+                .onAppear {
+                    // Configure upload queue with shared container
+                    let context = sharedContainer.mainContext
+                    uploadQueueService.configure(with: context)
+                }
+                .onChange(of: scenePhase) { _, newPhase in
+                    if newPhase == .active {
+                        // Process pending uploads when app becomes active
+                        Task {
+                            await uploadQueueService.refreshPendingCount()
+                            await uploadQueueService.processQueue()
+                        }
+                    }
+                }
         }
-        .modelContainer(for: [User.self, Video.self, Habit.self, Playbook.self])
+        // Use shared container for PendingUpload, regular container for other models
+        .modelContainer(sharedContainer)
     }
 
     /// Clear Keychain on first launch to handle reinstall edge case.

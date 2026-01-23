@@ -38,6 +38,15 @@ class Settings(BaseSettings):
     # Apple Sign In
     APPLE_BUNDLE_ID: str = "com.scrollsmith.app"
 
+    # YouTube Data API
+    YOUTUBE_API_KEY: Optional[str] = None
+
+    # OpenAI (Whisper transcription)
+    OPENAI_API_KEY: Optional[str] = None
+
+    # AssemblyAI (alternative transcription)
+    ASSEMBLYAI_API_KEY: Optional[str] = None
+
     @model_validator(mode="after")
     def build_database_url_from_pg_vars(self) -> "Settings":
         """Build DATABASE_URL from individual PG* variables if they exist."""

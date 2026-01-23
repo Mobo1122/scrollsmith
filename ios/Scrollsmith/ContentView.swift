@@ -15,8 +15,8 @@ struct ContentView: View {
                 AuthContainerView()
 
             case .authenticated:
-                // Show main app content
-                HomeView()
+                // Show main app content with tab navigation
+                MainTabView()
             }
         }
     }
@@ -103,16 +103,7 @@ struct HomeView: View {
                 Spacer()
             }
             .padding()
-            .navigationTitle("Scrollsmith")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Logout") {
-                        Task {
-                            await authViewModel.logout()
-                        }
-                    }
-                }
-            }
+            .navigationTitle("Home")
         }
     }
 

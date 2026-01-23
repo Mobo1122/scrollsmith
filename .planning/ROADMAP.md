@@ -13,8 +13,8 @@
 |---|-------|------|--------------|-------|
 | 1 | Foundation | Backend + iOS project scaffolding, database, deployment | 2 (INFR) | 4 plans |
 | 2 | Authentication | Email/password + Apple Sign In with verification and password reset | 12 (AUTH) | 0/6 |
-| 3 | Video Capture (iOS) | Camera roll, URL paste, Share Extension with permissions | 8 (CAPT) | 0/7 |
-| 4 | Transcription | On-device (WhisperKit/Speech) + backend (Whisper/YouTube API) | 8 (CAPT) | 0/6 |
+| 3 | Video Capture (iOS) | Camera roll, YouTube URL paste, Share Extension with permissions | 7 (CAPT) | 0/6 |
+| 4 | Transcription | Backend (Whisper/AssemblyAI) + YouTube captions (TikTok/IG deferred to v2) | 7 (CAPT) | 0/4 |
 | 5 | AI Summarization | Claude integration for bullets, steps, cards, tags | 11 (SUMM) | 0/7 |
 | 6 | Playbooks & Organization | CRUD Playbooks, video assignment, search, bulk operations | 12 (PLAY) | 0/6 |
 | 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 8 (SUMM subset) | 0/5 |
@@ -95,15 +95,21 @@ Plans:
 
 ### Phase 3: Video Capture (iOS)
 
-**Goal:** iOS video capture from camera roll, URL paste, and Share Extension with proper permissions
+**Goal:** iOS video capture from camera roll, YouTube URL paste, and Share Extension with proper permissions
+
+**v1 Scope:**
+- Camera roll uploads (including downloaded TikTok/IG videos saved to Photos)
+- YouTube URL paste for caption fetching
+- Share Extension for video files
+- **TikTok/IG URL paste deferred to v2** (requires macOS 14+ for WhisperKit toolchain)
 
 **Requirements:**
-- CAPT-01: Camera roll upload via PhotosPicker
+- CAPT-01: Camera roll upload via PhotosPicker (including downloaded Reels/Shorts)
 - CAPT-02: Camera roll permission request
 - CAPT-03: Non-video media error
 - CAPT-04: Video preview before processing
-- CAPT-05: URL paste
-- CAPT-06: URL validation
+- CAPT-05: YouTube URL paste only (TikTok/IG URL deferred to v2)
+- CAPT-06: YouTube URL validation
 - CAPT-07: Share Extension
 - CAPT-11: Upload progress indicator
 
@@ -111,58 +117,59 @@ Plans:
 1. User can select video from camera roll with permission prompt
 2. Non-video media shows clear error message
 3. User sees video thumbnail preview before confirming upload
-4. User can paste TikTok/IG/YouTube URL with format validation
-5. Share Extension receives videos from other apps and saves to App Group
-6. Upload progress shows percentage/spinner during file transfer
-7. Main app processes pending uploads from Share Extension on launch
+4. User can paste YouTube URL with format validation
+5. TikTok/IG URL input is hidden in v1 (users download to camera roll instead)
+6. Share Extension receives videos from other apps and saves to App Group
+7. Upload progress shows percentage/spinner during file transfer
+8. Main app processes pending uploads from Share Extension on launch
 
 **Dependencies:** Phase 2 (auth required to associate videos with users)
 
-**Plans:** 0/7
+**Plans:** 0/6
 - [ ] iOS: PhotosPicker integration with permission handling
 - [ ] iOS: Video preview UI with thumbnail generation
-- [ ] iOS: URL input with regex validation for TikTok/IG/YouTube patterns
+- [ ] iOS: YouTube-only URL input (TikTok/IG hidden for v1)
 - [ ] iOS: Share Extension target with App Group configuration
 - [ ] iOS: SwiftData shared container for pending uploads
 - [ ] iOS: Upload progress UI with cancellation
-- [ ] iOS: Main app processing of Share Extension queue
 
 ---
 
 ### Phase 4: Transcription
 
-**Goal:** Transcribe videos via on-device (WhisperKit/Speech) for TikTok/IG, backend (Whisper API) for uploads, YouTube API for captions
+**Goal:** Transcribe camera roll uploads via backend (Whisper/AssemblyAI), fetch YouTube captions when available
+
+**v1 Scope (simplified due to macOS 13 dev environment):**
+- Camera roll uploads: iOS uploads video → Backend transcribes via Whisper/AssemblyAI → Delete video
+- YouTube URLs: Fetch captions via youtube-transcript-api → Show "unavailable" if no captions
+- **TikTok/IG URL transcription deferred to v2** (requires macOS 14+ for WhisperKit toolchain)
 
 **Requirements:**
-- CAPT-08: On-device transcription (WhisperKit iOS 18+, Speech iOS 17)
-- CAPT-09: Backend transcription (OpenAI Whisper API)
-- CAPT-10: YouTube captions via API
+- CAPT-08: ~~On-device transcription~~ **DEFERRED TO v2**
+- CAPT-09: Backend transcription (OpenAI Whisper API or AssemblyAI)
+- CAPT-10: YouTube captions via youtube-transcript-api
 - CAPT-12: Transcription progress indicator
 - CAPT-13: Network error handling with retry
-- CAPT-14: YouTube API rate limit fallback
+- CAPT-14: Show "Transcript unavailable" for YouTube videos without captions
 - CAPT-15: Transcript-only storage
 - CAPT-16: Delete uploaded video after transcription
-- INFR-03: OpenAI Whisper API integration
-- INFR-05: YouTube Data API integration
+- INFR-03: OpenAI Whisper API or AssemblyAI integration
 
 **Success Criteria:**
-1. iOS 18+ devices transcribe TikTok/IG videos using WhisperKit on-device
-2. iOS 17 devices fall back to Apple Speech Framework
-3. Camera roll uploads send audio to backend, which transcribes via Whisper API and deletes audio file
-4. YouTube URLs fetch captions via YouTube Data API when available
-5. YouTube API quota errors fall back to on-device transcription with user notification
-6. Transcription progress shows spinner/percentage
-7. Only transcripts (not video files) are stored permanently in database
+1. Camera roll uploads send video/audio to backend, which transcribes and deletes file
+2. YouTube URLs fetch captions via youtube-transcript-api (no API key needed)
+3. YouTube videos without captions show "Transcript unavailable" message
+4. Transcription progress shows spinner/percentage during upload and processing
+5. Only transcripts (not video files) are stored permanently in database
+6. TikTok/IG URL paste UI is hidden in v1 (users download to camera roll instead)
 
 **Dependencies:** Phase 3 (video capture must exist first)
 
-**Plans:** 0/6
-- [ ] iOS: WhisperKit integration for iOS 18+ with model selection (tiny/base)
-- [ ] iOS: Apple Speech Framework fallback for iOS 17
-- [ ] iOS: Audio extraction from video using AVFoundation
-- [ ] Backend: OpenAI Whisper API integration with audio file cleanup
-- [ ] Backend: YouTube Data API integration for caption fetching
-- [ ] Backend: Error handling for API rate limits with fallback logic
+**Plans:** 0/4
+- [ ] Backend: Video file upload endpoint with Whisper/AssemblyAI transcription
+- [ ] Backend: YouTube caption fetching (already implemented via youtube-transcript-api)
+- [ ] iOS: Video file upload to backend with progress indicator
+- [ ] iOS: Update UI to show YouTube-only URL support, hide TikTok/IG
 
 ---
 
@@ -456,5 +463,19 @@ All 85 v1 requirements are now mapped to phases 1-12.
 
 ---
 
+## v2 Features (Deferred)
+
+The following features are deferred to v2 due to macOS 14+ requirement for WhisperKit toolchain:
+
+### TikTok/Instagram URL Support
+- User can paste TikTok/Instagram URL to import video
+- iOS downloads media from TikTok/IG URLs on-device
+- iOS transcribes TikTok/IG videos on-device using WhisperKit (iOS 17+)
+- iOS fallback to Apple Speech Framework for older devices
+
+**TODO for v2:** Add TikTok/IG URL → device-side download + WhisperKit transcription once dev env is on macOS 14+
+
+---
+
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-19 after Phase 1 planning*
+*Last updated: 2026-01-23 - deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)*
