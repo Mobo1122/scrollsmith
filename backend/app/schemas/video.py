@@ -65,6 +65,14 @@ class SummarizeRequest(BaseModel):
     )
 
 
+class TranscriptQuality(BaseModel):
+    """Transcript quality assessment."""
+    quality: Literal["good", "marginal", "poor"]
+    word_count: int
+    warnings: List[str] = Field(default_factory=list)
+    recommendation: Optional[str] = None
+
+
 class SummarizeResponse(BaseModel):
     """Response from summarize endpoint."""
     video_id: UUID
@@ -72,3 +80,7 @@ class SummarizeResponse(BaseModel):
     cached: bool = Field(description="Whether this was retrieved from cache")
     summary: dict = Field(description="Summary content (structure depends on format)")
     tags: Optional[List[str]] = None
+    transcript_quality: Optional[TranscriptQuality] = Field(
+        None,
+        description="Quality assessment of transcript (included if quality is marginal/poor)"
+    )

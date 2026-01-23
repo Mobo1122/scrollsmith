@@ -22,6 +22,7 @@ from app.schemas.video import (
     VideoListResponse,
     SummarizeRequest,
     SummarizeResponse,
+    TranscriptQuality,
 )
 from app.services.youtube_captions import (
     youtube_captions_service,
@@ -299,6 +300,20 @@ async def summarize_video(
             detail="Video has no transcript. Transcription must complete first."
         )
 
+    # Check transcript quality and warn if marginal
+    quality_info = summarization_service.check_transcript_quality(video.transcript)
+    quality_warning = None
+
+    if quality_info["quality"] in ["marginal", "poor"]:
+        quality_warning = TranscriptQuality(**quality_info)
+        logger.warning(
+            f"Video {video_id} has {quality_info['quality']} transcript quality: "
+            f"{quality_info['warnings']}"
+        )
+
+    # Poor quality transcripts are blocked by _validate_transcript in service
+    # Marginal quality transcripts proceed with warning
+
     # Tier-based feature gating for Pro formats
     if request.format in ["steps", "cards"]:
         if current_user.subscription_tier == "free":
@@ -336,6 +351,7 @@ async def summarize_video(
                 cached=True,
                 summary=cached_data,
                 tags=tags,
+                transcript_quality=quality_warning,
             )
 
     # Generate summary based on format
@@ -362,6 +378,7 @@ async def summarize_video(
                 cached=False,
                 summary=summary.model_dump(),
                 tags=summary.tags,
+                transcript_quality=quality_warning,
             )
 
         elif request.format == "steps":
@@ -393,6 +410,7 @@ async def summarize_video(
                 cached=False,
                 summary=summary_dict,
                 tags=tags,
+                transcript_quality=quality_warning,
             )
 
         elif request.format == "cards":
@@ -424,6 +442,7 @@ async def summarize_video(
                 cached=False,
                 summary=summary_dict,
                 tags=tags,
+                transcript_quality=quality_warning,
             )
 
     except TranscriptTooShortError as e:
