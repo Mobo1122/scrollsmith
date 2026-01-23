@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 6 of 12 (Playbooks & Organization) - COMPLETE
 **Goal:** CRUD Playbooks, video assignment, search, deletion, and bulk operations
-**Progress:** 100% (6/6 plans)
-**Plans:** 6/6 complete
+**Progress:** 100% (7/7 plans)
+**Plans:** 7/7 complete
 
 ## Milestone Progress
 
@@ -41,7 +41,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
-| 6 - Playbooks & Organization | ✓ Complete | 6/6 plans |
+| 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
@@ -49,7 +49,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █████░░░░░ 54% (32/59 plans)
+**Overall Progress:** █████░░░░░ 55% (33/60 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,7 +63,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
-- 2026-01-23: **Completed Phase 6 Playbooks & Organization** (6/6 plans)
+- 2026-01-23: **Completed Phase 6 Playbooks & Organization** (7/7 plans)
+- 2026-01-23: Completed Plan 06-07 iOS Video UI (3 tasks, 6min)
 - 2026-01-23: Completed Plan 06-06 iOS Playbook UI (3 tasks, 4min)
 - 2026-01-23: Completed Plan 06-05 Bulk Operations API (3 tasks, 8min)
 - 2026-01-23: Completed Plan 06-04 Video Search & Organization API (4 tasks)
@@ -142,6 +143,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | @Observable for PlaybookViewModel | 06-06 | iOS 17+ macro simpler than ObservableObject | ✓ Implemented |
 | lastSelectedPlaybookId | 06-06 | 'Remember last selected' behavior for batch operations | ✓ Implemented |
 | Horizontal chip picker | 06-06 | Quick Playbook selection without navigation | ✓ Implemented |
+| Long-press for selection mode | 06-07 | Standard iOS pattern (Photos app) | ✓ Implemented |
+| 250ms search debounce | 06-07 | Balance responsiveness vs API load | ✓ Implemented |
+| FlowLayout for tag chips | 06-07 | Natural wrapping of tag chips | ✓ Implemented |
+| 20 tag maximum | 06-07 | Prevent UI clutter, reasonable limit | ✓ Implemented |
 
 ## Next Actions
 
