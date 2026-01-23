@@ -117,6 +117,76 @@ class SummarizationService:
                 f"Transcript too short for summarization: {word_count} words (minimum {min_words})"
             )
 
+    def check_transcript_quality(self, transcript: str) -> dict:
+        """Check transcript quality and return warnings if needed.
+
+        Quality indicators:
+        - Word count (below 100 = too short, 100-200 = marginal, 200+ = good)
+        - Average word length (very short words may indicate poor transcription)
+        - Punctuation ratio (lack of punctuation suggests incoherent text)
+        - Repetition patterns (high repetition = poor audio quality)
+
+        Args:
+            transcript: Transcript text to check
+
+        Returns:
+            Dict with quality assessment:
+            {
+                "quality": "good" | "marginal" | "poor",
+                "word_count": int,
+                "warnings": list[str],
+                "recommendation": str | None
+            }
+        """
+        words = transcript.split()
+        word_count = len(words)
+
+        warnings = []
+        quality = "good"
+        recommendation = None
+
+        # Word count checks
+        if word_count < 100:
+            quality = "poor"
+            warnings.append(f"Transcript is very short ({word_count} words)")
+            recommendation = "Try a longer video or check audio quality"
+        elif word_count < 200:
+            quality = "marginal"
+            warnings.append(f"Transcript is short ({word_count} words)")
+            recommendation = "Summary quality may be limited"
+
+        # Average word length (very short = potential transcription errors)
+        if words:
+            avg_word_length = sum(len(w) for w in words) / len(words)
+            if avg_word_length < 3:
+                quality = "marginal" if quality == "good" else "poor"
+                warnings.append("Transcript contains many very short words (possible transcription errors)")
+
+        # Punctuation check (coherent text should have some punctuation)
+        punctuation_count = sum(1 for c in transcript if c in '.,!?;:')
+        if word_count > 50 and punctuation_count < word_count * 0.01:  # Less than 1% punctuation
+            quality = "marginal" if quality == "good" else "poor"
+            warnings.append("Transcript lacks punctuation (may be incoherent)")
+
+        # Repetition detection (simple: check if any 5-word phrase repeats 3+ times)
+        if word_count > 50:
+            phrases = [' '.join(words[i:i+5]) for i in range(len(words)-4)]
+            phrase_counts: dict[str, int] = {}
+            for phrase in phrases:
+                phrase_counts[phrase] = phrase_counts.get(phrase, 0) + 1
+
+            max_repetition = max(phrase_counts.values()) if phrase_counts else 0
+            if max_repetition >= 3:
+                quality = "marginal" if quality == "good" else "poor"
+                warnings.append("High repetition detected (potential audio loop or poor quality)")
+
+        return {
+            "quality": quality,
+            "word_count": word_count,
+            "warnings": warnings,
+            "recommendation": recommendation
+        }
+
     async def generate_bullet_summary(
         self,
         transcript: str,
