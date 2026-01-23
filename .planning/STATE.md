@@ -8,7 +8,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 5 AI Summarization
+**Current focus:** Phase 6 Playbooks & Organization
 
 ## Architecture Note (2026-01-23)
 
@@ -21,18 +21,18 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Current Phase
 
-**Phase:** 5 of 12 (AI Summarization)
-**Goal:** Generate bullet-point summaries from transcripts using Claude API
-**Progress:** 86% (6/7 plans)
-**Plans:** 6/7 complete
+**Phase:** 6 of 12 (Playbooks & Organization)
+**Goal:** CRUD Playbooks, video assignment, search, deletion, and bulk operations
+**Progress:** 0% (0/6 plans)
+**Plans:** 0/6 complete
 
 ## Milestone Progress
 
 **Milestone:** v1
 **Total Phases:** 12
-**Completed:** 4
+**Completed:** 5
 **In Progress:** 1
-**Pending:** 7
+**Pending:** 6
 
 | Phase | Status | Progress |
 |-------|--------|----------|
@@ -40,8 +40,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 2 - Authentication | ✓ Complete | 6/6 plans |
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
-| 5 - AI Summarization | ◐ In Progress | 6/7 plans |
-| 6 - Playbooks & Organization | ○ Pending | 0/6 plans |
+| 5 - AI Summarization | ✓ Complete | 6/6 plans |
+| 6 - Playbooks & Organization | ◐ In Progress | 0/6 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
@@ -51,22 +51,19 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Overall Progress:** ████░░░░░░ 44% (26/59 plans)
 
+*Note: Phase 5 had 6 plans (not 7 as originally estimated)*
+
 ## Requirements Coverage
 
 **Total v1 Requirements:** 85
 **Mapped to Phases:** 85
 **In Progress:** 0
-**Completed:** 36 (INFR-01 through INFR-05, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, TRANS-01 through TRANS-04)
+**Completed:** 44 (INFR-01 through INFR-05, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, TRANS-01 through TRANS-04, SUMM-01 through SUMM-04, SUMM-09 through SUMM-11, INFR-04)
 **Unmapped:** 0 ✓
 
 ## Recent Activity
 
-- 2026-01-23: **Completed Plan 05-06** Manual Summary Editing (PATCH endpoint, user_edited_summary flag)
-- 2026-01-23: **Completed Plan 05-05** Quality Detection & Regeneration (heuristic quality check, warnings in response)
-- 2026-01-23: **Completed Plan 05-04** Pro Format Generation Methods (Sonnet for steps/cards, auto-tag generation)
-- 2026-01-23: **Completed Plan 05-03** Pro Summary Fields & Tier Gating (Video model + 403 for free users)
-- 2026-01-23: **Completed Plan 05-02** Bullet Summary Generation (POST /videos/{id}/summarize endpoint)
-- 2026-01-23: **Completed Plan 05-01** Claude API Foundation (AsyncAnthropic + Pydantic schemas)
+- 2026-01-23: **Completed Phase 5 AI Summarization** (6/6 plans, all 8 requirements verified)
 - 2026-01-23: **Completed Phase 4 Transcription** (server-side v1 architecture)
 - 2026-01-23: Connected Railway to GitHub for auto-deploy
 - 2026-01-23: Architecture change: Deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)
@@ -128,14 +125,15 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Next Actions
 
-**Primary:** Phase 5 AI Summarization
-**Goal:** Generate bullet-point summaries from transcripts
+**Primary:** Phase 6 Playbooks & Organization
+**Goal:** CRUD Playbooks, video assignment, search, deletion, and bulk operations
 **Tasks:**
-1. Add GPT-4 summarization endpoint to backend
-2. Create summary generation service
-3. Update Video model with summary fields
-4. Add iOS summary display UI
-5. Integrate summarization into transcription flow
+1. Backend: Playbook CRUD API endpoints
+2. Backend: PostgreSQL full-text search indexes (GIN)
+3. Backend: Bulk operations API (delete, move)
+4. iOS: Playbook list and detail views
+5. iOS: Video grid with selection mode
+6. iOS: Search UI with real-time results
 
 ## Manual Xcode Setup Required
 
