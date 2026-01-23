@@ -58,6 +58,10 @@ class Video(Base):
         Text,
         nullable=True,
     )
+    user_edited_summary: Mapped[bool] = mapped_column(
+        default=False,
+        nullable=False,
+    )
     tags: Mapped[Optional[List[str]]] = mapped_column(
         ARRAY(String),
         nullable=True,

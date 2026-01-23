@@ -40,6 +40,7 @@ class VideoResponse(BaseModel):
     summary_bullets: Optional[str] = None
     summary_steps: Optional[str] = None
     summary_cards: Optional[str] = None
+    user_edited_summary: bool = False
     tags: Optional[List[str]] = None
     created_at: datetime
 
