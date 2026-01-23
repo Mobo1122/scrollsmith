@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 5 of 12 (AI Summarization)
 **Goal:** Generate bullet-point summaries from transcripts using Claude API
-**Progress:** 14% (1/7 plans)
-**Plans:** 1/7 complete
+**Progress:** 29% (2/7 plans)
+**Plans:** 2/7 complete
 
 ## Milestone Progress
 
@@ -40,7 +40,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 2 - Authentication | ✓ Complete | 6/6 plans |
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
-| 5 - AI Summarization | ◐ In Progress | 1/7 plans |
+| 5 - AI Summarization | ◐ In Progress | 2/7 plans |
 | 6 - Playbooks & Organization | ○ Pending | 0/6 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
@@ -49,7 +49,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ███░░░░░░░ 36% (21/59 plans)
+**Overall Progress:** ███░░░░░░░ 37% (22/59 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: **Completed Plan 05-02** Bullet Summary Generation (POST /videos/{id}/summarize endpoint)
 - 2026-01-23: **Completed Plan 05-01** Claude API Foundation (AsyncAnthropic + Pydantic schemas)
 - 2026-01-23: **Completed Phase 4 Transcription** (server-side v1 architecture)
 - 2026-01-23: Connected Railway to GitHub for auto-deploy
@@ -110,6 +111,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Railway GitHub auto-deploy | 04-01 | Connected Railway to GitHub with root dir set to `backend` | ✓ Implemented |
 | AsyncAnthropic for Claude API | 05-01 | Non-blocking async client for FastAPI compatibility | ✓ Implemented |
 | tenacity for API retries | 05-01 | Exponential backoff with jitter for rate limit handling | ✓ Implemented |
+| Claude Haiku 4.5 for free tier | 05-02 | Cost efficiency ($1/$5 per MTok) for bullet summaries | ✓ Implemented |
+| Summary caching in Video model | 05-02 | Avoid redundant API calls, store in summary_bullets + tags | ✓ Implemented |
 
 ## Next Actions
 
