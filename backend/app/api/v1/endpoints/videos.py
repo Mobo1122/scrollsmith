@@ -9,7 +9,7 @@ from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
-from sqlalchemy import select, func, text
+from sqlalchemy import select, func, text, delete as sa_delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_db
@@ -30,6 +30,11 @@ from app.schemas.video import (
     VideoPlaybooksResponse,
     VideoUpdateTagsRequest,
     VideoUpdateTagsResponse,
+    BulkDeleteRequest,
+    BulkDeleteResponse,
+    BulkMoveRequest,
+    BulkMoveResponse,
+    BulkAddToFavoritesRequest,
 )
 from app.schemas.summary import BulletSummary, StepChecklist, CardsSummary
 from app.services.youtube_captions import (
@@ -614,6 +619,118 @@ async def update_summary(
     return video
 
 
+@router.post("/{video_id}/playbooks", response_model=VideoPlaybooksResponse, status_code=status.HTTP_201_CREATED)
+async def assign_video_to_playbook(
+    video_id: UUID,
+    request: VideoAssignPlaybookRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> VideoPlaybooksResponse:
+    """Assign a video to a Playbook.
+
+    Videos can belong to multiple Playbooks (many-to-many).
+    """
+    # Verify video exists and belongs to user
+    video_result = await db.execute(
+        select(Video).where(Video.id == video_id, Video.user_id == current_user.id)
+    )
+    video = video_result.scalar_one_or_none()
+    if video is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Video not found")
+
+    # Verify Playbook exists and belongs to user
+    playbook_result = await db.execute(
+        select(Playbook).where(Playbook.id == request.playbook_id, Playbook.user_id == current_user.id)
+    )
+    playbook = playbook_result.scalar_one_or_none()
+    if playbook is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Playbook not found")
+
+    # Add association (INSERT ... ON CONFLICT DO NOTHING)
+    await db.execute(
+        text("""
+            INSERT INTO video_playbooks (video_id, playbook_id)
+            VALUES (:video_id, :playbook_id)
+            ON CONFLICT DO NOTHING
+        """),
+        {"video_id": video_id, "playbook_id": request.playbook_id}
+    )
+
+    # Update Playbook's updated_at for sorting
+    await db.execute(
+        text("UPDATE playbooks SET updated_at = now() WHERE id = :playbook_id"),
+        {"playbook_id": request.playbook_id}
+    )
+
+    await db.commit()
+
+    # Get all Playbook IDs for this video
+    playbook_ids_result = await db.execute(
+        text("SELECT playbook_id FROM video_playbooks WHERE video_id = :video_id"),
+        {"video_id": video_id}
+    )
+    playbook_ids = [row[0] for row in playbook_ids_result.fetchall()]
+
+    logger.info(f"Assigned video {video_id} to playbook {request.playbook_id}")
+
+    return VideoPlaybooksResponse(video_id=video_id, playbook_ids=playbook_ids)
+
+
+@router.delete("/{video_id}/playbooks/{playbook_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def remove_video_from_playbook(
+    video_id: UUID,
+    playbook_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> None:
+    """Remove a video from a Playbook.
+
+    Video remains in system, just unassigned from this Playbook.
+    """
+    # Verify video belongs to user
+    video_result = await db.execute(
+        select(Video).where(Video.id == video_id, Video.user_id == current_user.id)
+    )
+    if video_result.scalar_one_or_none() is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Video not found")
+
+    # Remove association
+    await db.execute(
+        text("""
+            DELETE FROM video_playbooks
+            WHERE video_id = :video_id AND playbook_id = :playbook_id
+        """),
+        {"video_id": video_id, "playbook_id": playbook_id}
+    )
+    await db.commit()
+
+    logger.info(f"Removed video {video_id} from playbook {playbook_id}")
+
+
+@router.get("/{video_id}/playbooks", response_model=VideoPlaybooksResponse)
+async def get_video_playbooks(
+    video_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> VideoPlaybooksResponse:
+    """Get all Playbooks a video belongs to."""
+    # Verify video belongs to user
+    video_result = await db.execute(
+        select(Video).where(Video.id == video_id, Video.user_id == current_user.id)
+    )
+    if video_result.scalar_one_or_none() is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Video not found")
+
+    # Get Playbook IDs
+    playbook_ids_result = await db.execute(
+        text("SELECT playbook_id FROM video_playbooks WHERE video_id = :video_id"),
+        {"video_id": video_id}
+    )
+    playbook_ids = [row[0] for row in playbook_ids_result.fetchall()]
+
+    return VideoPlaybooksResponse(video_id=video_id, playbook_ids=playbook_ids)
+
+
 @router.get("/search", response_model=VideoSearchResponse)
 async def search_videos(
     q: str = Query(..., min_length=1, max_length=200, description="Search query"),
@@ -803,3 +920,55 @@ async def delete_video(
     await db.commit()
 
     logger.info(f"Deleted video {video_id} for user {current_user.id}")
+
+
+# ============================================================
+# Bulk Operations
+# ============================================================
+
+
+@router.post("/bulk-delete", response_model=BulkDeleteResponse)
+async def bulk_delete_videos(
+    request: BulkDeleteRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> BulkDeleteResponse:
+    """Delete multiple videos at once.
+
+    Only deletes videos owned by the current user.
+    Returns count of actually deleted videos.
+    Maximum 100 videos per request.
+
+    Operation is atomic - either all succeed or all fail.
+
+    Args:
+        request: List of video IDs to delete (1-100)
+
+    Returns:
+        Count and IDs of actually deleted videos
+
+    Raises:
+        404: No matching videos found
+    """
+    # Use SQLAlchemy bulk delete for efficiency
+    stmt = sa_delete(Video).where(
+        Video.id.in_(request.video_ids),
+        Video.user_id == current_user.id
+    ).returning(Video.id)
+
+    result = await db.execute(stmt, execution_options={"synchronize_session": False})
+    deleted_ids = [row[0] for row in result.fetchall()]
+    await db.commit()
+
+    if not deleted_ids:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No matching videos found"
+        )
+
+    logger.info(f"Bulk deleted {len(deleted_ids)} videos for user {current_user.id}")
+
+    return BulkDeleteResponse(
+        deleted_count=len(deleted_ids),
+        video_ids=deleted_ids,
+    )
