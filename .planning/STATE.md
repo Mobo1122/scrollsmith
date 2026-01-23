@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 6 of 12 (Playbooks & Organization)
 **Goal:** CRUD Playbooks, video assignment, search, deletion, and bulk operations
-**Progress:** 33% (2/6 plans)
-**Plans:** 2/6 complete
+**Progress:** 67% (4/6 plans)
+**Plans:** 4/6 complete
 
 ## Milestone Progress
 
@@ -41,7 +41,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
-| 6 - Playbooks & Organization | ◐ In Progress | 2/6 plans |
+| 6 - Playbooks & Organization | ◐ In Progress | 4/6 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
@@ -49,7 +49,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ████░░░░░░ 47% (28/59 plans)
+**Overall Progress:** █████░░░░░ 51% (30/59 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,6 +63,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: Completed Plan 06-04 Video Search & Organization API (4 tasks)
+- 2026-01-23: Completed Plan 06-03 Playbook CRUD API (3 tasks, 3min)
 - 2026-01-23: Completed Plan 06-02 iOS SwiftData Models (work in 06-01)
 - 2026-01-23: Completed Plan 06-01 Schema Migration (many-to-many + FTS)
 - 2026-01-23: **Completed Phase 5 AI Summarization** (6/6 plans, all 8 requirements verified)
@@ -128,19 +130,23 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | is_system flag on Playbook | 06-01 | Protects Favorites playbook from deletion | ✓ Implemented |
 | Weighted tsvector for search | 06-01 | tags=A, summary=B, transcript=C - prioritized full-text search | ✓ Implemented |
 | GIN index on search_vector | 06-01 | Sub-millisecond full-text search performance | ✓ Implemented |
+| ts_rank weighted search | 06-04 | Tags > Summary > Transcript priority for relevance | ✓ Implemented |
+| HTML mark highlighting | 06-04 | Use <mark> tags for search highlights - standard HTML5 | ✓ Implemented |
+| Tag normalization on update | 06-04 | Strip, dedupe, filter empty on PATCH /tags | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Phase 6 Playbooks & Organization (Plan 03)
-**Goal:** Playbook CRUD API endpoints
+**Primary:** Phase 6 Playbooks & Organization (Plan 05)
+**Goal:** Bulk operations API
 **Tasks:**
 1. ~~Backend: Schema migration (many-to-many + FTS)~~ - DONE (06-01)
 2. ~~iOS: SwiftData models update~~ - DONE (06-02, work in 06-01)
-3. Backend: Playbook CRUD API endpoints
-4. Backend: Bulk operations API (delete, move)
-5. iOS: Playbook list and detail views
-6. iOS: Video grid with selection mode
-7. iOS: Search UI with real-time results
+3. ~~Backend: Playbook CRUD API endpoints~~ - DONE (06-03)
+4. ~~Backend: Video search, assignment, tag editing~~ - DONE (06-04)
+5. Backend: Bulk operations API (delete, move)
+6. iOS: Playbook list and detail views
+7. iOS: Video grid with selection mode
+8. iOS: Search UI with real-time results
 
 ## Manual Xcode Setup Required
 
