@@ -63,6 +63,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: Completed Plan 07-01 Summary Models & ViewModel (3 tasks, 9min)
 - 2026-01-23: Completed Plan 07-02 Deep Links & Inline Player (2 tasks, 2min)
 - 2026-01-23: **Completed Phase 6 Playbooks & Organization** (7/7 plans)
 - 2026-01-23: Completed Plan 06-07 iOS Video UI (3 tasks, 6min)
@@ -150,6 +151,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 20 tag maximum | 06-07 | Prevent UI clutter, reasonable limit | ✓ Implemented |
 | HTTPS-only deep links | 07-02 | URL schemes change frequently; HTTPS reliably triggers app interception | ✓ Implemented |
 | Thumbnail-first video loading | 07-02 | Faster initial display, saves memory until playback requested | ✓ Implemented |
+| @Observable for SummaryViewModel | 07-01 | iOS 17+ macro, matches PlaybookViewModel pattern | ✓ Implemented |
+| UserDefaults for step completion | 07-01 | Simple per-video keying, no SwiftData overhead | ✓ Implemented |
+| CodingKeys for snake_case mapping | 07-01 | Explicit mapping over keyDecodingStrategy for clarity | ✓ Implemented |
+| parsedSteps/parsedCards computed | 07-01 | Lazy JSON parsing, nil-safe, no upfront decode | ✓ Implemented |
 
 ## Next Actions
 
