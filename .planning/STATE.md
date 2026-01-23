@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 5 of 12 (AI Summarization)
 **Goal:** Generate bullet-point summaries from transcripts using Claude API
-**Progress:** 57% (4/7 plans)
-**Plans:** 4/7 complete
+**Progress:** 71% (5/7 plans)
+**Plans:** 5/7 complete
 
 ## Milestone Progress
 
@@ -40,7 +40,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 2 - Authentication | ✓ Complete | 6/6 plans |
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
-| 5 - AI Summarization | ◐ In Progress | 4/7 plans |
+| 5 - AI Summarization | ◐ In Progress | 5/7 plans |
 | 6 - Playbooks & Organization | ○ Pending | 0/6 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
@@ -49,7 +49,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ████░░░░░░ 41% (24/59 plans)
+**Overall Progress:** ████░░░░░░ 42% (25/59 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: **Completed Plan 05-05** Quality Detection & Regeneration (heuristic quality check, warnings in response)
 - 2026-01-23: **Completed Plan 05-04** Pro Format Generation Methods (Sonnet for steps/cards, auto-tag generation)
 - 2026-01-23: **Completed Plan 05-03** Pro Summary Fields & Tier Gating (Video model + 403 for free users)
 - 2026-01-23: **Completed Plan 05-02** Bullet Summary Generation (POST /videos/{id}/summarize endpoint)
@@ -119,6 +120,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Structured 403 error response | 05-03 | UX: provides upgrade_url and format_requested for iOS upgrade prompt | ✓ Implemented |
 | Claude Sonnet for Pro formats | 05-04 | Better reasoning for complex step extraction and categorization | ✓ Implemented |
 | Auto-generate bullets for tags | 05-04 | Tags always from bullets - consistency across all formats | ✓ Implemented |
+| Heuristic quality detection | 05-05 | Simple word count/punctuation/repetition checks - no ML overhead | ✓ Implemented |
+| Quality warnings in response | 05-05 | iOS can show quality warning regardless of cache status | ✓ Implemented |
 
 ## Next Actions
 
