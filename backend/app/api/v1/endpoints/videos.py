@@ -731,6 +731,45 @@ async def get_video_playbooks(
     return VideoPlaybooksResponse(video_id=video_id, playbook_ids=playbook_ids)
 
 
+@router.patch("/{video_id}/tags", response_model=VideoUpdateTagsResponse)
+async def update_video_tags(
+    video_id: UUID,
+    request: VideoUpdateTagsRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> VideoUpdateTagsResponse:
+    """Update tags for a video.
+
+    Replaces all existing tags with the provided list.
+    Tags are used for organization and appear in full-text search with highest weight.
+    Maximum 20 tags per video.
+    """
+    # Verify video exists and belongs to user
+    video_result = await db.execute(
+        select(Video).where(Video.id == video_id, Video.user_id == current_user.id)
+    )
+    video = video_result.scalar_one_or_none()
+    if video is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Video not found")
+
+    # Normalize tags: strip whitespace, remove duplicates, filter empty
+    normalized_tags = list(dict.fromkeys(
+        tag.strip() for tag in request.tags if tag.strip()
+    ))
+
+    # Update video tags
+    video.tags = normalized_tags
+    await db.commit()
+    await db.refresh(video)
+
+    logger.info(f"Updated tags for video {video_id}: {normalized_tags}")
+
+    return VideoUpdateTagsResponse(
+        id=video.id,
+        tags=video.tags or [],
+    )
+
+
 @router.get("/search", response_model=VideoSearchResponse)
 async def search_videos(
     q: str = Query(..., min_length=1, max_length=200, description="Search query"),
