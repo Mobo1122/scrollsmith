@@ -13,6 +13,7 @@
 		A0000004 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000014 /* User.swift */; };
 		A0000005 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000015 /* Video.swift */; };
 		A000001A /* SummaryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000002A /* SummaryModels.swift */; };
+		A000001B /* SummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000002B /* SummaryViewModel.swift */; };
 		A0000006 /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000016 /* Habit.swift */; };
 		A0000007 /* Playbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000017 /* Playbook.swift */; };
 		A0000008 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000018 /* APIClient.swift */; };
@@ -90,6 +91,7 @@
 		A0000018 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		A0000019 /* HealthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthResponse.swift; sourceTree = "<group>"; };
 		A000002A /* SummaryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryModels.swift; sourceTree = "<group>"; };
+		A000002B /* SummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewModel.swift; sourceTree = "<group>"; };
 		CE2D7A5F2F20100A004CCAEF /* Scrollsmith.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Scrollsmith.entitlements; sourceTree = "<group>"; };
 		CE2D7A642F205D98004CCAEF /* ScrollsmithShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScrollsmithShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE2D7A692F205D99004CCAEF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 			isa = PBXGroup;
 			children = (
 				CE2D7AA12F206FCB004CCAEF /* AuthViewModel.swift */,
+				A000002B /* SummaryViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -398,6 +401,7 @@
 				CE2D7AB32F206FCB004CCAEF /* URLInputView.swift in Sources */,
 				A0000008 /* APIClient.swift in Sources */,
 				A000001A /* SummaryModels.swift in Sources */,
+				A000001B /* SummaryViewModel.swift in Sources */,
 				CE2D7ABA2F206FCB004CCAEF /* LoginView.swift in Sources */,
 				CE2D7AB42F206FCB004CCAEF /* VideoConfirmationSheet.swift in Sources */,
 				A0000009 /* HealthResponse.swift in Sources */,
