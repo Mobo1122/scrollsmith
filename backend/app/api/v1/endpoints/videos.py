@@ -9,11 +9,11 @@ from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
-from sqlalchemy import select, func
+from sqlalchemy import select, func, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_db
-from app.models import User, Video
+from app.models import User, Video, Playbook
 from app.schemas.video import (
     YouTubeCaptionsRequest,
     YouTubeCaptionsResponse,
@@ -24,6 +24,12 @@ from app.schemas.video import (
     SummarizeResponse,
     TranscriptQuality,
     UpdateSummaryRequest,
+    VideoSearchResult,
+    VideoSearchResponse,
+    VideoAssignPlaybookRequest,
+    VideoPlaybooksResponse,
+    VideoUpdateTagsRequest,
+    VideoUpdateTagsResponse,
 )
 from app.schemas.summary import BulletSummary, StepChecklist, CardsSummary
 from app.services.youtube_captions import (
@@ -606,6 +612,107 @@ async def update_summary(
     logger.info(f"Updated summary for video {video_id}: {', '.join(updates)} (user_edited=True)")
 
     return video
+
+
+@router.get("/search", response_model=VideoSearchResponse)
+async def search_videos(
+    q: str = Query(..., min_length=1, max_length=200, description="Search query"),
+    playbook_id: Optional[UUID] = Query(None, description="Limit search to specific Playbook"),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
+) -> VideoSearchResponse:
+    """Full-text search across videos.
+
+    Searches transcript, summary_bullets, and tags with weighted ranking:
+    - Tags: weight A (highest priority)
+    - Summary: weight B
+    - Transcript: weight C (lowest priority)
+
+    Results include highlighted matching text.
+    """
+    # Build search query with optional Playbook filter
+    if playbook_id:
+        search_query = text("""
+            SELECT v.id, v.source_url, v.summary_bullets, v.tags, v.created_at,
+                   ts_rank(v.search_vector, plainto_tsquery('english', :q)) AS rank,
+                   ts_headline('english', coalesce(v.transcript, ''), plainto_tsquery('english', :q),
+                       'MaxWords=30, MinWords=15, StartSel=<mark>, StopSel=</mark>') AS highlight
+            FROM videos v
+            JOIN video_playbooks vp ON vp.video_id = v.id
+            WHERE v.user_id = :user_id
+              AND v.search_vector @@ plainto_tsquery('english', :q)
+              AND vp.playbook_id = :playbook_id
+            ORDER BY rank DESC
+            LIMIT :limit OFFSET :skip
+        """)
+        params = {
+            "q": q,
+            "user_id": current_user.id,
+            "playbook_id": playbook_id,
+            "limit": limit,
+            "skip": skip,
+        }
+    else:
+        search_query = text("""
+            SELECT v.id, v.source_url, v.summary_bullets, v.tags, v.created_at,
+                   ts_rank(v.search_vector, plainto_tsquery('english', :q)) AS rank,
+                   ts_headline('english', coalesce(v.transcript, ''), plainto_tsquery('english', :q),
+                       'MaxWords=30, MinWords=15, StartSel=<mark>, StopSel=</mark>') AS highlight
+            FROM videos v
+            WHERE v.user_id = :user_id
+              AND v.search_vector @@ plainto_tsquery('english', :q)
+            ORDER BY rank DESC
+            LIMIT :limit OFFSET :skip
+        """)
+        params = {
+            "q": q,
+            "user_id": current_user.id,
+            "limit": limit,
+            "skip": skip,
+        }
+
+    result = await db.execute(search_query, params)
+    rows = result.mappings().all()
+
+    # Get total count
+    count_query = text("""
+        SELECT COUNT(*) FROM videos v
+        WHERE v.user_id = :user_id
+          AND v.search_vector @@ plainto_tsquery('english', :q)
+    """)
+    if playbook_id:
+        count_query = text("""
+            SELECT COUNT(*) FROM videos v
+            JOIN video_playbooks vp ON vp.video_id = v.id
+            WHERE v.user_id = :user_id
+              AND v.search_vector @@ plainto_tsquery('english', :q)
+              AND vp.playbook_id = :playbook_id
+        """)
+    count_result = await db.execute(count_query, {
+        "q": q,
+        "user_id": current_user.id,
+        "playbook_id": playbook_id,
+    } if playbook_id else {"q": q, "user_id": current_user.id})
+    total = count_result.scalar_one()
+
+    videos = [
+        VideoSearchResult(
+            id=row["id"],
+            source_url=row["source_url"],
+            summary_bullets=row["summary_bullets"],
+            tags=row["tags"],
+            created_at=row["created_at"],
+            rank=row["rank"],
+            highlight=row["highlight"],
+        )
+        for row in rows
+    ]
+
+    logger.info(f"Search '{q}' for user {current_user.id}: {total} results")
+
+    return VideoSearchResponse(videos=videos, query=q, total=total)
 
 
 @router.get("/{video_id}", response_model=VideoResponse)
