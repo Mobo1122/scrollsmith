@@ -22,9 +22,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 ## Current Phase
 
 **Phase:** 5 of 12 (AI Summarization)
-**Goal:** Generate bullet-point summaries from transcripts using GPT-4
-**Progress:** 0% (0/7 plans)
-**Plans:** 0/7 complete
+**Goal:** Generate bullet-point summaries from transcripts using Claude API
+**Progress:** 14% (1/7 plans)
+**Plans:** 1/7 complete
 
 ## Milestone Progress
 
@@ -40,7 +40,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 2 - Authentication | ✓ Complete | 6/6 plans |
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
-| 5 - AI Summarization | ◐ In Progress | 0/7 plans |
+| 5 - AI Summarization | ◐ In Progress | 1/7 plans |
 | 6 - Playbooks & Organization | ○ Pending | 0/6 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
@@ -49,7 +49,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ███░░░░░░░ 33% (20/59 plans)
+**Overall Progress:** ███░░░░░░░ 36% (21/59 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: **Completed Plan 05-01** Claude API Foundation (AsyncAnthropic + Pydantic schemas)
 - 2026-01-23: **Completed Phase 4 Transcription** (server-side v1 architecture)
 - 2026-01-23: Connected Railway to GitHub for auto-deploy
 - 2026-01-23: Architecture change: Deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)
@@ -79,12 +80,11 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Environment Variables (Railway)
 
-Add these to Railway for Phase 4 transcription:
-
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `OPENAI_API_KEY` | Yes* | OpenAI API key for Whisper transcription |
 | `ASSEMBLYAI_API_KEY` | No | AssemblyAI API key (fallback transcription) |
+| `ANTHROPIC_API_KEY` | Yes | Anthropic Claude API key for AI summarization |
 
 *At least one transcription API key is required for camera roll uploads to work.
 
@@ -108,6 +108,8 @@ Add these to Railway for Phase 4 transcription:
 | Server-side Whisper/AssemblyAI | 04-01 | Backend transcribes camera roll uploads, simpler iOS code | ✓ Implemented |
 | youtube-transcript-api | 04-05 | No API key required, no rate limits, instant captions | ✓ Implemented |
 | Railway GitHub auto-deploy | 04-01 | Connected Railway to GitHub with root dir set to `backend` | ✓ Implemented |
+| AsyncAnthropic for Claude API | 05-01 | Non-blocking async client for FastAPI compatibility | ✓ Implemented |
+| tenacity for API retries | 05-01 | Exponential backoff with jitter for rate limit handling | ✓ Implemented |
 
 ## Next Actions
 
