@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 6 of 12 (Playbooks & Organization)
 **Goal:** CRUD Playbooks, video assignment, search, deletion, and bulk operations
-**Progress:** 67% (4/6 plans)
-**Plans:** 4/6 complete
+**Progress:** 83% (5/6 plans)
+**Plans:** 5/6 complete
 
 ## Milestone Progress
 
@@ -41,7 +41,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 3 - Video Capture (iOS) | ✓ Complete | 6/6 plans (updated scope) |
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
-| 6 - Playbooks & Organization | ◐ In Progress | 4/6 plans |
+| 6 - Playbooks & Organization | ◐ In Progress | 5/6 plans |
 | 7 - Summary Display | ○ Pending | 0/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
@@ -49,7 +49,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █████░░░░░ 51% (30/59 plans)
+**Overall Progress:** █████░░░░░ 53% (31/59 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,6 +63,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: Completed Plan 06-05 Bulk Operations API (3 tasks, 8min)
 - 2026-01-23: Completed Plan 06-04 Video Search & Organization API (4 tasks)
 - 2026-01-23: Completed Plan 06-03 Playbook CRUD API (3 tasks, 3min)
 - 2026-01-23: Completed Plan 06-02 iOS SwiftData Models (work in 06-01)
@@ -133,20 +134,21 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | ts_rank weighted search | 06-04 | Tags > Summary > Transcript priority for relevance | ✓ Implemented |
 | HTML mark highlighting | 06-04 | Use <mark> tags for search highlights - standard HTML5 | ✓ Implemented |
 | Tag normalization on update | 06-04 | Strip, dedupe, filter empty on PATCH /tags | ✓ Implemented |
+| Bulk delete with RETURNING | 06-05 | Efficiently returns deleted IDs without separate query | ✓ Implemented |
+| ON CONFLICT DO NOTHING for bulk move | 06-05 | Idempotent bulk operations handle duplicates | ✓ Implemented |
+| Max 100 videos per bulk request | 06-05 | Prevents excessive load while allowing meaningful batches | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Phase 6 Playbooks & Organization (Plan 05)
-**Goal:** Bulk operations API
+**Primary:** Phase 6 Playbooks & Organization (Plan 06)
+**Goal:** iOS Playbook UI and search
 **Tasks:**
 1. ~~Backend: Schema migration (many-to-many + FTS)~~ - DONE (06-01)
 2. ~~iOS: SwiftData models update~~ - DONE (06-02, work in 06-01)
 3. ~~Backend: Playbook CRUD API endpoints~~ - DONE (06-03)
 4. ~~Backend: Video search, assignment, tag editing~~ - DONE (06-04)
-5. Backend: Bulk operations API (delete, move)
-6. iOS: Playbook list and detail views
-7. iOS: Video grid with selection mode
-8. iOS: Search UI with real-time results
+5. ~~Backend: Bulk operations API (delete, move)~~ - DONE (06-05)
+6. iOS: Playbook list and detail views, Video grid with selection mode, Search UI
 
 ## Manual Xcode Setup Required
 
