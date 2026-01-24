@@ -8,7 +8,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 7 Summary Display
+**Current focus:** Phase 8 Subscription System
 
 ## Architecture Note (2026-01-23)
 
@@ -21,17 +21,17 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Current Phase
 
-**Phase:** 7 of 12 (Summary Display) - IN PROGRESS
-**Goal:** Display AI summaries in iOS with multiple formats
-**Progress:** 80% (4/5 plans)
-**Plans:** 4/5 complete
+**Phase:** 8 of 12 (Subscription System) - PENDING
+**Goal:** Implement RevenueCat subscription and Pro tier gating
+**Progress:** 0% (0/8 plans)
+**Plans:** 0/8 complete
 
 ## Milestone Progress
 
 **Milestone:** v1
 **Total Phases:** 12
-**Completed:** 6
-**In Progress:** 1
+**Completed:** 7
+**In Progress:** 0
 **Pending:** 5
 
 | Phase | Status | Progress |
@@ -42,14 +42,14 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
 | 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
-| 7 - Summary Display | ◐ In Progress | 4/5 plans |
+| 7 - Summary Display | ✓ Complete | 5/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
 | 10 - Habit Tracking | ○ Pending | 0/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ██████░░░░ 62% (37/60 plans)
+**Overall Progress:** ██████░░░░ 63% (38/60 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,6 +63,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-24: **Completed Phase 7 Summary Display** (5/5 plans)
+- 2026-01-24: Completed Plan 07-05 Video Detail Integration (3 tasks, 5min)
 - 2026-01-24: Completed Plan 07-04 Swipeable Card View (2 tasks, 4min)
 - 2026-01-23: Completed Plan 07-03 Summary Display Views (2 tasks, 2min)
 - 2026-01-23: Completed Plan 07-01 Summary Models & ViewModel (3 tasks, 9min)
@@ -165,15 +167,18 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Rotation = offset/20 degrees | 07-04 | Subtle rotation effect follows drag direction | ✓ Implemented |
 | 1.5s toast duration | 07-04 | Long enough to read, short enough not to block | ✓ Implemented |
 | 2 background cards | 07-04 | Visual hint of remaining cards without clutter | ✓ Implemented |
+| Segmented control with lock icons | 07-05 | Shows all formats, gates access on selection | ✓ Implemented |
+| Blurred Pro teaser | 07-05 | "See more with Pro" for locked formats | ✓ Implemented |
+| isPro placeholder | 07-05 | Always false until Phase 8 wires RevenueCat | ✓ Implemented |
+| View Original FAB behavior split | 07-05 | YouTube/TikTok/IG deep link, camera roll inline player | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Phase 7 Summary Display (continuing)
-**Goal:** Display AI summaries in iOS with multiple formats
-**Remaining plans:**
-1. 07-05: Video detail integration
+**Primary:** Phase 8 Subscription System
+**Goal:** Implement RevenueCat subscription and Pro tier gating
+**Plans:** 8 plans pending
 
-**Completed:** Plans 07-01 (iOS models), 07-02 (deep links), 07-03 (bullets/steps views), 07-04 (swipeable cards)
+**Prerequisites:** Phase 7 Summary Display complete with Pro tier UI placeholders ready for Phase 8 integration.
 
 ## Manual Xcode Setup Required
 
