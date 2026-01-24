@@ -717,6 +717,27 @@ struct VideoDTO: Codable, Identifiable {
     let userEditedSummary: Bool?    // Indicates user edited the summary
     let tags: [String]?
     let createdAt: Date
+
+    // Memberwise init for Previews
+    init(
+        id: UUID,
+        sourceUrl: String? = nil,
+        summaryBullets: String? = nil,
+        summarySteps: String? = nil,
+        summaryCards: String? = nil,
+        userEditedSummary: Bool? = nil,
+        tags: [String]? = nil,
+        createdAt: Date = Date()
+    ) {
+        self.id = id
+        self.sourceUrl = sourceUrl
+        self.summaryBullets = summaryBullets
+        self.summarySteps = summarySteps
+        self.summaryCards = summaryCards
+        self.userEditedSummary = userEditedSummary
+        self.tags = tags
+        self.createdAt = createdAt
+    }
 }
 
 // MARK: - VideoDTO Parsing Helpers
