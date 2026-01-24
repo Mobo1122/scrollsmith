@@ -78,9 +78,9 @@ struct CardStackView: View {
         return RoundedRectangle(cornerRadius: 16)
             .fill(Color(.systemGray6))
             .frame(height: 280)
-            .scaleEffect(1 - (offset * 0.05))
+            .scaleEffect(1.0 - (offset * 0.05))
             .offset(y: offset * 8)
-            .opacity(1 - (offset * 0.3))
+            .opacity(Double(1.0 - (offset * 0.3)))
     }
 
     // MARK: - Action Buttons

@@ -60,7 +60,7 @@ struct PlaybookDetailView: View {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(videos) { video in
                     NavigationLink {
-                        SummaryDisplayView(video: video, isPro: false)
+                        SummaryDisplayView(video: video)
                     } label: {
                         VideoThumbnailCard(video: video)
                     }

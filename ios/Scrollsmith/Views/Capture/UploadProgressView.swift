@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 /// A view showing upload/processing progress.
 ///
@@ -127,7 +128,7 @@ struct PendingUploadRow: View {
             Label("Pending", systemImage: "clock")
                 .font(.caption2)
                 .foregroundColor(.orange)
-        case .processing:
+        case .downloading, .extractingAudio, .loadingModel, .transcribing, .saving:
             Label("Processing", systemImage: "arrow.triangle.2.circlepath")
                 .font(.caption2)
                 .foregroundColor(.blue)
@@ -146,6 +147,10 @@ struct PendingUploadRow: View {
 #Preview {
     VStack {
         UploadProgressView()
-        PendingUploadsListView()
     }
+}
+
+#Preview("Pending List") {
+    PendingUploadsListView()
+        .modelContainer(for: PendingUpload.self, inMemory: true)
 }

@@ -144,6 +144,8 @@ enum SpeechTranscriptionError: LocalizedError {
                 return "Speech recognition is restricted on this device"
             case .notDetermined:
                 return "Speech recognition permission not yet requested"
+            case .authorized:
+                return "Speech recognition is authorized"
             @unknown default:
                 return "Speech recognition not authorized"
             }

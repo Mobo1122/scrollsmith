@@ -4,7 +4,7 @@ import Foundation
 ///
 /// This is separate from the SwiftData User model as it represents
 /// the API response format, not the local database schema.
-struct UserResponse: Codable, Identifiable {
+struct UserResponse: Codable, Identifiable, Equatable {
     let id: UUID
     let email: String
     let emailVerified: Bool

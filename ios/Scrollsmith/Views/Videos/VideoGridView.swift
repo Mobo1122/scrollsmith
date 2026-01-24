@@ -42,7 +42,7 @@ struct VideoGridView: View {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(videos) { video in
                             NavigationLink {
-                                SummaryDisplayView(video: video, isPro: false)
+                                SummaryDisplayView(video: video)
                             } label: {
                                 VideoGridItem(
                                     video: video,
@@ -289,7 +289,7 @@ struct BulkMoveSheet: View {
                     onSelect(playbook)
                     dismiss()
                 } label: {
-                    PlaybookRow(playbook: playbook)
+                    MovePlaybookRow(playbook: playbook)
                 }
             }
             .navigationTitle("Move \(selectedCount) video\(selectedCount == 1 ? "" : "s")")
@@ -304,8 +304,8 @@ struct BulkMoveSheet: View {
     }
 }
 
-/// A row displaying a playbook with icon and video count.
-struct PlaybookRow: View {
+/// A row displaying a playbook with icon and video count (for move sheet).
+private struct MovePlaybookRow: View {
     let playbook: PlaybookDTO
 
     var body: some View {

@@ -9,8 +9,8 @@ import SwiftUI
 /// - View Original FAB always accessible
 struct SummaryDisplayView: View {
     let video: VideoDTO
-    let isPro: Bool  // Placeholder: always false until Phase 8
 
+    @EnvironmentObject private var subscriptionViewModel: SubscriptionViewModel
     @State private var viewModel = SummaryViewModel()
     @State private var showPaywall = false
     @State private var paywallFormat: SummaryFormat = .steps
@@ -38,7 +38,7 @@ struct SummaryDisplayView: View {
         }
         .onAppear {
             // Set default format
-            viewModel.currentFormat = viewModel.bestDefaultFormat(for: video, isPro: isPro)
+            viewModel.currentFormat = viewModel.bestDefaultFormat(for: video, isPro: subscriptionViewModel.isPro)
         }
     }
 
@@ -52,10 +52,10 @@ struct SummaryDisplayView: View {
             }
 
             // Steps - show for all, but check access on select
-            if video.summarySteps != nil || !isPro {
+            if video.summarySteps != nil || !subscriptionViewModel.isPro {
                 HStack {
                     Text("Steps")
-                    if !isPro {
+                    if !subscriptionViewModel.isPro {
                         Image(systemName: "lock.fill")
                             .font(.caption2)
                     }
@@ -64,10 +64,10 @@ struct SummaryDisplayView: View {
             }
 
             // Cards - show for all, but check access on select
-            if video.summaryCards != nil || !isPro {
+            if video.summaryCards != nil || !subscriptionViewModel.isPro {
                 HStack {
                     Text("Cards")
-                    if !isPro {
+                    if !subscriptionViewModel.isPro {
                         Image(systemName: "lock.fill")
                             .font(.caption2)
                     }
@@ -78,7 +78,7 @@ struct SummaryDisplayView: View {
         .pickerStyle(.segmented)
         .onChange(of: viewModel.currentFormat) { oldValue, newValue in
             // Check Pro access when switching to Pro formats
-            if !isPro && (newValue == .steps || newValue == .cards) {
+            if !subscriptionViewModel.isPro && (newValue == .steps || newValue == .cards) {
                 paywallFormat = newValue
                 showPaywall = true
                 // Revert to previous format
@@ -100,7 +100,7 @@ struct SummaryDisplayView: View {
             }
 
         case .steps:
-            if isPro, let checklist = video.parsedSteps {
+            if subscriptionViewModel.isPro, let checklist = video.parsedSteps {
                 StepChecklistView(
                     checklist: checklist,
                     videoId: video.id,
@@ -112,7 +112,7 @@ struct SummaryDisplayView: View {
             }
 
         case .cards:
-            if isPro, let cardsSummary = video.parsedCards {
+            if subscriptionViewModel.isPro, let cardsSummary = video.parsedCards {
                 CardStackView(cards: cardsSummary.cards)
             } else {
                 proTeaser(for: .cards)
@@ -246,8 +246,8 @@ extension SummaryDisplayView {
                 userEditedSummary: false,
                 tags: ["productivity", "habits"],
                 createdAt: Date()
-            ),
-            isPro: false
+            )
         )
+        .environmentObject(SubscriptionViewModel())
     }
 }

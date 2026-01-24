@@ -624,6 +624,39 @@ actor APIClient {
         return try decoder.decode(UpdateTagsResponse.self, from: data)
     }
 
+    // MARK: - Subscriptions
+
+    /// Fetches current user's usage and subscription status.
+    ///
+    /// Returns videos used this month, limit, and whether user can create more videos.
+    /// Backend will implement GET /api/v1/subscriptions/usage in Phase 8.
+    func fetchUsage() async throws -> UsageResponse {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/subscriptions/usage") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "GET"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(UsageResponse.self, from: data)
+    }
+
     // MARK: - Private
 
     private func getAccessToken() async -> String? {

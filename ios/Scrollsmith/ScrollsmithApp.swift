@@ -1,9 +1,11 @@
 import SwiftUI
 import SwiftData
+import RevenueCat
 
 @main
 struct ScrollsmithApp: App {
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var subscriptionViewModel = SubscriptionViewModel()
     @StateObject private var uploadQueueService = UploadQueueService.shared
     @Environment(\.scenePhase) private var scenePhase
 
@@ -20,11 +22,26 @@ struct ScrollsmithApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(authViewModel)
+                .environmentObject(subscriptionViewModel)
                 .environmentObject(uploadQueueService)
                 .onAppear {
                     // Configure upload queue with shared container
                     let context = sharedContainer.mainContext
                     uploadQueueService.configure(with: context)
+                }
+                .onChange(of: authViewModel.currentUser) { _, newUser in
+                    // Configure RevenueCat when user logs in
+                    if let userId = newUser?.id {
+                        Task {
+                            await SubscriptionService.shared.configure(userId: userId)
+                            await subscriptionViewModel.refresh()
+                        }
+                    } else {
+                        // User logged out - reset subscription state
+                        Task {
+                            await SubscriptionService.shared.reset()
+                        }
+                    }
                 }
                 .onChange(of: scenePhase) { _, newPhase in
                     if newPhase == .active {
@@ -32,7 +49,17 @@ struct ScrollsmithApp: App {
                         Task {
                             await uploadQueueService.refreshPendingCount()
                             await uploadQueueService.processQueue()
+
+                            // Refresh subscription status
+                            if authViewModel.currentUser != nil {
+                                await subscriptionViewModel.refresh()
+                            }
                         }
+                    }
+                }
+                .sheet(isPresented: $subscriptionViewModel.showPaywall) {
+                    NavigationStack {
+                        ScrollsmithPaywallView()
                     }
                 }
         }

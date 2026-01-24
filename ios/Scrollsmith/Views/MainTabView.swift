@@ -50,73 +50,11 @@ struct MainTabView: View {
     }
 }
 
-/// Settings view with user info and logout.
-struct SettingsView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
-
-    var body: some View {
-        NavigationStack {
-            List {
-                // User info section
-                if let user = authViewModel.currentUser {
-                    Section("Account") {
-                        HStack {
-                            Image(systemName: "person.circle.fill")
-                                .font(.title)
-                                .foregroundColor(.blue)
-                            VStack(alignment: .leading) {
-                                Text(user.email)
-                                    .font(.headline)
-                                if !user.emailVerified {
-                                    Label("Email not verified", systemImage: "exclamationmark.triangle")
-                                        .font(.caption)
-                                        .foregroundColor(.orange)
-                                }
-                            }
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-
-                // App section
-                Section("App") {
-                    NavigationLink {
-                        Text("About Scrollsmith")
-                    } label: {
-                        Label("About", systemImage: "info.circle")
-                    }
-
-                    NavigationLink {
-                        Text("Privacy Policy")
-                    } label: {
-                        Label("Privacy Policy", systemImage: "hand.raised")
-                    }
-
-                    NavigationLink {
-                        Text("Terms of Service")
-                    } label: {
-                        Label("Terms of Service", systemImage: "doc.text")
-                    }
-                }
-
-                // Logout section
-                Section {
-                    Button(role: .destructive) {
-                        Task {
-                            await authViewModel.logout()
-                        }
-                    } label: {
-                        Label("Log Out", systemImage: "rectangle.portrait.and.arrow.right")
-                    }
-                }
-            }
-            .navigationTitle("Settings")
-        }
-    }
-}
+// SettingsView is now in Views/Settings/SettingsView.swift
 
 #Preview {
     MainTabView()
         .environmentObject(AuthViewModel())
+        .environmentObject(SubscriptionViewModel())
         .environmentObject(UploadQueueService.shared)
 }

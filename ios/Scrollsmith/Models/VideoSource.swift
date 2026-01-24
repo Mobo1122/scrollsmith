@@ -1,7 +1,7 @@
 import Foundation
 
 /// Represents the source platform of a video.
-enum VideoPlatform: String, Codable {
+enum VideoPlatform: String, Codable, Equatable {
     case tiktok
     case instagram
     case youtube
@@ -42,7 +42,7 @@ enum VideoPlatform: String, Codable {
 }
 
 /// Represents a video source, either a URL or local file.
-enum VideoSource {
+enum VideoSource: Equatable {
     case url(String, VideoPlatform)
     case localFile(URL)
 
