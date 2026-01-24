@@ -18,7 +18,7 @@
 | 5 | AI Summarization | Claude integration for bullets, steps, cards, tags | 11 (SUMM) | 6 plans |
 | 6 | Playbooks & Organization | CRUD Playbooks, video assignment, search, bulk operations | 12 (PLAY) | ✓ 7 plans |
 | 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 4 (SUMM-05 to SUMM-08) | ✓ 6 plans |
-| 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 13 (SUBS) | 0/8 |
+| 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 15 (SUBS + INFR) | 8 plans |
 | 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 0/5 |
 | 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | 0/7 |
 | 11 | Infrastructure & Polish | Analytics, crash reporting, webhook retry, error handling | 8 (INFR) | 0/6 |
@@ -321,15 +321,17 @@ Plans:
 
 **Dependencies:** Phase 2 (user accounts), Phase 5 (summary formats to gate)
 
-**Plans:** 0/8
-- [ ] Backend: RevenueCat webhook handler with signature verification
-- [ ] Backend: Subscription status API endpoint
-- [ ] Backend: Monthly usage tracking table and reset logic
-- [ ] iOS: RevenueCat SDK integration
-- [ ] iOS: StoreKit 2 product configuration in App Store Connect
-- [ ] iOS: Paywall UI with pricing display
-- [ ] iOS: Restore purchases button
-- [ ] iOS: Usage indicator in UI
+**Plans:** 8 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Backend usage tracking schema (Wave 1)
+- [ ] 08-02-PLAN.md — Backend RevenueCat webhook handler (Wave 1)
+- [ ] 08-03-PLAN.md — Backend usage API and limit enforcement (Wave 1)
+- [ ] 08-04-PLAN.md — iOS RevenueCat SDK integration (Wave 2)
+- [ ] 08-05-PLAN.md — iOS usage tracking ViewModel (Wave 2)
+- [ ] 08-06-PLAN.md — iOS paywall UI with RevenueCatUI (Wave 3)
+- [ ] 08-07-PLAN.md — iOS usage indicator and detail sheet (Wave 3)
+- [ ] 08-08-PLAN.md — iOS restore purchases and tier wiring (Wave 3)
 
 ---
 
@@ -486,4 +488,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-24 - Phase 7 Summary Display complete (6 plans)*
+*Last updated: 2026-01-24 - Phase 8 Subscription System planned (8 plans in 3 waves)*
