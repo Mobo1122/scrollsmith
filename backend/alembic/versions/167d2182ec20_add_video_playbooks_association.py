@@ -71,27 +71,53 @@ def upgrade() -> None:
     op.drop_index('ix_videos_playbook_id', 'videos')
     op.drop_column('videos', 'playbook_id')
 
-    # 5. Add search_vector generated column with weighted fields
-    # A=tags (most relevant), B=summary bullets, C=transcript (least relevant)
+    # 5. Add search_vector column (updated via trigger, not generated column)
+    # PostgreSQL requires IMMUTABLE functions for generated columns, but to_tsvector is STABLE
+    op.add_column(
+        'videos',
+        sa.Column('search_vector', postgresql.TSVECTOR(), nullable=True),
+    )
+
+    # 6. Create function to update search_vector
     op.execute("""
-        ALTER TABLE videos
-        ADD COLUMN search_vector tsvector
-        GENERATED ALWAYS AS (
-            setweight(to_tsvector('english', coalesce(array_to_string(tags, ' '), '')), 'A') ||
-            setweight(to_tsvector('english', coalesce(summary_bullets, '')), 'B') ||
-            setweight(to_tsvector('english', coalesce(transcript, '')), 'C')
-        ) STORED
+        CREATE OR REPLACE FUNCTION videos_search_vector_update() RETURNS trigger AS $$
+        BEGIN
+            NEW.search_vector :=
+                setweight(to_tsvector('english', coalesce(array_to_string(NEW.tags, ' '), '')), 'A') ||
+                setweight(to_tsvector('english', coalesce(NEW.summary_bullets, '')), 'B') ||
+                setweight(to_tsvector('english', coalesce(NEW.transcript, '')), 'C');
+            RETURN NEW;
+        END
+        $$ LANGUAGE plpgsql;
     """)
 
-    # 6. Create GIN index for fast full-text search
+    # 7. Create trigger to auto-update search_vector on INSERT/UPDATE
+    op.execute("""
+        CREATE TRIGGER videos_search_vector_trigger
+        BEFORE INSERT OR UPDATE ON videos
+        FOR EACH ROW EXECUTE FUNCTION videos_search_vector_update();
+    """)
+
+    # 8. Populate search_vector for existing rows
+    op.execute("""
+        UPDATE videos SET
+            search_vector =
+                setweight(to_tsvector('english', coalesce(array_to_string(tags, ' '), '')), 'A') ||
+                setweight(to_tsvector('english', coalesce(summary_bullets, '')), 'B') ||
+                setweight(to_tsvector('english', coalesce(transcript, '')), 'C');
+    """)
+
+    # 9. Create GIN index for fast full-text search
     op.execute("CREATE INDEX idx_videos_search ON videos USING GIN (search_vector)")
 
 
 def downgrade() -> None:
     """Downgrade schema: many-to-many -> one-to-many, remove full-text search."""
-    # 1. Drop search index and column
+    # 1. Drop search index, trigger, function, and column
     op.execute("DROP INDEX idx_videos_search")
-    op.execute("ALTER TABLE videos DROP COLUMN search_vector")
+    op.execute("DROP TRIGGER videos_search_vector_trigger ON videos")
+    op.execute("DROP FUNCTION videos_search_vector_update()")
+    op.drop_column('videos', 'search_vector')
 
     # 2. Re-add playbook_id column to videos
     op.add_column(
