@@ -41,16 +41,20 @@ struct VideoGridView: View {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(videos) { video in
-                            VideoGridItem(
-                                video: video,
-                                isSelected: selection.isSelected(video.id),
-                                isSelecting: selection.isSelecting
-                            )
+                            NavigationLink {
+                                SummaryDisplayView(video: video, isPro: false)
+                            } label: {
+                                VideoGridItem(
+                                    video: video,
+                                    isSelected: selection.isSelected(video.id),
+                                    isSelecting: selection.isSelecting
+                                )
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(selection.isSelecting)
                             .onTapGesture {
                                 if selection.isSelecting {
                                     selection.toggle(video.id)
-                                } else {
-                                    // Navigate to detail (Phase 7)
                                 }
                             }
                             .onLongPressGesture {
