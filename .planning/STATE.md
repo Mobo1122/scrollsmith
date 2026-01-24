@@ -1,6 +1,6 @@
 # State: Scrollsmith
 
-**Last Updated:** 2026-01-23
+**Last Updated:** 2026-01-24
 
 ## Project Reference
 
@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 7 of 12 (Summary Display) - IN PROGRESS
 **Goal:** Display AI summaries in iOS with multiple formats
-**Progress:** 60% (3/5 plans)
-**Plans:** 3/5 complete
+**Progress:** 80% (4/5 plans)
+**Plans:** 4/5 complete
 
 ## Milestone Progress
 
@@ -42,14 +42,14 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
 | 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
-| 7 - Summary Display | ◐ In Progress | 3/5 plans |
+| 7 - Summary Display | ◐ In Progress | 4/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
 | 10 - Habit Tracking | ○ Pending | 0/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ██████░░░░ 60% (36/60 plans)
+**Overall Progress:** ██████░░░░ 62% (37/60 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,6 +63,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-24: Completed Plan 07-04 Swipeable Card View (2 tasks, 4min)
 - 2026-01-23: Completed Plan 07-03 Summary Display Views (2 tasks, 2min)
 - 2026-01-23: Completed Plan 07-01 Summary Models & ViewModel (3 tasks, 9min)
 - 2026-01-23: Completed Plan 07-02 Deep Links & Inline Player (2 tasks, 2min)
@@ -160,16 +161,19 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 4pt line spacing | 07-03 | ADHD-friendly readability per RESEARCH.md | ✓ Implemented |
 | Timeline with step numbers | 07-03 | Shows number when incomplete, checkmark when done | ✓ Implemented |
 | Color-coded connecting lines | 07-03 | Green for completed, gray for pending steps | ✓ Implemented |
+| 120pt swipe threshold | 07-04 | Balance between intentional swipe and accidental trigger | ✓ Implemented |
+| Rotation = offset/20 degrees | 07-04 | Subtle rotation effect follows drag direction | ✓ Implemented |
+| 1.5s toast duration | 07-04 | Long enough to read, short enough not to block | ✓ Implemented |
+| 2 background cards | 07-04 | Visual hint of remaining cards without clutter | ✓ Implemented |
 
 ## Next Actions
 
 **Primary:** Phase 7 Summary Display (continuing)
 **Goal:** Display AI summaries in iOS with multiple formats
 **Remaining plans:**
-1. 07-04: Format switching and Pro tier gating
-2. 07-05: Video detail integration
+1. 07-05: Video detail integration
 
-**Completed:** Plans 07-01 (iOS models), 07-02 (deep links), 07-03 (bullets/steps views)
+**Completed:** Plans 07-01 (iOS models), 07-02 (deep links), 07-03 (bullets/steps views), 07-04 (swipeable cards)
 
 ## Manual Xcode Setup Required
 
