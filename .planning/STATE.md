@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 7 of 12 (Summary Display) - IN PROGRESS
 **Goal:** Display AI summaries in iOS with multiple formats
-**Progress:** 40% (2/5 plans)
-**Plans:** 2/5 complete
+**Progress:** 60% (3/5 plans)
+**Plans:** 3/5 complete
 
 ## Milestone Progress
 
@@ -42,14 +42,14 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
 | 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
-| 7 - Summary Display | ◐ In Progress | 2/5 plans |
+| 7 - Summary Display | ◐ In Progress | 3/5 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
 | 10 - Habit Tracking | ○ Pending | 0/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ██████░░░░ 58% (35/60 plans)
+**Overall Progress:** ██████░░░░ 60% (36/60 plans)
 
 *Note: Phase 5 had 6 plans (not 7 as originally estimated)*
 
@@ -63,6 +63,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-23: Completed Plan 07-03 Summary Display Views (2 tasks, 2min)
 - 2026-01-23: Completed Plan 07-01 Summary Models & ViewModel (3 tasks, 9min)
 - 2026-01-23: Completed Plan 07-02 Deep Links & Inline Player (2 tasks, 2min)
 - 2026-01-23: **Completed Phase 6 Playbooks & Organization** (7/7 plans)
@@ -155,17 +156,20 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | UserDefaults for step completion | 07-01 | Simple per-video keying, no SwiftData overhead | ✓ Implemented |
 | CodingKeys for snake_case mapping | 07-01 | Explicit mapping over keyDecodingStrategy for clarity | ✓ Implemented |
 | parsedSteps/parsedCards computed | 07-01 | Lazy JSON parsing, nil-safe, no upfront decode | ✓ Implemented |
+| Circle bullet indicators | 07-03 | Colored circles (accentColor) for visual hierarchy | ✓ Implemented |
+| 4pt line spacing | 07-03 | ADHD-friendly readability per RESEARCH.md | ✓ Implemented |
+| Timeline with step numbers | 07-03 | Shows number when incomplete, checkmark when done | ✓ Implemented |
+| Color-coded connecting lines | 07-03 | Green for completed, gray for pending steps | ✓ Implemented |
 
 ## Next Actions
 
 **Primary:** Phase 7 Summary Display (continuing)
 **Goal:** Display AI summaries in iOS with multiple formats
 **Remaining plans:**
-1. 07-03: Summary display views (bullets, steps, cards)
-2. 07-04: Format switching and Pro tier gating
-3. 07-05: Video detail integration
+1. 07-04: Format switching and Pro tier gating
+2. 07-05: Video detail integration
 
-**Completed:** Plans 07-01 (iOS models) and 07-02 (deep links)
+**Completed:** Plans 07-01 (iOS models), 07-02 (deep links), 07-03 (bullets/steps views)
 
 ## Manual Xcode Setup Required
 
