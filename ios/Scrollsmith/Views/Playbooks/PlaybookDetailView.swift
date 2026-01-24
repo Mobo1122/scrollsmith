@@ -59,7 +59,12 @@ struct PlaybookDetailView: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(videos) { video in
-                    VideoThumbnailCard(video: video)
+                    NavigationLink {
+                        SummaryDisplayView(video: video, isPro: false)
+                    } label: {
+                        VideoThumbnailCard(video: video)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             .padding()
@@ -85,9 +90,6 @@ struct PlaybookDetailView: View {
 // MARK: - VideoThumbnailCard
 
 /// A card displaying a video thumbnail with optional tags.
-///
-/// Note: This is a placeholder implementation. Full video display
-/// will be enhanced in Phase 7 (Summary Display).
 struct VideoThumbnailCard: View {
     let video: VideoDTO
 
