@@ -9,7 +9,7 @@ actor SubscriptionService {
     static let shared = SubscriptionService()
 
     private var isConfigured = false
-    private let entitlementID = "pro"
+    private let entitlementID = "Scrollsmith Pro"
     private let apiKey = "test_mVpCDZKcwncLwtHIsjlmGAWbTag"
 
     private init() {}
@@ -52,7 +52,7 @@ actor SubscriptionService {
     /// Returns cached result from RevenueCat SDK (refreshed every ~5 minutes).
     /// Fails closed - returns false on error to avoid granting access incorrectly.
     ///
-    /// - Returns: True if "pro" entitlement is active, false otherwise
+    /// - Returns: True if "Scrollsmith Pro" entitlement is active, false otherwise
     func isPro() async -> Bool {
         guard isConfigured else { return false }
 
