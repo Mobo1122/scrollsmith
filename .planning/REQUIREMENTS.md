@@ -186,7 +186,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CAPT-08 to CAPT-10, CAPT-12 to CAPT-16, INFR-03, INFR-05 | Phase 4 | Complete |
 | SUMM-01 to SUMM-04, SUMM-09 to SUMM-11, INFR-04 | Phase 5 | Complete |
 | PLAY-01 to PLAY-12 | Phase 6 | Complete |
-| SUMM-05 to SUMM-08 | Phase 7 | Pending |
+| SUMM-05 to SUMM-08 | Phase 7 | Complete |
 | SUBS-01 to SUBS-13, INFR-06 to INFR-07 | Phase 8 | Pending |
 | HABT-01 to HABT-04 | Phase 9 | Pending |
 | HABT-05 to HABT-17 | Phase 10 | Pending |
@@ -200,4 +200,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-01-18*
-*Last updated: 2026-01-23 - deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)*
+*Last updated: 2026-01-24 - Phase 7 Summary Display complete*
