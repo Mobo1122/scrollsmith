@@ -17,7 +17,7 @@
 | 4 | Transcription | Backend (Whisper/AssemblyAI) + YouTube captions (TikTok/IG deferred to v2) | 7 (CAPT) | 0/4 |
 | 5 | AI Summarization | Claude integration for bullets, steps, cards, tags | 11 (SUMM) | 6 plans |
 | 6 | Playbooks & Organization | CRUD Playbooks, video assignment, search, bulk operations | 12 (PLAY) | ✓ 7 plans |
-| 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 4 (SUMM-05 to SUMM-08) | 5 plans |
+| 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 4 (SUMM-05 to SUMM-08) | 6 plans |
 | 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 13 (SUBS) | 0/8 |
 | 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 0/5 |
 | 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | 0/7 |
@@ -274,14 +274,15 @@ Plans:
 
 **Dependencies:** Phase 5 (summaries must exist), Phase 8 (Pro tier check)
 
-**Plans:** 5 plans
+**Plans:** 6 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — iOS Summary models + SummaryViewModel (Wave 1)
-- [ ] 07-02-PLAN.md — DeepLinkService + InlineVideoPlayerView (Wave 1)
-- [ ] 07-03-PLAN.md — BulletSummaryView + StepChecklistView (Wave 2)
-- [ ] 07-04-PLAN.md — CardStackView + SwipeableCardView (Wave 2)
-- [ ] 07-05-PLAN.md — SummaryDisplayView container + Pro tier gating (Wave 3)
+- [x] 07-01-PLAN.md — iOS Summary models + SummaryViewModel (Wave 1)
+- [x] 07-02-PLAN.md — DeepLinkService + InlineVideoPlayerView (Wave 1)
+- [x] 07-03-PLAN.md — BulletSummaryView + StepChecklistView (Wave 2)
+- [x] 07-04-PLAN.md — CardStackView + SwipeableCardView (Wave 2)
+- [x] 07-05-PLAN.md — SummaryDisplayView container + Pro tier gating (Wave 3)
+- [ ] 07-06-PLAN.md — Navigation integration (gap closure)
 
 ---
 
@@ -485,4 +486,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-23 - Phase 7 planned (5 plans in 3 waves)*
+*Last updated: 2026-01-24 - Phase 7 gap closure plan added (6 plans total)*

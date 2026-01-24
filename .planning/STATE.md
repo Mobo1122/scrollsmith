@@ -8,7 +8,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 8 Subscription System
+**Current focus:** Phase 7 Gap Closure (Navigation Integration)
 
 ## Architecture Note (2026-01-23)
 
@@ -21,17 +21,17 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Current Phase
 
-**Phase:** 8 of 12 (Subscription System) - PENDING
-**Goal:** Implement RevenueCat subscription and Pro tier gating
-**Progress:** 0% (0/8 plans)
-**Plans:** 0/8 complete
+**Phase:** 7 of 12 (Summary Display) - GAP CLOSURE
+**Goal:** Wire navigation from video grid/playbook to SummaryDisplayView
+**Progress:** 5/6 plans (gap closure plan 07-06 pending)
+**Plans:** 5/6 complete
 
 ## Milestone Progress
 
 **Milestone:** v1
 **Total Phases:** 12
-**Completed:** 7
-**In Progress:** 0
+**Completed:** 6
+**In Progress:** 1 (Phase 7 gap closure)
 **Pending:** 5
 
 | Phase | Status | Progress |
@@ -42,27 +42,28 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 4 - Transcription | ✓ Complete | 4/4 plans (server-side v1) |
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
 | 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
-| 7 - Summary Display | ✓ Complete | 5/5 plans |
+| 7 - Summary Display | ◐ Gap Closure | 5/6 plans (navigation gap) |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
 | 9 - Habit Extraction | ○ Pending | 0/5 plans |
 | 10 - Habit Tracking | ○ Pending | 0/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ██████░░░░ 63% (38/60 plans)
+**Overall Progress:** ██████░░░░ 63% (38/61 plans)
 
-*Note: Phase 5 had 6 plans (not 7 as originally estimated)*
+*Note: Phase 7 now has 6 plans (gap closure added)*
 
 ## Requirements Coverage
 
 **Total v1 Requirements:** 85
 **Mapped to Phases:** 85
-**In Progress:** 0
+**In Progress:** 4 (SUMM-05 through SUMM-08 blocked by navigation gap)
 **Completed:** 44 (INFR-01 through INFR-05, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, TRANS-01 through TRANS-04, SUMM-01 through SUMM-04, SUMM-09 through SUMM-11, INFR-04)
 **Unmapped:** 0 ✓
 
 ## Recent Activity
 
+- 2026-01-24: **Phase 7 Verification** found navigation gap - Plan 07-06 created
 - 2026-01-24: **Completed Phase 7 Summary Display** (5/5 plans)
 - 2026-01-24: Completed Plan 07-05 Video Detail Integration (3 tasks, 5min)
 - 2026-01-24: Completed Plan 07-04 Swipeable Card View (2 tasks, 4min)
@@ -174,11 +175,11 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Next Actions
 
-**Primary:** Phase 8 Subscription System
-**Goal:** Implement RevenueCat subscription and Pro tier gating
-**Plans:** 8 plans pending
+**Primary:** Execute Plan 07-06 (Navigation Integration - Gap Closure)
+**Goal:** Wire navigation from VideoGridView and PlaybookDetailView to SummaryDisplayView
+**Plans:** 1 plan pending
 
-**Prerequisites:** Phase 7 Summary Display complete with Pro tier UI placeholders ready for Phase 8 integration.
+**After Gap Closure:** Phase 8 Subscription System (8 plans)
 
 ## Manual Xcode Setup Required
 
