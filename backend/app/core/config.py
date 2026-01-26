@@ -50,6 +50,13 @@ class Settings(BaseSettings):
     # Anthropic Claude API (AI summarization)
     ANTHROPIC_API_KEY: Optional[str] = None
 
+    # RevenueCat (subscriptions)
+    REVENUECAT_WEBHOOK_AUTH_KEY: Optional[str] = None
+    REVENUECAT_API_KEY: Optional[str] = None
+
+    # Free tier limits
+    FREE_TIER_VIDEO_LIMIT: int = 10
+
     @model_validator(mode="after")
     def build_database_url_from_pg_vars(self) -> "Settings":
         """Build DATABASE_URL from individual PG* variables if they exist."""

@@ -5,14 +5,17 @@ TikTok/Instagram URL support deferred to v2 (requires WhisperKit on iOS).
 """
 
 import logging
+from datetime import datetime, timezone
 from typing import Optional
 from uuid import UUID
 
+from dateutil.relativedelta import relativedelta
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
 from sqlalchemy import select, func, text, delete as sa_delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_db
+from app.core.config import settings
 from app.models import User, Video, Playbook
 from app.schemas.video import (
     YouTubeCaptionsRequest,
@@ -63,6 +66,73 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/videos", tags=["videos"])
 
 
+# ============================================================
+# Usage Limit Helpers
+# ============================================================
+
+
+def _get_next_reset_date() -> datetime:
+    """Calculate the 1st of next month at midnight UTC."""
+    now = datetime.now(timezone.utc)
+    return (now + relativedelta(months=1)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+
+def _check_and_reset_usage(user: User) -> None:
+    """Reset usage counter if past reset date (in-place mutation)."""
+    if user.subscription_tier == "pro":
+        return
+
+    now = datetime.now(timezone.utc)
+
+    # Initialize reset date if not set
+    if user.usage_reset_date is None:
+        user.usage_reset_date = _get_next_reset_date()
+        return
+
+    # Reset if past reset date
+    if now >= user.usage_reset_date:
+        user.videos_this_month = 0
+        user.usage_reset_date = _get_next_reset_date()
+        logger.info(f"Reset usage for user {user.id}")
+
+
+def _enforce_usage_limit(user: User) -> None:
+    """Check if user has exceeded their video limit.
+
+    Raises HTTPException 403 if free user has reached 10 videos/month.
+    Pro users are unlimited.
+    """
+    if user.subscription_tier == "pro":
+        return  # Pro users have unlimited videos
+
+    _check_and_reset_usage(user)
+
+    if user.videos_this_month >= settings.FREE_TIER_VIDEO_LIMIT:
+        logger.info(f"User {user.id} blocked: {user.videos_this_month}/{settings.FREE_TIER_VIDEO_LIMIT} videos")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail={
+                "error": "usage_limit_exceeded",
+                "message": f"You've reached your monthly limit of {settings.FREE_TIER_VIDEO_LIMIT} videos. Upgrade to Pro for unlimited videos.",
+                "videos_this_month": user.videos_this_month,
+                "videos_limit": settings.FREE_TIER_VIDEO_LIMIT,
+                "upgrade_url": "/subscribe/pro",
+            }
+        )
+
+
+def _increment_usage(user: User) -> None:
+    """Increment usage counter for free users after successful video creation."""
+    if user.subscription_tier != "pro":
+        user.videos_this_month += 1
+        logger.info(f"User {user.id} usage: {user.videos_this_month}/{settings.FREE_TIER_VIDEO_LIMIT}")
+
+
+# ============================================================
+# Video Endpoints
+# ============================================================
+
+
 @router.post("/transcribe", response_model=VideoResponse, status_code=status.HTTP_201_CREATED)
 async def transcribe_audio(
     audio: UploadFile = File(..., description="Audio file to transcribe (M4A, MP3, WAV)"),
@@ -82,7 +152,13 @@ async def transcribe_audio(
 
     Returns:
         Video record with transcript
+
+    Raises:
+        403: Free tier limit exceeded
     """
+    # Check usage limits before processing
+    _enforce_usage_limit(current_user)
+
     # Validate file type
     allowed_types = ["audio/m4a", "audio/x-m4a", "audio/mp4", "audio/mpeg", "audio/wav", "audio/x-wav"]
     content_type = audio.content_type or ""
@@ -135,6 +211,10 @@ async def transcribe_audio(
             transcript=transcript,
         )
         db.add(video)
+
+        # Increment usage counter for free users
+        _increment_usage(current_user)
+
         await db.commit()
         await db.refresh(video)
 
@@ -177,7 +257,13 @@ async def get_youtube_captions(
 
     v1: Returns captions if available. If no captions, returns error.
     v2 TODO: Add fallback to on-device WhisperKit transcription.
+
+    Raises:
+        403: Free tier limit exceeded
     """
+    # Check usage limits before processing
+    _enforce_usage_limit(current_user)
+
     try:
         caption_text, metadata = await youtube_captions_service.get_captions(request.url)
 
@@ -188,6 +274,10 @@ async def get_youtube_captions(
             transcript=caption_text,
         )
         db.add(video)
+
+        # Increment usage counter for free users
+        _increment_usage(current_user)
+
         await db.commit()
         await db.refresh(video)
 
@@ -241,13 +331,23 @@ async def create_video(
     """Create a video record with transcript from iOS.
 
     v2 TODO: Used for on-device transcription results from WhisperKit.
+
+    Raises:
+        403: Free tier limit exceeded
     """
+    # Check usage limits before processing
+    _enforce_usage_limit(current_user)
+
     video = Video(
         user_id=current_user.id,
         source_url=request.source_url,
         transcript=request.transcript,
     )
     db.add(video)
+
+    # Increment usage counter for free users
+    _increment_usage(current_user)
+
     await db.commit()
     await db.refresh(video)
 

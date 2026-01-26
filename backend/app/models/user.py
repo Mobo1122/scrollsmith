@@ -43,6 +43,16 @@ class User(Base):
         nullable=False,
     )
 
+    # Usage tracking (free tier limits)
+    videos_this_month: Mapped[int] = mapped_column(
+        default=0,
+        nullable=False,
+    )
+    usage_reset_date: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
     # Email verification
     email_verified: Mapped[bool] = mapped_column(
         Boolean,

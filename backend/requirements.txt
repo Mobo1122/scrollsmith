@@ -28,3 +28,6 @@ aiohttp>=3.9.0
 # AI Summarization (Phase 5)
 anthropic>=0.70.0
 tenacity>=8.2.0
+
+# Subscription & Usage (Phase 8)
+python-dateutil>=2.8.0
