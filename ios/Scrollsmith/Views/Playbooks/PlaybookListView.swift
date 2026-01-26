@@ -69,11 +69,61 @@ struct PlaybookListView: View {
 
     private var playbookList: some View {
         List {
-            // Favorites at top (system Playbook)
+            // All Videos at the very top
+            Section {
+                NavigationLink {
+                    VideoGridView()
+                        .navigationTitle("All Videos")
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "rectangle.stack")
+                            .foregroundStyle(.blue)
+                            .font(.title2)
+                            .frame(width: 32)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("All Videos")
+                                .font(.headline)
+                            Text("View all your videos")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                }
+            }
+
+            // Favorites (system Playbook)
             if let favorites = viewModel.favoritesPlaybook {
                 NavigationLink(destination: PlaybookDetailView(playbook: favorites)) {
                     PlaybookRow(playbook: favorites)
                 }
+            }
+
+            // Uncategorized videos
+            NavigationLink {
+                VideoGridView(playbookId: nil, showUncategorized: true)
+                    .navigationTitle("Uncategorized")
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "tray")
+                        .foregroundStyle(.secondary)
+                        .font(.title2)
+                        .frame(width: 32)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Uncategorized")
+                            .font(.headline)
+                        Text("Videos not in any playbook")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+                }
+                .contentShape(Rectangle())
             }
 
             // User Playbooks
