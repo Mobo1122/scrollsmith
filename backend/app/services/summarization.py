@@ -282,8 +282,12 @@ class SummarizationService:
                     # Last resort: treat each non-empty line as a bullet
                     bullets = [l.strip() for l in lines if l.strip() and not l.lower().startswith('tag')][:10]
 
+                # Ensure minimum 3 bullets for BulletSummary validation
+                if len(bullets) < 3:
+                    bullets = bullets + ["Content could not be fully parsed"] * (3 - len(bullets))
+
                 result = BulletSummary(
-                    bullets=bullets[:10] if bullets else ["Summary could not be parsed"],
+                    bullets=bullets[:10],
                     tags=tags[:8] if tags else ["video"]
                 )
 
