@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 10 of 12 (Habit Tracking)
 **Goal:** Notifications, completions, streaks, visualization
-**Progress:** 3/7 plans
-**Plans:** 3/7 complete
+**Progress:** 4/7 plans
+**Plans:** 4/7 complete
 
 ## Milestone Progress
 
@@ -45,11 +45,11 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 7 - Summary Display | ✓ Complete | 6/6 plans |
 | 8 - Subscription System | ✓ Complete | 8/8 plans |
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
-| 10 - Habit Tracking | ◐ In Progress | 3/7 plans |
+| 10 - Habit Tracking | ◐ In Progress | 4/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ███████░░░ 80% (49/61 plans)
+**Overall Progress:** ████████░░ 82% (50/61 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-26: Completed Plan 10-05 iOS Habit Completion & Update APIs (3 tasks, 11min)
 - 2026-01-26: Completed Plan 10-03 Habit Completion Endpoints (2 tasks, 2min)
 - 2026-01-26: Completed Plan 10-02 Habit Reminder Fields (3 tasks, 2min)
 - 2026-01-26: Completed Plan 10-01 HabitCompletion Model (2 tasks, 3min)
@@ -199,6 +200,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Gap <= 2 for streak forgiveness | 10-03 | gap=1 consecutive, gap=2 missed one day, gap>=3 breaks streak | ✓ Implemented |
 | Flush before streak calculation | 10-03 | Ensures completion is in DB before PostgreSQL window function runs | ✓ Implemented |
 | Cache streaks on Habit model | 10-03 | Avoid recalculating streaks on every habit list fetch | ✓ Implemented |
+| HabitCompletion local-only model | 10-05 | Share Extension doesn't need completion tracking | ✓ Implemented |
+| user_timezone for completion request | 10-05 | Backend expects snake_case user_timezone for streak calc | ✓ Implemented |
+| Default timezone parameter | 10-05 | TimeZone.current.identifier reduces boilerplate | ✓ Implemented |
 
 ## Next Actions
 
