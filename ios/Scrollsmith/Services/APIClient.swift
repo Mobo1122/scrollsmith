@@ -866,36 +866,17 @@ struct VideoCreateResponse: Codable {
     let createdAt: Date
 }
 
-struct SummarizeResponse: Codable {
+struct SummarizeResponse: Decodable {
     let videoId: UUID
     let format: String
     let cached: Bool
-    let summary: SummaryContent
     let tags: [String]?
+    // Note: `summary` field is ignored - it's a dynamic dict we don't need
+    // The summary gets saved to the video record and fetched via getVideos()
 
-    struct SummaryContent: Codable {
-        // For bullets format
-        let bullets: [String]?
-        let tags: [String]?
-
-        // For steps format
-        let steps: [Step]?
-        let totalSteps: Int?
-
-        // For cards format
-        let cards: [Card]?
-
-        struct Step: Codable {
-            let stepNumber: Int
-            let text: String
-            let timestamp: String?
-        }
-
-        struct Card: Codable {
-            let title: String
-            let content: String
-            let emoji: String?
-        }
+    enum CodingKeys: String, CodingKey {
+        case videoId, format, cached, tags
+        // `summary` intentionally omitted - ignored during decoding
     }
 }
 
