@@ -4,6 +4,7 @@ Pro tier only: Habit extraction requires Pro subscription.
 """
 
 import logging
+from datetime import datetime, timezone
 from typing import List
 from uuid import UUID
 
@@ -12,12 +13,15 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_db
-from app.models import User, Video, Habit
+from app.models import User, Video, Habit, HabitCompletion
 from app.schemas.habit import (
     HabitSuggestion,
     HabitExtractionResponse,
     HabitCreateRequest,
+    HabitUpdateRequest,
     HabitResponse,
+    HabitCompletionCreate,
+    HabitCompletionResponse,
 )
 from app.services.habit_extraction import (
     habit_extraction_service,
@@ -26,6 +30,7 @@ from app.services.habit_extraction import (
     ExtractionFailedError,
     TranscriptTooShortError,
 )
+from app.services.streak_calculator import calculate_streaks_with_forgiveness
 
 logger = logging.getLogger(__name__)
 
@@ -229,3 +234,144 @@ async def delete_habit(
     await db.commit()
 
     logger.info(f"Deleted habit {habit_id} for user {current_user.id}")
+
+
+@router.patch("/{habit_id}", response_model=HabitResponse)
+async def update_habit(
+    habit_id: UUID,
+    request: HabitUpdateRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Habit:
+    """Update a habit's details (partial update).
+
+    Only provided fields are updated.
+    """
+    result = await db.execute(
+        select(Habit).where(
+            Habit.id == habit_id,
+            Habit.user_id == current_user.id
+        )
+    )
+    habit = result.scalar_one_or_none()
+
+    if habit is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Habit not found"
+        )
+
+    # Apply updates
+    update_data = request.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(habit, field, value)
+
+    await db.commit()
+    await db.refresh(habit)
+
+    logger.info(f"Updated habit {habit_id} for user {current_user.id}")
+    return habit
+
+
+@router.post("/{habit_id}/complete", response_model=HabitCompletionResponse)
+async def complete_habit(
+    habit_id: UUID,
+    request: HabitCompletionCreate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> HabitCompletionResponse:
+    """Record a habit completion.
+
+    Stores completion with user's timezone for accurate streak calculation.
+    Updates current_streak and longest_streak on the habit.
+    """
+    # Verify habit belongs to user
+    result = await db.execute(
+        select(Habit).where(
+            Habit.id == habit_id,
+            Habit.user_id == current_user.id
+        )
+    )
+    habit = result.scalar_one_or_none()
+
+    if habit is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Habit not found"
+        )
+
+    # Create completion record
+    completion = HabitCompletion(
+        habit_id=habit_id,
+        completed_at=datetime.now(timezone.utc),
+        user_timezone=request.user_timezone,
+    )
+    db.add(completion)
+
+    # Flush to ensure completion is in DB before streak calculation
+    await db.flush()
+
+    # Recalculate streaks
+    current_streak, longest_streak = await calculate_streaks_with_forgiveness(
+        db, habit_id, request.user_timezone
+    )
+    habit.current_streak = current_streak
+    habit.longest_streak = max(habit.longest_streak, longest_streak)
+
+    await db.commit()
+    await db.refresh(completion)
+
+    logger.info(f"Completed habit {habit_id}, streak: {current_streak}")
+
+    return HabitCompletionResponse(
+        id=completion.id,
+        habit_id=habit_id,
+        completed_at=completion.completed_at,
+        current_streak=habit.current_streak,
+        longest_streak=habit.longest_streak,
+    )
+
+
+@router.get("/{habit_id}/completions", response_model=List[HabitCompletionResponse])
+async def get_habit_completions(
+    habit_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> List[HabitCompletionResponse]:
+    """Get all completions for a habit (for calendar display).
+
+    Returns completions ordered by date descending (most recent first).
+    """
+    # Verify habit belongs to user
+    result = await db.execute(
+        select(Habit).where(
+            Habit.id == habit_id,
+            Habit.user_id == current_user.id
+        )
+    )
+    habit = result.scalar_one_or_none()
+
+    if habit is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Habit not found"
+        )
+
+    # Fetch completions
+    result = await db.execute(
+        select(HabitCompletion)
+        .where(HabitCompletion.habit_id == habit_id)
+        .order_by(HabitCompletion.completed_at.desc())
+    )
+    completions = result.scalars().all()
+
+    return [
+        HabitCompletionResponse(
+            id=c.id,
+            habit_id=c.habit_id,
+            completed_at=c.completed_at,
+            current_streak=habit.current_streak,
+            longest_streak=habit.longest_streak,
+        )
+        for c in completions
+    ]

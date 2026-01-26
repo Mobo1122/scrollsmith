@@ -101,3 +101,24 @@ class HabitResponse(BaseModel):
     created_at: datetime = Field(description="When the habit was created")
 
     model_config = {"from_attributes": True}
+
+
+class HabitCompletionCreate(BaseModel):
+    """Request to record a habit completion."""
+
+    user_timezone: str = Field(
+        default="UTC",
+        description="IANA timezone identifier (e.g., 'America/New_York')"
+    )
+
+
+class HabitCompletionResponse(BaseModel):
+    """Response after recording a habit completion."""
+
+    id: UUID
+    habit_id: UUID
+    completed_at: datetime
+    current_streak: int
+    longest_streak: int
+
+    model_config = {"from_attributes": True}
