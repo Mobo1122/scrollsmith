@@ -194,19 +194,46 @@ struct CaptureView: View {
     // MARK: - Actions
 
     private func processVideo(source: VideoSource) {
-        // TODO: In Phase 4, this will trigger transcription
-        // For now, just create the video record locally
-
         showConfirmation = false
+
+        // Create source URL string based on source type
+        let sourceURLString: String
+        let platform: String
+
+        switch source {
+        case .localFile(let url):
+            sourceURLString = url.absoluteString
+            platform = VideoPlatform.cameraRoll.rawValue
+        case .url(let urlString, let videoPlatform):
+            sourceURLString = urlString
+            platform = videoPlatform.rawValue
+        }
+
+        // Create PendingUpload record
+        let pendingUpload = PendingUpload(
+            sourceURL: sourceURLString,
+            platform: platform
+        )
+        modelContext.insert(pendingUpload)
+
+        do {
+            try modelContext.save()
+        } catch {
+            errorMessage = "Failed to queue video: \(error.localizedDescription)"
+            return
+        }
+
+        // Trigger the upload queue
+        Task {
+            await uploadQueueService.refreshPendingCount()
+            await uploadQueueService.processQueue()
+        }
 
         // Reset state
         selectedVideoURL = nil
         urlText = ""
         validatedURLSource = nil
-
-        // Show success feedback
-        // In a real implementation, this would navigate to the video detail
-        // or show a processing indicator
+        errorMessage = nil
     }
 
     private func cancelSelection() {
