@@ -86,6 +86,9 @@
 		CE781F262F2509A200D238A3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F222F2509A100D238A3 /* SettingsView.swift */; };
 		CE781F272F2509A200D238A3 /* ScrollsmithPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F242F2509A200D238A3 /* ScrollsmithPaywallView.swift */; };
 		CE781F282F2509A200D238A3 /* UsagePillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F252F2509A200D238A3 /* UsagePillView.swift */; };
+		CE781F2C2F28104400D238A3 /* FrequencyPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F2A2F28104400D238A3 /* FrequencyPickerView.swift */; };
+		CE781F2D2F28104400D238A3 /* HabitExtractionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F2B2F28104400D238A3 /* HabitExtractionSheet.swift */; };
+		CE781F2E2F28200000D238A3 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F2F2F28200000D238A3 /* NotificationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,6 +196,9 @@
 		CE781F222F2509A100D238A3 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		CE781F242F2509A200D238A3 /* ScrollsmithPaywallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollsmithPaywallView.swift; sourceTree = "<group>"; };
 		CE781F252F2509A200D238A3 /* UsagePillView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsagePillView.swift; sourceTree = "<group>"; };
+		CE781F2A2F28104400D238A3 /* FrequencyPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyPickerView.swift; sourceTree = "<group>"; };
+		CE781F2B2F28104400D238A3 /* HabitExtractionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitExtractionSheet.swift; sourceTree = "<group>"; };
+		CE781F2F2F28200000D238A3 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,6 +280,7 @@
 				CE2D7A882F206ABD004CCAEF /* AppleSignInService.swift */,
 				CE2D7A892F206ABD004CCAEF /* AuthService.swift */,
 				CE2D7A8A2F206ABD004CCAEF /* KeychainService.swift */,
+				CE781F2F2F28200000D238A3 /* NotificationManager.swift */,
 				CE2D7A7D2F206664004CCAEF /* SharedModelContainer.swift */,
 				CE2D7A7B2F206663004CCAEF /* ThumbnailService.swift */,
 				CE2D7A7C2F206663004CCAEF /* UploadQueueService.swift */,
@@ -323,6 +330,7 @@
 			isa = PBXGroup;
 			children = (
 				CE2D7AA32F206FCB004CCAEF /* MainTabView.swift */,
+				CE781F292F28104400D238A3 /* Habits */,
 				CE781F212F2509A100D238A3 /* Settings */,
 				CE781F232F2509A200D238A3 /* Subscription */,
 				CE781EE52F24FF3900D238A3 /* Playbooks */,
@@ -427,6 +435,15 @@
 				CE781F252F2509A200D238A3 /* UsagePillView.swift */,
 			);
 			path = Subscription;
+			sourceTree = "<group>";
+		};
+		CE781F292F28104400D238A3 /* Habits */ = {
+			isa = PBXGroup;
+			children = (
+				CE781F2A2F28104400D238A3 /* FrequencyPickerView.swift */,
+				CE781F2B2F28104400D238A3 /* HabitExtractionSheet.swift */,
+			);
+			path = Habits;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -571,6 +588,7 @@
 				CE2D7A8D2F206ABD004CCAEF /* KeychainService.swift in Sources */,
 				CE781F1C2F2508EA00D238A3 /* SubscriptionService.swift in Sources */,
 				CE781EF52F24FF3900D238A3 /* PlaybookListView.swift in Sources */,
+				CE781F2C2F28104400D238A3 /* FrequencyPickerView.swift in Sources */,
 				CE2D7A772F20661A004CCAEF /* MovieTransferable.swift in Sources */,
 				CE781F092F25000E00D238A3 /* VideoSelectionManager.swift in Sources */,
 				CE2D7ABB2F206FCB004CCAEF /* AppleSignInButton.swift in Sources */,
@@ -588,6 +606,7 @@
 				A0000006 /* Habit.swift in Sources */,
 				CE2D7AB12F206FCB004CCAEF /* AuthViewModel.swift in Sources */,
 				CE2D7AB72F206FCB004CCAEF /* VideoPickerView.swift in Sources */,
+				CE781F2D2F28104400D238A3 /* HabitExtractionSheet.swift in Sources */,
 				CE781EF92F24FF3900D238A3 /* VideoGridView.swift in Sources */,
 				CE781EFA2F24FF3900D238A3 /* VideoSearchView.swift in Sources */,
 				A0000007 /* Playbook.swift in Sources */,
@@ -604,6 +623,7 @@
 				CE2D7AB42F206FCB004CCAEF /* VideoConfirmationSheet.swift in Sources */,
 				A0000009 /* HealthResponse.swift in Sources */,
 				CE781F082F25000E00D238A3 /* SearchViewModel.swift in Sources */,
+				CE781F2E2F28200000D238A3 /* NotificationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
