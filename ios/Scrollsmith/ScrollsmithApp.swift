@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import RevenueCat
+import UserNotifications
 
 @main
 struct ScrollsmithApp: App {
@@ -16,6 +17,12 @@ struct ScrollsmithApp: App {
         // Clear stale Keychain items on first launch after reinstall
         // Keychain items persist after app uninstall, which can cause issues
         clearKeychainOnFirstLaunch()
+
+        // Register notification categories on launch
+        NotificationManager.shared.registerCategories()
+
+        // Set notification delegate for handling actions
+        UNUserNotificationCenter.current().delegate = NotificationManager.shared
     }
 
     var body: some Scene {
