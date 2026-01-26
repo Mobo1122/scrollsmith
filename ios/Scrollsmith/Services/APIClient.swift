@@ -809,6 +809,115 @@ actor APIClient {
         return try decoder.decode([HabitDTO].self, from: data)
     }
 
+    /// Completes a habit for today.
+    ///
+    /// - Parameters:
+    ///   - habitId: The habit to complete
+    ///   - timezone: User's timezone for accurate day boundary calculation
+    /// - Returns: Completion response with updated streak info
+    func completeHabit(habitId: UUID, timezone: String = TimeZone.current.identifier) async throws -> HabitCompletionResponse {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/habits/\(habitId.uuidString.lowercased())/complete") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body = HabitCompletionRequest(timezone: timezone)
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(HabitCompletionResponse.self, from: data)
+    }
+
+    /// Updates a habit (partial update).
+    ///
+    /// - Parameters:
+    ///   - habitId: The habit to update
+    ///   - request: Partial update request (only non-nil fields are updated)
+    /// - Returns: Updated habit DTO
+    func updateHabit(habitId: UUID, request: HabitUpdateRequest) async throws -> HabitDTO {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/habits/\(habitId.uuidString.lowercased())") else {
+            throw APIError.invalidURL
+        }
+
+        var urlRequest = URLRequest(url: endpoint)
+        urlRequest.httpMethod = "PATCH"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        urlRequest.httpBody = try encoder.encode(request)
+
+        let (data, response) = try await session.data(for: urlRequest)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(HabitDTO.self, from: data)
+    }
+
+    /// Gets habit completions for calendar display.
+    ///
+    /// - Parameter habitId: The habit to get completions for
+    /// - Returns: Array of completion responses
+    func getHabitCompletions(habitId: UUID) async throws -> [HabitCompletionResponse] {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/habits/\(habitId.uuidString.lowercased())/completions") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "GET"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode([HabitCompletionResponse].self, from: data)
+    }
+
     // MARK: - Private
 
     private func getAccessToken() async -> String? {
