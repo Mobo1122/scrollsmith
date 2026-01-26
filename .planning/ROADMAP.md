@@ -19,7 +19,7 @@
 | 6 | Playbooks & Organization | CRUD Playbooks, video assignment, search, bulk operations | 12 (PLAY) | ✓ 7 plans |
 | 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 4 (SUMM-05 to SUMM-08) | ✓ 6 plans |
 | 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 15 (SUBS + INFR) | 8 plans |
-| 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 0/5 |
+| 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 4 plans |
 | 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | 0/7 |
 | 11 | Infrastructure & Polish | Analytics, crash reporting, webhook retry, error handling | 8 (INFR) | 0/6 |
 | 12 | Legal & Launch Prep | Terms, Privacy Policy, App Store submission materials | 6 (LEGA) | 0/5 |
@@ -349,17 +349,18 @@ Plans:
 1. Pro users see "Make action points" button on summarized videos
 2. Claude API generates 1-3 concrete, recurring habit suggestions from video transcript
 3. User can select which habits to create (all, some, or none)
-4. User sets frequency per habit (daily, 3×weekly, weekly)
+4. User sets frequency per habit (daily, 3x weekly, weekly)
 5. Free users see upgrade prompt when tapping "Make action points"
 
 **Dependencies:** Phase 8 (Pro tier check), Phase 5 (summaries exist)
 
-**Plans:** 0/5
-- [ ] Backend: Claude API prompt for habit extraction
-- [ ] Backend: Habit creation API endpoint
-- [ ] iOS: "Make action points" button with Pro gate
-- [ ] iOS: Habit suggestion list UI with selection
-- [ ] iOS: Frequency picker (daily/3×weekly/weekly)
+**Plans:** 4 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — Backend habit extraction service + Pydantic schemas (Wave 1)
+- [ ] 09-02-PLAN.md — Backend habit API endpoints (Wave 1)
+- [ ] 09-03-PLAN.md — iOS models + APIClient + ViewModel (Wave 2)
+- [ ] 09-04-PLAN.md — iOS UI: HabitExtractionSheet + SummaryDisplayView integration (Wave 3)
 
 ---
 
@@ -488,4 +489,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-24 - Phase 8 Subscription System planned (8 plans in 3 waves)*
+*Last updated: 2026-01-26 - Phase 9 Habit Extraction planned (4 plans in 3 waves)*
