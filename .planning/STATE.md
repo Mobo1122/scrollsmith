@@ -1,6 +1,6 @@
 # State: Scrollsmith
 
-**Last Updated:** 2026-01-24
+**Last Updated:** 2026-01-26
 
 ## Project Reference
 
@@ -8,7 +8,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 8 Subscription System
+**Current focus:** Phase 9 Habit Extraction
 
 ## Architecture Note (2026-01-23)
 
@@ -21,10 +21,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Current Phase
 
-**Phase:** 8 of 12 (Subscription System)
-**Goal:** RevenueCat integration, paywall, tier enforcement
-**Progress:** 0/8 plans
-**Plans:** 0/8 complete
+**Phase:** 9 of 12 (Habit Extraction)
+**Goal:** Claude habit extraction, API endpoints, iOS selection UI
+**Progress:** 1/5 plans
+**Plans:** 1/5 complete
 
 ## Milestone Progress
 
@@ -43,8 +43,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
 | 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
 | 7 - Summary Display | ✓ Complete | 6/6 plans |
-| 8 - Subscription System | ◐ In Progress | 0/8 plans |
-| 9 - Habit Extraction | ○ Pending | 0/5 plans |
+| 8 - Subscription System | ○ Pending | 0/8 plans |
+| 9 - Habit Extraction | ◐ In Progress | 1/5 plans |
 | 10 - Habit Tracking | ○ Pending | 0/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-26: Completed Plan 09-01 Habit Extraction Service (2 tasks, 2min)
 - 2026-01-24: **Completed Phase 7 Summary Display** (6/6 plans - gap closure complete)
 - 2026-01-24: Completed Plan 07-06 Navigation Integration (2 tasks, 5min)
 - 2026-01-24: Phase 7 Verification found navigation gap - Plan 07-06 created
@@ -173,11 +174,14 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | View Original FAB behavior split | 07-05 | YouTube/TikTok/IG deep link, camera roll inline player | ✓ Implemented |
 | NavigationLink with disabled modifier | 07-06 | Disable navigation in selection mode, keeps pattern simple | ✓ Implemented |
 | buttonStyle(.plain) for NavigationLink | 07-06 | Preserves grid item appearance without button styling | ✓ Implemented |
+| Claude Sonnet for habit extraction | 09-01 | Better reasoning for extracting specific, actionable habits | ✓ Implemented |
+| Structured outputs for habit extraction | 09-01 | Guarantees valid JSON response with correct schema | ✓ Implemented |
+| System prompt constrains habits | 09-01 | Ensures habits are specific, recurring, derived, actionable | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Phase 8 Subscription System (8 plans)
-**Goal:** RevenueCat integration, paywall UI, tier enforcement
+**Primary:** Plan 09-02 Habit API Endpoints
+**Goal:** POST /extract-habits, POST /habits, GET /habits endpoints
 
 ## Manual Xcode Setup Required
 
