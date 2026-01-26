@@ -19,6 +19,7 @@
 		A000001A /* SummaryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000002A /* SummaryModels.swift */; };
 		A000001B /* SummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000002B /* SummaryViewModel.swift */; };
 		A000002C /* HabitModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000003C /* HabitModels.swift */; };
+		A000002D /* HabitExtractionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000003D /* HabitExtractionViewModel.swift */; };
 		CE2D7A6A2F205D99004CCAEF /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE2D7A682F205D99004CCAEF /* MainInterface.storyboard */; };
 		CE2D7A6E2F205D99004CCAEF /* ScrollsmithShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE2D7A642F205D98004CCAEF /* ScrollsmithShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CE2D7A772F20661A004CCAEF /* MovieTransferable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2D7A742F20661A004CCAEF /* MovieTransferable.swift */; };
@@ -125,6 +126,7 @@
 		A000002A /* SummaryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryModels.swift; sourceTree = "<group>"; };
 		A000002B /* SummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewModel.swift; sourceTree = "<group>"; };
 		A000003C /* HabitModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitModels.swift; sourceTree = "<group>"; };
+		A000003D /* HabitExtractionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitExtractionViewModel.swift; sourceTree = "<group>"; };
 		CE2D7A5F2F20100A004CCAEF /* Scrollsmith.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Scrollsmith.entitlements; sourceTree = "<group>"; };
 		CE2D7A642F205D98004CCAEF /* ScrollsmithShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScrollsmithShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE2D7A692F205D99004CCAEF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 				CE781F062F25000E00D238A3 /* VideoSelectionManager.swift */,
 				CE2D7AA12F206FCB004CCAEF /* AuthViewModel.swift */,
 				A000002B /* SummaryViewModel.swift */,
+				A000003D /* HabitExtractionViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -592,6 +595,7 @@
 				A0000008 /* APIClient.swift in Sources */,
 				A000001A /* SummaryModels.swift in Sources */,
 				A000002C /* HabitModels.swift in Sources */,
+				A000002D /* HabitExtractionViewModel.swift in Sources */,
 				CE781EFB2F24FF3A00D238A3 /* InlineVideoPlayerView.swift in Sources */,
 				A000001B /* SummaryViewModel.swift in Sources */,
 				CE781F072F25000E00D238A3 /* PlaybookViewModel.swift in Sources */,
