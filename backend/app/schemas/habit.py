@@ -4,12 +4,13 @@ Exports:
     - HabitSuggestion: A single habit suggestion from Claude
     - HabitExtractionResponse: Response from extraction endpoint
     - HabitCreateRequest: Request to create a habit
+    - HabitUpdateRequest: Request to update a habit (partial updates)
     - HabitResponse: Full habit response
 """
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, time
 from typing import Literal, Optional, List
 from uuid import UUID
 
@@ -58,6 +59,22 @@ class HabitCreateRequest(BaseModel):
     )
 
 
+class HabitUpdateRequest(BaseModel):
+    """Request to update a habit. All fields optional for partial updates."""
+
+    title: Optional[str] = Field(None, min_length=1, max_length=200)
+    frequency: Optional[Literal["daily", "3x_weekly", "weekly"]] = None
+    reminder_time: Optional[time] = Field(
+        None,
+        description="Time for reminder in HH:MM format"
+    )
+    reminder_days: Optional[List[int]] = Field(
+        None,
+        description="Days of week (1=Sun through 7=Sat). Null for daily."
+    )
+    is_active: Optional[bool] = None
+
+
 class HabitResponse(BaseModel):
     """Full habit response with tracking data."""
 
@@ -78,6 +95,9 @@ class HabitResponse(BaseModel):
         ge=0,
         description="Longest streak achieved"
     )
+    reminder_time: Optional[time] = None
+    reminder_days: Optional[List[int]] = None
+    is_active: bool = True
     created_at: datetime = Field(description="When the habit was created")
 
     model_config = {"from_attributes": True}
