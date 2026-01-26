@@ -7,6 +7,7 @@ import SwiftUI
 /// 2. Shows 1-3 habit suggestions with checkboxes
 /// 3. Shows frequency picker for each selected habit
 /// 4. User taps "Create Habits" to save selected habits
+@MainActor
 struct HabitExtractionSheet: View {
     let videoId: UUID
     @Environment(\.dismiss) private var dismiss

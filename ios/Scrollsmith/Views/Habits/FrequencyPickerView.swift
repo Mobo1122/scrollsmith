@@ -17,7 +17,12 @@ struct FrequencyPickerView: View {
 }
 
 #Preview {
-    @Previewable @State var frequency: HabitFrequency = .daily
-    FrequencyPickerView(frequency: $frequency)
-        .padding()
+    struct PreviewWrapper: View {
+        @State private var frequency: HabitFrequency = .daily
+        var body: some View {
+            FrequencyPickerView(frequency: $frequency)
+                .padding()
+        }
+    }
+    return PreviewWrapper()
 }
