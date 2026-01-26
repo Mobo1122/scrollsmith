@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 9 of 12 (Habit Extraction)
 **Goal:** Claude habit extraction, API endpoints, iOS selection UI
-**Progress:** 3/5 plans
-**Plans:** 3/5 complete
+**Progress:** 4/5 plans
+**Plans:** 4/5 complete
 
 ## Milestone Progress
 
@@ -44,12 +44,12 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
 | 7 - Summary Display | ✓ Complete | 6/6 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
-| 9 - Habit Extraction | ◐ In Progress | 3/5 plans |
+| 9 - Habit Extraction | ◐ In Progress | 4/5 plans |
 | 10 - Habit Tracking | ○ Pending | 0/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ██████░░░░ 67% (41/61 plans)
+**Overall Progress:** ██████░░░░ 69% (42/61 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-26: Completed Plan 09-04 Habit Selection UI (4 tasks, 3min)
 - 2026-01-26: Completed Plan 09-03 Habit iOS Models (3 tasks, 10min)
 - 2026-01-26: Completed Plan 09-02 Habit API Endpoints (2 tasks, 2min)
 - 2026-01-26: Completed Plan 09-01 Habit Extraction Service (2 tasks, 2min)
@@ -185,11 +186,14 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | HabitSelectionState struct | 09-03 | Tracks selection and frequency override for each suggestion in UI | ✓ Implemented |
 | APIError.proRequired case | 09-03 | Specific error for 403 responses to trigger paywall display | ✓ Implemented |
 | @Observable state machine in ViewModel | 09-03 | Using iOS 17+ macro, consistent with other ViewModels | ✓ Implemented |
+| Sparkles icon for action points button | 09-04 | Conveys AI-powered feature | ✓ Implemented |
+| Inline frequency picker on selection | 09-04 | Reveals segmented picker when checkbox selected | ✓ Implemented |
+| Lock icon overlay for free users | 09-04 | Consistent with existing paywall pattern | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Plan 09-04 Habit Selection UI
-**Goal:** SwiftUI views for habit extraction flow
+**Primary:** Plan 09-05 Habit Extraction Tests
+**Goal:** Test coverage for habit extraction service
 
 ## Manual Xcode Setup Required
 
