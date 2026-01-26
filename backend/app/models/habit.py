@@ -1,11 +1,11 @@
 """Habit model."""
 
 import uuid
-from datetime import datetime
-from typing import Optional, TYPE_CHECKING
+from datetime import datetime, time
+from typing import Optional, List, TYPE_CHECKING
 
-from sqlalchemy import String, Integer, DateTime, func, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import String, Integer, DateTime, Time, Boolean, func, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID, ARRAY, INTEGER
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -54,6 +54,22 @@ class Habit(Base):
         Integer,
         default=0,
         nullable=False,
+    )
+    reminder_time: Mapped[Optional[time]] = mapped_column(
+        Time,
+        nullable=True,
+        comment="Time of day for reminder (user's local time)",
+    )
+    reminder_days: Mapped[Optional[List[int]]] = mapped_column(
+        ARRAY(INTEGER),
+        nullable=True,
+        comment="Days of week for reminder (1=Sun through 7=Sat). Null for daily.",
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False,
+        comment="Whether habit is active (false = paused, no reminders)",
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
