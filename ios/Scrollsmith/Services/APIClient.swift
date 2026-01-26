@@ -657,6 +657,117 @@ actor APIClient {
         return try decoder.decode(UsageResponse.self, from: data)
     }
 
+    // MARK: - Habits
+
+    /// Extracts habit suggestions from a video transcript (Pro only).
+    ///
+    /// - Parameter videoId: The video to extract habits from
+    /// - Returns: 1-3 habit suggestions from Claude API
+    /// - Throws: APIError.proRequired if user is not Pro, other APIError types
+    func extractHabits(videoId: UUID) async throws -> HabitExtractionResponse {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/habits/videos/\(videoId.uuidString.lowercased())/extract") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        // Handle Pro-required error specially for UI to show paywall
+        if httpResponse.statusCode == 403 {
+            throw APIError.proRequired
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(HabitExtractionResponse.self, from: data)
+    }
+
+    /// Creates a habit from a selected suggestion.
+    ///
+    /// - Parameters:
+    ///   - videoId: Source video ID
+    ///   - title: Habit title (from suggestion or modified)
+    ///   - frequency: Selected frequency
+    /// - Returns: Created habit DTO
+    func createHabit(videoId: UUID, title: String, frequency: HabitFrequency) async throws -> HabitDTO {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/habits") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body = HabitCreateRequest(videoId: videoId, title: title, frequency: frequency)
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        if httpResponse.statusCode == 403 {
+            throw APIError.proRequired
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(HabitDTO.self, from: data)
+    }
+
+    /// Fetches all habits for the current user.
+    func getHabits() async throws -> [HabitDTO] {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/habits") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "GET"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode([HabitDTO].self, from: data)
+    }
+
     // MARK: - Private
 
     private func getAccessToken() async -> String? {
@@ -672,6 +783,7 @@ enum APIError: LocalizedError {
     case httpError(statusCode: Int)
     case decodingError(Error)
     case unauthorized
+    case proRequired
 
     var errorDescription: String? {
         switch self {
@@ -680,6 +792,7 @@ enum APIError: LocalizedError {
         case .httpError(let code): return "Server error (HTTP \(code))"
         case .decodingError(let error): return "Failed to parse response: \(error.localizedDescription)"
         case .unauthorized: return "Please log in again"
+        case .proRequired: return "This feature requires a Pro subscription"
         }
     }
 }
