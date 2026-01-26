@@ -206,6 +206,47 @@ struct VideoGridItem: View {
     let isSelected: Bool
     let isSelecting: Bool
 
+    /// Derive a display label from available data
+    private var displayLabel: String {
+        // First try tags
+        if let tags = video.tags, !tags.isEmpty {
+            return tags.prefix(2).joined(separator: ", ")
+        }
+
+        // Then try to extract from source URL
+        if let sourceUrl = video.sourceUrl {
+            if sourceUrl.contains("youtube") {
+                return "YouTube video"
+            } else if sourceUrl.contains("camera_roll") {
+                return "Camera roll video"
+            } else if sourceUrl.contains("tiktok") {
+                return "TikTok video"
+            } else if sourceUrl.contains("instagram") {
+                return "Instagram video"
+            }
+        }
+
+        // Check if it has a summary (processed)
+        if video.summaryBullets != nil {
+            return "Video ready"
+        }
+
+        // Default - still processing or no data
+        return "Processing..."
+    }
+
+    /// Icon based on source platform
+    private var platformIcon: String {
+        guard let sourceUrl = video.sourceUrl else { return "play.circle.fill" }
+
+        if sourceUrl.contains("youtube") {
+            return "play.rectangle.fill"
+        } else if sourceUrl.contains("camera_roll") {
+            return "photo.on.rectangle"
+        }
+        return "play.circle.fill"
+    }
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack(alignment: .leading) {
@@ -213,17 +254,15 @@ struct VideoGridItem: View {
                     .fill(Color.gray.opacity(0.3))
                     .aspectRatio(16/9, contentMode: .fit)
                     .overlay {
-                        Image(systemName: "play.circle.fill")
+                        Image(systemName: platformIcon)
                             .font(.largeTitle)
                             .foregroundStyle(.white)
                     }
 
-                if let tags = video.tags, !tags.isEmpty {
-                    Text(tags.prefix(2).joined(separator: ", "))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
+                Text(displayLabel)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
             .opacity(isSelected ? 0.7 : 1.0)
 

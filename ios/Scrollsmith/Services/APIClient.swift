@@ -202,6 +202,47 @@ actor APIClient {
         return (data, response)
     }
 
+    /// Generates AI summary for a video.
+    ///
+    /// - Parameters:
+    ///   - videoId: The video ID to summarize
+    ///   - format: Summary format (bullets, steps, cards). Defaults to bullets.
+    /// - Returns: The summarize response with generated content
+    func summarizeVideo(
+        videoId: UUID,
+        format: String = "bullets"
+    ) async throws -> SummarizeResponse {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/\(videoId.uuidString.lowercased())/summarize") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body = ["format": format]
+        request.httpBody = try JSONEncoder().encode(body)
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(SummarizeResponse.self, from: data)
+    }
+
     // MARK: - Playbooks
 
     /// Fetches all Playbooks for the current user.
@@ -823,6 +864,39 @@ struct VideoCreateResponse: Codable {
     let summaryBullets: String?
     let tags: [String]?
     let createdAt: Date
+}
+
+struct SummarizeResponse: Codable {
+    let videoId: UUID
+    let format: String
+    let cached: Bool
+    let summary: SummaryContent
+    let tags: [String]?
+
+    struct SummaryContent: Codable {
+        // For bullets format
+        let bullets: [String]?
+        let tags: [String]?
+
+        // For steps format
+        let steps: [Step]?
+        let totalSteps: Int?
+
+        // For cards format
+        let cards: [Card]?
+
+        struct Step: Codable {
+            let stepNumber: Int
+            let text: String
+            let timestamp: String?
+        }
+
+        struct Card: Codable {
+            let title: String
+            let content: String
+            let emoji: String?
+        }
+    }
 }
 
 // MARK: - Playbook DTOs

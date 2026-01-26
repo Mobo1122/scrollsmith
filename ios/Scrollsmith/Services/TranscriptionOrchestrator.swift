@@ -90,6 +90,16 @@ class TranscriptionOrchestrator: ObservableObject {
             upload.processedAt = Date()
             try context.save()
 
+            // Trigger summarization if we have a video ID
+            if let videoId = upload.videoId {
+                do {
+                    _ = try await APIClient.shared.summarizeVideo(videoId: videoId, format: "bullets")
+                } catch {
+                    // Summarization failure is non-fatal - video is still saved
+                    print("Summarization failed (non-fatal): \(error)")
+                }
+            }
+
             state = .completed(transcript: transcript)
             progress = 1.0
 
