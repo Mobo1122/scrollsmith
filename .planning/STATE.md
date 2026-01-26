@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 10 of 12 (Habit Tracking)
 **Goal:** Notifications, completions, streaks, visualization
-**Progress:** 0/7 plans
-**Plans:** 0/7 complete
+**Progress:** 3/7 plans
+**Plans:** 3/7 complete
 
 ## Milestone Progress
 
@@ -45,11 +45,11 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 7 - Summary Display | ✓ Complete | 6/6 plans |
 | 8 - Subscription System | ✓ Complete | 8/8 plans |
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
-| 10 - Habit Tracking | ◐ In Progress | 0/7 plans |
+| 10 - Habit Tracking | ◐ In Progress | 3/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ███████░░░ 75% (46/61 plans)
+**Overall Progress:** ███████░░░ 80% (49/61 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-26: Completed Plan 10-03 Habit Completion Endpoints (2 tasks, 2min)
+- 2026-01-26: Completed Plan 10-02 Habit Reminder Fields (3 tasks, 2min)
+- 2026-01-26: Completed Plan 10-01 HabitCompletion Model (2 tasks, 3min)
 - 2026-01-26: **Completed Phase 9 Habit Extraction** (4/4 plans, HABT-01 to HABT-04 verified)
 - 2026-01-26: Completed Plan 09-04 Habit Selection UI (4 tasks, 3min)
 - 2026-01-26: Completed Plan 09-03 Habit iOS Models (3 tasks, 10min)
@@ -190,6 +193,12 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Sparkles icon for action points button | 09-04 | Conveys AI-powered feature | ✓ Implemented |
 | Inline frequency picker on selection | 09-04 | Reveals segmented picker when checkbox selected | ✓ Implemented |
 | Lock icon overlay for free users | 09-04 | Consistent with existing paywall pattern | ✓ Implemented |
+| reminder_days null = daily | 10-02 | Null means "every day" for daily habits | ✓ Implemented |
+| Weekday encoding 1-7 (Sun-Sat) | 10-02 | ISO weekday standard for reminder_days array | ✓ Implemented |
+| is_active server_default='true' | 10-02 | Existing habits remain active after migration | ✓ Implemented |
+| Gap <= 2 for streak forgiveness | 10-03 | gap=1 consecutive, gap=2 missed one day, gap>=3 breaks streak | ✓ Implemented |
+| Flush before streak calculation | 10-03 | Ensures completion is in DB before PostgreSQL window function runs | ✓ Implemented |
+| Cache streaks on Habit model | 10-03 | Avoid recalculating streaks on every habit list fetch | ✓ Implemented |
 
 ## Next Actions
 
