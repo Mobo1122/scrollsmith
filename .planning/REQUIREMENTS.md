@@ -72,10 +72,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Habits (Pro Tier)
 
-- [ ] **HABT-01**: User can tap "Make action points" on any summarized video
-- [ ] **HABT-02**: App suggests 1-3 concrete recurring habits based on video content
-- [ ] **HABT-03**: User can select which suggested habits to create
-- [ ] **HABT-04**: User can set habit frequency (daily, 3×weekly, weekly)
+- [x] **HABT-01**: User can tap "Make action points" on any summarized video
+- [x] **HABT-02**: App suggests 1-3 concrete recurring habits based on video content
+- [x] **HABT-03**: User can select which suggested habits to create
+- [x] **HABT-04**: User can set habit frequency (daily, 3×weekly, weekly)
 - [ ] **HABT-05**: User can set reminder time for each habit
 - [ ] **HABT-06**: App requests push notification permission with clear value proposition
 - [ ] **HABT-07**: App provides in-app habit reminder UI if notifications denied
@@ -188,7 +188,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAY-01 to PLAY-12 | Phase 6 | Complete |
 | SUMM-05 to SUMM-08 | Phase 7 | Complete |
 | SUBS-01 to SUBS-13, INFR-06 to INFR-07 | Phase 8 | Pending |
-| HABT-01 to HABT-04 | Phase 9 | Pending |
+| HABT-01 to HABT-04 | Phase 9 | Complete |
 | HABT-05 to HABT-17 | Phase 10 | Pending |
 | INFR-08 to INFR-10 | Phase 11 | Pending |
 | LEGA-01 to LEGA-06 | Phase 12 | Pending |
@@ -200,4 +200,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-01-18*
-*Last updated: 2026-01-24 - Phase 7 Summary Display complete*
+*Last updated: 2026-01-26 - Phase 9 Habit Extraction complete*

@@ -8,7 +8,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 9 Habit Extraction
+**Current focus:** Phase 10 Habit Tracking
 
 ## Architecture Note (2026-01-23)
 
@@ -21,18 +21,18 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Current Phase
 
-**Phase:** 9 of 12 (Habit Extraction)
-**Goal:** Claude habit extraction, API endpoints, iOS selection UI
-**Progress:** 4/5 plans
-**Plans:** 4/5 complete
+**Phase:** 10 of 12 (Habit Tracking)
+**Goal:** Notifications, completions, streaks, visualization
+**Progress:** 0/7 plans
+**Plans:** 0/7 complete
 
 ## Milestone Progress
 
 **Milestone:** v1
 **Total Phases:** 12
-**Completed:** 7
-**In Progress:** 1 (Phase 8 Subscription System)
-**Pending:** 4
+**Completed:** 9
+**In Progress:** 1 (Phase 10 Habit Tracking)
+**Pending:** 2
 
 | Phase | Status | Progress |
 |-------|--------|----------|
@@ -43,24 +43,25 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 5 - AI Summarization | ✓ Complete | 6/6 plans |
 | 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
 | 7 - Summary Display | ✓ Complete | 6/6 plans |
-| 8 - Subscription System | ○ Pending | 0/8 plans |
-| 9 - Habit Extraction | ◐ In Progress | 4/5 plans |
-| 10 - Habit Tracking | ○ Pending | 0/7 plans |
+| 8 - Subscription System | ✓ Complete | 8/8 plans |
+| 9 - Habit Extraction | ✓ Complete | 4/4 plans |
+| 10 - Habit Tracking | ◐ In Progress | 0/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ██████░░░░ 69% (42/61 plans)
+**Overall Progress:** ███████░░░ 75% (46/61 plans)
 
 ## Requirements Coverage
 
 **Total v1 Requirements:** 85
 **Mapped to Phases:** 85
 **In Progress:** 0
-**Completed:** 48 (INFR-01 through INFR-05, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, TRANS-01 through TRANS-04, SUMM-01 through SUMM-11)
+**Completed:** 52 (INFR-01 through INFR-07, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, SUMM-01 through SUMM-11, SUBS-01 through SUBS-13, HABT-01 through HABT-04)
 **Unmapped:** 0 ✓
 
 ## Recent Activity
 
+- 2026-01-26: **Completed Phase 9 Habit Extraction** (4/4 plans, HABT-01 to HABT-04 verified)
 - 2026-01-26: Completed Plan 09-04 Habit Selection UI (4 tasks, 3min)
 - 2026-01-26: Completed Plan 09-03 Habit iOS Models (3 tasks, 10min)
 - 2026-01-26: Completed Plan 09-02 Habit API Endpoints (2 tasks, 2min)
@@ -192,8 +193,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Next Actions
 
-**Primary:** Plan 09-05 Habit Extraction Tests
-**Goal:** Test coverage for habit extraction service
+**Primary:** Phase 10 Habit Tracking (7 plans)
+**Goal:** Notifications, completions, streaks, visualization
 
 ## Manual Xcode Setup Required
 
