@@ -236,7 +236,7 @@ class SummarizationService:
 
         try:
             response = await self._call_claude(
-                model="claude-haiku-4-5-20241022",
+                model="claude-3-5-haiku-20241022",
                 max_tokens=2048,
                 system=system_content,
                 messages=[{"role": "user", "content": user_message}],
