@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 9 of 12 (Habit Extraction)
 **Goal:** Claude habit extraction, API endpoints, iOS selection UI
-**Progress:** 2/5 plans
-**Plans:** 2/5 complete
+**Progress:** 3/5 plans
+**Plans:** 3/5 complete
 
 ## Milestone Progress
 
@@ -44,12 +44,12 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 6 - Playbooks & Organization | ✓ Complete | 7/7 plans |
 | 7 - Summary Display | ✓ Complete | 6/6 plans |
 | 8 - Subscription System | ○ Pending | 0/8 plans |
-| 9 - Habit Extraction | ◐ In Progress | 2/5 plans |
+| 9 - Habit Extraction | ◐ In Progress | 3/5 plans |
 | 10 - Habit Tracking | ○ Pending | 0/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ██████░░░░ 66% (40/61 plans)
+**Overall Progress:** ██████░░░░ 67% (41/61 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-26: Completed Plan 09-03 Habit iOS Models (3 tasks, 10min)
 - 2026-01-26: Completed Plan 09-02 Habit API Endpoints (2 tasks, 2min)
 - 2026-01-26: Completed Plan 09-01 Habit Extraction Service (2 tasks, 2min)
 - 2026-01-24: **Completed Phase 7 Summary Display** (6/6 plans - gap closure complete)
@@ -180,11 +181,15 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | System prompt constrains habits | 09-01 | Ensures habits are specific, recurring, derived, actionable | ✓ Implemented |
 | Habits API under /habits prefix | 09-02 | Extraction at /habits/videos/{id}/extract keeps all habit endpoints together | ✓ Implemented |
 | Pro tier gate on habit creation | 09-02 | Both extraction AND creation require Pro subscription | ✓ Implemented |
+| HabitFrequency enum with rawValue | 09-03 | Matches backend enum values exactly (daily, 3x_weekly, weekly) | ✓ Implemented |
+| HabitSelectionState struct | 09-03 | Tracks selection and frequency override for each suggestion in UI | ✓ Implemented |
+| APIError.proRequired case | 09-03 | Specific error for 403 responses to trigger paywall display | ✓ Implemented |
+| @Observable state machine in ViewModel | 09-03 | Using iOS 17+ macro, consistent with other ViewModels | ✓ Implemented |
 
 ## Next Actions
 
-**Primary:** Plan 09-03 Habit iOS Models
-**Goal:** SwiftData Habit model, HabitViewModel, API client extensions
+**Primary:** Plan 09-04 Habit Selection UI
+**Goal:** SwiftUI views for habit extraction flow
 
 ## Manual Xcode Setup Required
 
