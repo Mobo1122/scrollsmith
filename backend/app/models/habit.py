@@ -13,6 +13,7 @@ from app.core.database import Base
 if TYPE_CHECKING:
     from app.models.user import User
     from app.models.video import Video
+    from app.models.habit_completion import HabitCompletion
 
 
 class Habit(Base):
@@ -85,6 +86,11 @@ class Habit(Base):
     video: Mapped[Optional["Video"]] = relationship(
         "Video",
         back_populates="habits",
+    )
+    completions: Mapped[List["HabitCompletion"]] = relationship(
+        "HabitCompletion",
+        back_populates="habit",
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self) -> str:
