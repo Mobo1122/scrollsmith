@@ -20,7 +20,7 @@
 | 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 4 (SUMM-05 to SUMM-08) | ✓ 6 plans |
 | 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 15 (SUBS + INFR) | 8 plans |
 | 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 4 plans |
-| 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | 0/7 |
+| 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | 7 plans |
 | 11 | Infrastructure & Polish | Analytics, crash reporting, webhook retry, error handling | 8 (INFR) | 0/6 |
 | 12 | Legal & Launch Prep | Terms, Privacy Policy, App Store submission materials | 6 (LEGA) | 0/5 |
 
@@ -366,13 +366,13 @@ Plans:
 
 ### Phase 10: Habit Tracking
 
-**Goal:** Push notifications, completions, streaks, visualization, and editing
+**Goal:** Local notifications, completions, streaks with 1-day forgiveness, visualization, and editing
 
 **Requirements:**
 - HABT-05: Set reminder time
 - HABT-06: Request notification permission
 - HABT-07: In-app fallback if denied
-- HABT-08: Push notification at scheduled time
+- HABT-08: Local notification at scheduled time
 - HABT-09: Mark complete from notification
 - HABT-10: Mark complete in-app
 - HABT-11: Current streak tracking
@@ -385,26 +385,28 @@ Plans:
 
 **Success Criteria:**
 1. User sets reminder time for each habit
-2. App requests notification permission with clear value proposition ("Never forget your habits")
+2. App requests notification permission with clear value proposition ("Stay on Track")
 3. If notifications denied, in-app reminder UI shows pending habits
-4. User receives push notification at scheduled time with quick completion action
+4. User receives local notification at scheduled time with "Mark Complete" action
 5. User can mark habit complete from notification or in-app
 6. Streaks are tracked with 1-day forgiveness (missing one day doesn't reset streak)
-7. Habit list shows current streak and longest streak with calendar/chart visualization
+7. Habit list shows current streak and longest streak with GitHub-style calendar visualization
 8. User can tap habit to view source video
 9. User can edit habit title, frequency, or reminder time
 10. User can delete habit with confirmation
 
 **Dependencies:** Phase 9 (habits must be created first)
 
-**Plans:** 0/7
-- [ ] iOS: UNUserNotificationCenter permission request
-- [ ] iOS: Local notification scheduling based on frequency
-- [ ] iOS: Notification action handler for quick completion
-- [ ] iOS: In-app habit list with streak display (calendar or chart)
-- [ ] Backend: Habit completion logging with timezone handling
-- [ ] Backend: Streak calculation with 1-day forgiveness logic
-- [ ] iOS: Habit editing UI
+**Plans:** 7 plans
+
+Plans:
+- [ ] 10-01-PLAN.md — HabitCompletion model + schema migration (Wave 1)
+- [ ] 10-02-PLAN.md — Habit model updates (reminder_time, reminder_days, is_active) (Wave 1)
+- [ ] 10-03-PLAN.md — Habit completion endpoint + streak calculation with forgiveness (Wave 1)
+- [ ] 10-04-PLAN.md — NotificationManager + permission handling (Wave 2)
+- [ ] 10-05-PLAN.md — iOS HabitCompletion model + APIClient updates (Wave 2)
+- [ ] 10-06-PLAN.md — HabitListView + HabitRowView with streaks (Wave 3)
+- [ ] 10-07-PLAN.md — HabitDetailView (edit, delete, calendar visualization, source video link) (Wave 3)
 
 ---
 
@@ -489,4 +491,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-26 - Phase 9 Habit Extraction planned (4 plans in 3 waves)*
+*Last updated: 2026-01-26 - Phase 10 Habit Tracking planned (7 plans in 3 waves)*
