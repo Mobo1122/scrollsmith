@@ -74,6 +74,9 @@ struct HabitDTO: Codable, Identifiable {
     let frequency: String
     let currentStreak: Int
     let longestStreak: Int
+    let reminderTime: String?  // "HH:MM:SS" format from backend
+    let reminderDays: [Int]?
+    let isActive: Bool
     let createdAt: Date
 
     enum CodingKeys: String, CodingKey {
@@ -83,12 +86,25 @@ struct HabitDTO: Codable, Identifiable {
         case frequency
         case currentStreak = "current_streak"
         case longestStreak = "longest_streak"
+        case reminderTime = "reminder_time"
+        case reminderDays = "reminder_days"
+        case isActive = "is_active"
         case createdAt = "created_at"
     }
 
     /// Parsed frequency as enum (falls back to daily if unknown).
     var frequencyEnum: HabitFrequency {
         HabitFrequency(rawValue: frequency) ?? .daily
+    }
+
+    /// Parse reminderTime string into DateComponents (hour, minute).
+    var reminderTimeComponents: DateComponents? {
+        guard let timeString = reminderTime else { return nil }
+        let parts = timeString.split(separator: ":")
+        guard parts.count >= 2,
+              let hour = Int(parts[0]),
+              let minute = Int(parts[1]) else { return nil }
+        return DateComponents(hour: hour, minute: minute)
     }
 }
 
@@ -127,5 +143,56 @@ struct HabitSelectionState: Identifiable {
         self.suggestion = suggestion
         self.isSelected = isSelected
         self.frequency = suggestion.suggestedFrequency
+    }
+}
+
+// MARK: - Update Request
+
+/// Request body for PATCH /habits/{id} endpoint.
+struct HabitUpdateRequest: Codable {
+    var title: String?
+    var frequency: String?
+    var reminderTime: String?  // "HH:MM" format
+    var reminderDays: [Int]?
+    var isActive: Bool?
+
+    enum CodingKeys: String, CodingKey {
+        case title
+        case frequency
+        case reminderTime = "reminder_time"
+        case reminderDays = "reminder_days"
+        case isActive = "is_active"
+    }
+}
+
+// MARK: - Completion Request/Response
+
+/// Request body for POST /habits/{id}/complete endpoint.
+struct HabitCompletionRequest: Codable {
+    let userTimezone: String
+
+    enum CodingKeys: String, CodingKey {
+        case userTimezone = "user_timezone"
+    }
+
+    init(timezone: String = TimeZone.current.identifier) {
+        self.userTimezone = timezone
+    }
+}
+
+/// Response from POST /habits/{id}/complete endpoint.
+struct HabitCompletionResponse: Codable {
+    let id: UUID
+    let habitId: UUID
+    let completedAt: Date
+    let currentStreak: Int
+    let longestStreak: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case habitId = "habit_id"
+        case completedAt = "completed_at"
+        case currentStreak = "current_streak"
+        case longestStreak = "longest_streak"
     }
 }
