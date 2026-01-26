@@ -943,10 +943,22 @@ struct VideoDTO: Codable, Identifiable {
 
 // MARK: - VideoDTO Parsing Helpers
 
+/// Backend BulletSummary structure
+private struct BulletSummaryPayload: Decodable {
+    let bullets: [String]
+    let tags: [String]?
+}
+
 extension VideoDTO {
     /// Parses summary_bullets JSON string into array of strings.
+    /// Backend stores as {"bullets": [...], "tags": [...]}
     var parsedBullets: [String]? {
         guard let json = summaryBullets else { return nil }
+        // Try new format first: {"bullets": [...], "tags": [...]}
+        if let payload = try? JSONDecoder().decode(BulletSummaryPayload.self, from: Data(json.utf8)) {
+            return payload.bullets
+        }
+        // Fallback to legacy format: ["bullet1", "bullet2"]
         return try? JSONDecoder().decode([String].self, from: Data(json.utf8))
     }
 
@@ -989,8 +1001,14 @@ struct VideoSearchResult: Codable, Identifiable {
 
 extension VideoSearchResult {
     /// Parses summary_bullets JSON string into array of strings.
+    /// Backend stores as {"bullets": [...], "tags": [...]}
     var parsedBullets: [String]? {
         guard let json = summaryBullets else { return nil }
+        // Try new format first: {"bullets": [...], "tags": [...]}
+        if let payload = try? JSONDecoder().decode(BulletSummaryPayload.self, from: Data(json.utf8)) {
+            return payload.bullets
+        }
+        // Fallback to legacy format: ["bullet1", "bullet2"]
         return try? JSONDecoder().decode([String].self, from: Data(json.utf8))
     }
 
