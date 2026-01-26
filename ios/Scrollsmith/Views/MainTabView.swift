@@ -28,7 +28,7 @@ struct MainTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView()
+            PlaybookListView()
                 .tabItem {
                     Label(Tab.home.rawValue, systemImage: Tab.home.icon)
                 }
