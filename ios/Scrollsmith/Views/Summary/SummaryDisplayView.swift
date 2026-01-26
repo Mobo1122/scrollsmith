@@ -14,6 +14,7 @@ struct SummaryDisplayView: View {
     @State private var viewModel = SummaryViewModel()
     @State private var showPaywall = false
     @State private var paywallFormat: SummaryFormat = .steps
+    @State private var showHabitExtraction = false
 
     private let deepLinkService = DeepLinkService()
 
@@ -26,6 +27,14 @@ struct SummaryDisplayView: View {
 
                 // Content based on format
                 contentView
+
+                // Make action points button (Pro feature)
+                // Videos with summaries have transcripts available for habit extraction
+                if video.summaryBullets != nil {
+                    makeActionPointsButton
+                        .padding(.horizontal)
+                        .padding(.bottom, 8)
+                }
             }
 
             // View Original FAB
@@ -35,6 +44,9 @@ struct SummaryDisplayView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPaywall) {
             ProPaywallSheet(requestedFormat: paywallFormat)
+        }
+        .sheet(isPresented: $showHabitExtraction) {
+            HabitExtractionSheet(videoId: video.id)
         }
         .onAppear {
             // Set default format
@@ -166,6 +178,41 @@ struct SummaryDisplayView: View {
             .padding(.horizontal)
         }
         .padding()
+    }
+
+    // MARK: - Make Action Points Button
+
+    private var makeActionPointsButton: some View {
+        Button {
+            if subscriptionViewModel.isPro {
+                showHabitExtraction = true
+            } else {
+                paywallFormat = .steps  // Reuse paywall sheet
+                showPaywall = true
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "sparkles")
+                Text("Make action points")
+            }
+            .font(.subheadline)
+            .fontWeight(.medium)
+            .foregroundColor(subscriptionViewModel.isPro ? .white : .secondary)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(subscriptionViewModel.isPro ? Color.accentColor : Color(.systemGray5))
+            )
+            .overlay(alignment: .trailing) {
+                if !subscriptionViewModel.isPro {
+                    Image(systemName: "lock.fill")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.trailing, 12)
+                }
+            }
+        }
     }
 
     // MARK: - View Original FAB
