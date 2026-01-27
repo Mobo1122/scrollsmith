@@ -463,12 +463,14 @@ Plans:
 
 **Dependencies:** Phase 11 (app must be feature-complete)
 
-**Plans:** 0/5
-- [ ] Write Terms of Service and Privacy Policy
-- [ ] Host Terms and Privacy Policy (static site or backend)
-- [ ] iOS: Add Terms and Privacy links to signup and settings
-- [ ] App Store Connect: Create subscription products and agreements
-- [ ] Create App Store marketing materials (screenshots, video, description)
+**Plans:** 5 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Legal documents and backend hosting (Wave 1)
+- [ ] 12-02-PLAN.md — iOS WebView and Mail components (Wave 1)
+- [ ] 12-03-PLAN.md — iOS Legal links integration (Wave 2)
+- [ ] 12-04-PLAN.md — App Store Connect configuration (Wave 1, checkpoints)
+- [ ] 12-05-PLAN.md — App Store marketing materials (Wave 2, checkpoints)
 
 ---
 
@@ -493,4 +495,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-27 - Phase 11 complete (6 plans, INFR-08 to INFR-10 verified)*
+*Last updated: 2026-01-27 - Phase 12 planned (5 plans in 2 waves)*
