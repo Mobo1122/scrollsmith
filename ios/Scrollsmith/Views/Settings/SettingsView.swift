@@ -74,6 +74,15 @@ struct SettingsView: View {
                     }
                 }
 
+                // About Section
+                Section {
+                    NavigationLink {
+                        AboutView()
+                    } label: {
+                        Label("About Scrollsmith", systemImage: "info.circle")
+                    }
+                }
+
                 // Account Actions
                 Section {
                     Button(role: .destructive) {
