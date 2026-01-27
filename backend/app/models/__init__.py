@@ -6,6 +6,7 @@ from app.models.video import Video
 from app.models.habit import Habit
 from app.models.habit_completion import HabitCompletion
 from app.models.refresh_token import RefreshToken
+from app.models.webhook_event import WebhookEvent
 
 __all__ = [
     "User",
@@ -14,5 +15,6 @@ __all__ = [
     "Habit",
     "HabitCompletion",
     "RefreshToken",
+    "WebhookEvent",
     "video_playbooks",
 ]
