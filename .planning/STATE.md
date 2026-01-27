@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 11 of 12 (Infrastructure & Polish)
 **Goal:** Analytics, crash reporting, webhook retry, error handling
-**Progress:** 3/6 plans
-**Plans:** 3/6 complete
+**Progress:** 4/6 plans
+**Plans:** 4/6 complete
 
 ## Milestone Progress
 
@@ -46,21 +46,22 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 8 - Subscription System | ✓ Complete | 8/8 plans |
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
 | 10 - Habit Tracking | ✓ Complete | 7/7 plans |
-| 11 - Infrastructure & Polish | ◐ In Progress | 3/6 plans |
+| 11 - Infrastructure & Polish | ◐ In Progress | 4/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █████████░ 91% (62/68 plans)
+**Overall Progress:** █████████░ 93% (63/68 plans)
 
 ## Requirements Coverage
 
 **Total v1 Requirements:** 85
 **Mapped to Phases:** 85
 **In Progress:** 0
-**Completed:** 67 (INFR-01 through INFR-09, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, SUMM-01 through SUMM-11, SUBS-01 through SUBS-13, HABT-01 through HABT-17)
+**Completed:** 68 (INFR-01 through INFR-10, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, SUMM-01 through SUMM-11, SUBS-01 through SUBS-13, HABT-01 through HABT-17)
 **Unmapped:** 0 ✓
 
 ## Recent Activity
 
+- 2026-01-27: Completed Plan 11-03 iOS Crash Reporting (2 tasks, 23min - pre-completed by 11-04)
 - 2026-01-27: Completed Plan 11-04 iOS Analytics (2 tasks, 17min)
 - 2026-01-27: Completed Plan 11-02 Webhook Retry Queue (2 tasks, 3min)
 - 2026-01-27: Completed Plan 11-01 Backend Logging & Monitoring (2 tasks, 163s)
@@ -227,6 +228,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Task-wrapped analytics calls | 11-04 | Fire-and-forget pattern prevents blocking UI thread | ✓ Implemented |
 | trackAutomaticEvents=false | 11-04 | Explicit control over tracked events, reduces noise | ✓ Implemented |
 | Include streak length in habit completion | 11-04 | Enables cohort analysis by engagement level | ✓ Implemented |
+| Sentry over Firebase Crashlytics | 11-03 | Explicit SwiftUI support with screenshot/view hierarchy capture | ✓ Implemented |
+| Crash reporting before other init | 11-03 | Capture crashes during app initialization | ✓ Implemented |
+| 20% iOS trace sample rate | 11-03 | Balance performance insight vs API cost (higher than backend 10%) | ✓ Implemented |
 
 ## Next Actions
 
