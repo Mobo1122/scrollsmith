@@ -80,6 +80,11 @@
 		CE781F132F25008600D238A3 /* PendingUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F0F2F25008600D238A3 /* PendingUpload.swift */; };
 		CE781F162F2506E700D238A3 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = CE781F152F2506E700D238A3 /* RevenueCat */; };
 		CE781F182F2506E700D238A3 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE781F172F2506E700D238A3 /* RevenueCatUI */; };
+		AAAA11042F2A000001234567 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = AAAA11032F2A000001234567 /* Mixpanel */; };
+		BBBB22042F2B000001234567 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = BBBB22032F2B000001234567 /* Sentry */; };
+		AAAA11062F2A000001234568 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA11052F2A000001234568 /* AnalyticsService.swift */; };
+		CRASH1062F2A000001234572 /* CrashReportingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRASH1052F2A000001234571 /* CrashReportingService.swift */; };
+		CONFIG122F2A000001234570 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CONFIG112F2A000001234569 /* Configuration.swift */; };
 		CE781F1C2F2508EA00D238A3 /* SubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F1B2F2508EA00D238A3 /* SubscriptionService.swift */; };
 		CE781F1E2F25091C00D238A3 /* UsageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F1D2F25091C00D238A3 /* UsageResponse.swift */; };
 		CE781F202F25094100D238A3 /* SubscriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F1F2F25094100D238A3 /* SubscriptionViewModel.swift */; };
@@ -198,6 +203,9 @@
 		CE781F0E2F25008600D238A3 /* VideoSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoSource.swift; sourceTree = "<group>"; };
 		CE781F0F2F25008600D238A3 /* PendingUpload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PendingUpload.swift; sourceTree = "<group>"; };
 		CE781F1B2F2508EA00D238A3 /* SubscriptionService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionService.swift; sourceTree = "<group>"; };
+		AAAA11052F2A000001234568 /* AnalyticsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		CRASH1052F2A000001234571 /* CrashReportingService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrashReportingService.swift; sourceTree = "<group>"; };
+		CONFIG112F2A000001234569 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		CE781F1D2F25091C00D238A3 /* UsageResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsageResponse.swift; sourceTree = "<group>"; };
 		CE781F1F2F25094100D238A3 /* SubscriptionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionViewModel.swift; sourceTree = "<group>"; };
 		CE781F222F2509A100D238A3 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -222,6 +230,8 @@
 			files = (
 				CE781F182F2506E700D238A3 /* RevenueCatUI in Frameworks */,
 				CE781F162F2506E700D238A3 /* RevenueCat in Frameworks */,
+				AAAA11042F2A000001234567 /* Mixpanel in Frameworks */,
+				BBBB22042F2B000001234567 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,6 +263,7 @@
 				CE2D7AA02F206FCB004CCAEF /* ViewModels */,
 				CE2D7A5F2F20100A004CCAEF /* Scrollsmith.entitlements */,
 				A0000011 /* ScrollsmithApp.swift */,
+				CONFIG112F2A000001234569 /* Configuration.swift */,
 				A0000012 /* ContentView.swift */,
 				A0000013 /* Assets.xcassets */,
 			);
@@ -291,6 +302,8 @@
 			isa = PBXGroup;
 			children = (
 				CE781F1B2F2508EA00D238A3 /* SubscriptionService.swift */,
+				AAAA11052F2A000001234568 /* AnalyticsService.swift */,
+				CRASH1052F2A000001234571 /* CrashReportingService.swift */,
 				CE2D7A882F206ABD004CCAEF /* AppleSignInService.swift */,
 				CE2D7A892F206ABD004CCAEF /* AuthService.swift */,
 				CE2D7A8A2F206ABD004CCAEF /* KeychainService.swift */,
@@ -488,6 +501,8 @@
 			packageProductDependencies = (
 				CE781F152F2506E700D238A3 /* RevenueCat */,
 				CE781F172F2506E700D238A3 /* RevenueCatUI */,
+				AAAA11032F2A000001234567 /* Mixpanel */,
+				BBBB22032F2B000001234567 /* Sentry */,
 			);
 			productName = Scrollsmith;
 			productReference = A0000010 /* Scrollsmith.app */;
@@ -538,7 +553,9 @@
 			);
 			mainGroup = A0000030;
 			packageReferences = (
+				BBBB22022F2B000001234567 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				CE781F142F2506E500D238A3 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
+				AAAA11022F2A000001234567 /* XCRemoteSwiftPackageReference "mixpanel-swift" */,
 			);
 			productRefGroup = A0000032 /* Products */;
 			projectDirPath = "";
@@ -608,6 +625,9 @@
 				A0000004 /* User.swift in Sources */,
 				CE2D7A8D2F206ABD004CCAEF /* KeychainService.swift in Sources */,
 				CE781F1C2F2508EA00D238A3 /* SubscriptionService.swift in Sources */,
+				AAAA11062F2A000001234568 /* AnalyticsService.swift in Sources */,
+				CRASH1062F2A000001234572 /* CrashReportingService.swift in Sources */,
+				CONFIG122F2A000001234570 /* Configuration.swift in Sources */,
 				CE781EF52F24FF3900D238A3 /* PlaybookListView.swift in Sources */,
 				CE781F2C2F28104400D238A3 /* FrequencyPickerView.swift in Sources */,
 				CE2D7A772F20661A004CCAEF /* MovieTransferable.swift in Sources */,
@@ -970,6 +990,22 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		AAAA11022F2A000001234567 /* XCRemoteSwiftPackageReference "mixpanel-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mixpanel/mixpanel-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		BBBB22022F2B000001234567 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -982,6 +1018,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CE781F142F2506E500D238A3 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
 			productName = RevenueCatUI;
+		};
+		AAAA11032F2A000001234567 /* Mixpanel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AAAA11022F2A000001234567 /* XCRemoteSwiftPackageReference "mixpanel-swift" */;
+			productName = Mixpanel;
+		};
+		BBBB22032F2B000001234567 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BBBB22022F2B000001234567 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
