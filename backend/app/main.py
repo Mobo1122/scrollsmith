@@ -5,6 +5,7 @@ from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from asgi_correlation_id import CorrelationIdMiddleware
 
 from app.core.config import settings
@@ -69,3 +70,15 @@ async def root():
         "version": settings.APP_VERSION,
         "status": "running",
     }
+
+
+@app.get("/terms")
+async def terms_of_service():
+    """Serve Terms of Service HTML page."""
+    return FileResponse("app/static/legal/terms.html", media_type="text/html")
+
+
+@app.get("/privacy")
+async def privacy_policy():
+    """Serve Privacy Policy HTML page."""
+    return FileResponse("app/static/legal/privacy.html", media_type="text/html")
