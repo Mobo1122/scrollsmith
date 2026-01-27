@@ -85,6 +85,11 @@ class SubscriptionViewModel: ObservableObject {
     ///
     /// Call this from PaywallView's onPurchaseCompleted/onRestoreCompleted.
     func handlePurchaseSuccess() async {
+        // Track Pro conversion
+        Task {
+            await AnalyticsService.shared.trackProConversion(source: "paywall")
+        }
+
         await refresh()
         showPaywall = false
     }

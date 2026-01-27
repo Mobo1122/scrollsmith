@@ -51,6 +51,11 @@ struct SummaryDisplayView: View {
         .onAppear {
             // Set default format
             viewModel.currentFormat = viewModel.bestDefaultFormat(for: video, isPro: subscriptionViewModel.isPro)
+
+            // Track video view
+            Task {
+                await AnalyticsService.shared.trackVideoView(videoId: video.id)
+            }
         }
     }
 

@@ -46,13 +46,21 @@ final class HabitListViewModel {
     @MainActor
     func completeHabit(_ habit: HabitDTO) async {
         do {
-            _ = try await APIClient.shared.completeHabit(
+            let response = try await APIClient.shared.completeHabit(
                 habitId: habit.id,
                 timezone: TimeZone.current.identifier
             )
 
             // Update local state
             _completedToday.insert(habit.id)
+
+            // Track completion with streak length
+            Task {
+                await AnalyticsService.shared.trackHabitCompletion(
+                    habitId: habit.id,
+                    streakLength: response.currentStreak
+                )
+            }
 
             // Update habit in list with new streak
             if habits.firstIndex(where: { $0.id == habit.id }) != nil {

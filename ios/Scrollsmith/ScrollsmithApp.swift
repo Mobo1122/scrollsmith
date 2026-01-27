@@ -14,6 +14,12 @@ struct ScrollsmithApp: App {
     private let sharedContainer = SharedModelContainer.shared
 
     init() {
+        // Initialize crash reporting FIRST (before anything else)
+        CrashReportingService.shared.configure()
+
+        // Initialize analytics
+        Task { await AnalyticsService.shared.configure() }
+
         // Clear stale Keychain items on first launch after reinstall
         // Keychain items persist after app uninstall, which can cause issues
         clearKeychainOnFirstLaunch()
@@ -37,16 +43,24 @@ struct ScrollsmithApp: App {
                     uploadQueueService.configure(with: context)
                 }
                 .onChange(of: authViewModel.currentUser) { _, newUser in
+                    // Set user context for crash reporting
+                    CrashReportingService.shared.setUser(userId: newUser?.id)
+
                     // Configure RevenueCat when user logs in
                     if let userId = newUser?.id {
                         Task {
                             await SubscriptionService.shared.configure(userId: userId)
                             await subscriptionViewModel.refresh()
+
+                            // Identify user for analytics
+                            let isPro = await SubscriptionService.shared.isPro()
+                            await AnalyticsService.shared.identifyUser(userId: userId, isPro: isPro)
                         }
                     } else {
                         // User logged out - reset subscription state
                         Task {
                             await SubscriptionService.shared.reset()
+                            await AnalyticsService.shared.resetUser()
                         }
                     }
                 }
