@@ -7,6 +7,8 @@ struct RegisterView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var confirmPassword = ""
+    @State private var showingTerms = false
+    @State private var showingPrivacy = false
     @FocusState private var focusedField: Field?
 
     let onSwitchToLogin: () -> Void
@@ -154,6 +156,28 @@ struct RegisterView: View {
 
             Spacer()
 
+            // Legal footer
+            HStack(spacing: 4) {
+                Text("By signing up, you agree to our")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+
+                Button("Terms") {
+                    showingTerms = true
+                }
+                .font(.footnote)
+
+                Text("and")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+
+                Button("Privacy Policy") {
+                    showingPrivacy = true
+                }
+                .font(.footnote)
+            }
+            .padding(.bottom, 8)
+
             // Switch to login
             HStack {
                 Text("Already have an account?")
@@ -165,6 +189,12 @@ struct RegisterView: View {
             .font(.subheadline)
         }
         .padding()
+        .sheet(isPresented: $showingTerms) {
+            LegalDocumentView(documentType: .terms)
+        }
+        .sheet(isPresented: $showingPrivacy) {
+            LegalDocumentView(documentType: .privacy)
+        }
         .onAppear {
             authViewModel.clearError()
         }
