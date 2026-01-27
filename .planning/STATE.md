@@ -1,6 +1,6 @@
 # State: Scrollsmith
 
-**Last Updated:** 2026-01-27 22:05
+**Last Updated:** 2026-01-27 22:06
 
 ## Project Reference
 
@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 12 of 12 (Legal & Launch Prep)
 **Goal:** Terms of Service, Privacy Policy, App Store submission
-**Progress:** 1/5 plans
-**Plans:** 1/5 complete
+**Progress:** 2/5 plans
+**Plans:** 2/5 complete
 
 ## Milestone Progress
 
@@ -47,9 +47,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
 | 10 - Habit Tracking | ✓ Complete | 7/7 plans |
 | 11 - Infrastructure & Polish | ✓ Complete | 6/6 plans |
-| 12 - Legal & Launch Prep | ◐ In Progress | 1/5 plans |
+| 12 - Legal & Launch Prep | ◐ In Progress | 2/5 plans |
 
-**Overall Progress:** █████████░ 97% (66/68 plans)
+**Overall Progress:** █████████░ 99% (67/68 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-27: Completed Plan 12-02 iOS Legal Components (2 tasks, 3min)
 - 2026-01-27: Completed Plan 12-01 Legal Document Hosting (2 tasks, 2min)
 - 2026-01-27: **Completed Phase 11 Infrastructure & Polish** (6/6 plans, INFR-08 to INFR-10 verified)
 - 2026-01-27: Completed Plan 11-06 LLM Error Handling (2 tasks, 3min)
@@ -245,6 +246,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Root-level legal endpoints | 12-01 | Public-facing pages at /terms, /privacy - not under /api/v1/ | ✓ Implemented |
 | GDPR-compliant AI disclosure | 12-01 | Third-party processor table with data destinations | ✓ Implemented |
 | England & Wales jurisdiction | 12-01 | Per CONTEXT.md business requirements | ✓ Implemented |
+| UIViewRepresentable for WebView | 12-02 | Standard Apple pattern for UIKit in SwiftUI | ✓ Implemented |
+| Coordinator pattern for MailView | 12-02 | Required for delegate callback handling | ✓ Implemented |
+| Configuration.apiBaseURL for legal URLs | 12-02 | Centralized config matches existing pattern | ✓ Implemented |
+| DocumentType enum for legal docs | 12-02 | Type-safe document identification with computed URL | ✓ Implemented |
 
 ## Next Actions
 
