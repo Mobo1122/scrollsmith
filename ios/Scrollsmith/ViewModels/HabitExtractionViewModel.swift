@@ -88,7 +88,11 @@ class HabitExtractionViewModel {
         } catch APIError.proRequired {
             state = .proRequired
         } catch {
-            state = .error(error.localizedDescription)
+            state = .error(AppError.from(error).localizedDescription)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "extractHabits",
+                "videoId": videoId.uuidString
+            ])
         }
     }
 
@@ -150,7 +154,12 @@ class HabitExtractionViewModel {
         if createdCount > 0 {
             state = .success(created: createdCount)
         } else if let error = lastError {
-            state = .error(error.localizedDescription)
+            state = .error(AppError.from(error).localizedDescription)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "createSelectedHabits",
+                "videoId": videoId.uuidString,
+                "selectedCount": selectedItems.count
+            ])
         } else {
             state = .error("Failed to create habits")
         }

@@ -17,7 +17,7 @@ struct VideoGridView: View {
     @State private var selection = VideoSelectionManager()
     @State private var playbooks = PlaybookViewModel()
     @State private var isLoading = false
-    @State private var error: String?
+    @State private var error: AppError?
 
     @State private var showDeleteConfirm = false
     @State private var showMoveSheet = false
@@ -148,19 +148,33 @@ struct VideoGridView: View {
         .refreshable {
             await loadVideos()
         }
+        .errorAlert(
+            $error,
+            retryAction: {
+                Task {
+                    await loadVideos()
+                }
+            }
+        )
     }
 
     // MARK: - Data Loading
 
     private func loadVideos() async {
         isLoading = true
+        error = nil
         do {
             videos = try await APIClient.shared.getVideos(
                 playbookId: playbookId,
                 uncategorized: showUncategorized
             )
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "loadVideos",
+                "playbookId": playbookId?.uuidString ?? "nil",
+                "uncategorized": showUncategorized
+            ])
         }
         isLoading = false
     }
@@ -173,7 +187,11 @@ struct VideoGridView: View {
             videos.removeAll { selection.isSelected($0.id) }
             selection.clearSelection()
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "bulkDelete",
+                "count": selection.selectedCount
+            ])
         }
     }
 
@@ -184,7 +202,12 @@ struct VideoGridView: View {
             showMoveSheet = false
             await loadVideos()  // Refresh to reflect changes
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "bulkMove",
+                "playbookId": playbookId.uuidString,
+                "count": selection.selectedCount
+            ])
         }
     }
 
@@ -193,7 +216,11 @@ struct VideoGridView: View {
             _ = try await APIClient.shared.bulkAddToFavorites(ids: Array(selection.selectedIds))
             selection.clearSelection()
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "bulkAddToFavorites",
+                "count": selection.selectedCount
+            ])
         }
     }
 }

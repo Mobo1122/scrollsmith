@@ -56,7 +56,11 @@ struct HabitListView: View {
                             try await APIClient.shared.deleteHabit(habitId: habit.id)
                             await viewModel.loadHabits()
                         } catch {
-                            viewModel.error = "Failed to delete habit"
+                            viewModel.error = AppError.from(error)
+                            CrashReportingService.shared.captureError(error, context: [
+                                "action": "deleteHabit",
+                                "habitId": habit.id.uuidString
+                            ])
                         }
                     },
                     onUpdate: { request in
@@ -65,20 +69,24 @@ struct HabitListView: View {
                             await viewModel.loadHabits()
                             return true
                         } catch {
-                            viewModel.error = "Failed to update habit"
+                            viewModel.error = AppError.from(error)
+                            CrashReportingService.shared.captureError(error, context: [
+                                "action": "updateHabit",
+                                "habitId": habit.id.uuidString
+                            ])
                             return false
                         }
                     }
                 )
             }
-            .alert("Error", isPresented: .init(
-                get: { viewModel.error != nil },
-                set: { if !$0 { viewModel.error = nil } }
-            )) {
-                Button("OK") { viewModel.error = nil }
-            } message: {
-                Text(viewModel.error ?? "")
-            }
+            .errorAlert(
+                $viewModel.error,
+                retryAction: {
+                    Task {
+                        await viewModel.loadHabits()
+                    }
+                }
+            )
         }
     }
 

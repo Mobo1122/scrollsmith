@@ -11,7 +11,7 @@ final class PlaybookViewModel {
 
     var playbooks: [PlaybookDTO] = []
     var isLoading: Bool = false
-    var error: String?
+    var error: AppError?
     var lastSelectedPlaybookId: UUID?  // "Remember last selected" behavior
 
     // MARK: - Load Playbooks
@@ -24,7 +24,8 @@ final class PlaybookViewModel {
         do {
             playbooks = try await APIClient.shared.getPlaybooks()
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: ["action": "loadPlaybooks"])
         }
 
         isLoading = false
@@ -49,7 +50,11 @@ final class PlaybookViewModel {
             }
             return true
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "createPlaybook",
+                "name": name
+            ])
             return false
         }
     }
@@ -70,7 +75,11 @@ final class PlaybookViewModel {
             }
             return true
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "updatePlaybook",
+                "playbookId": id.uuidString
+            ])
             return false
         }
     }
@@ -89,7 +98,11 @@ final class PlaybookViewModel {
             playbooks.removeAll { $0.id == id }
             return true
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "deletePlaybook",
+                "playbookId": id.uuidString
+            ])
             return false
         }
     }
@@ -111,7 +124,12 @@ final class PlaybookViewModel {
             await loadPlaybooks()  // Refresh counts
             return true
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "assignVideo",
+                "videoId": videoId.uuidString,
+                "playbookId": playbookId.uuidString
+            ])
             return false
         }
     }
@@ -128,7 +146,12 @@ final class PlaybookViewModel {
             await loadPlaybooks()  // Refresh counts
             return true
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "removeVideo",
+                "videoId": videoId.uuidString,
+                "playbookId": playbookId.uuidString
+            ])
             return false
         }
     }

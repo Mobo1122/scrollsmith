@@ -12,7 +12,7 @@ final class SummaryViewModel {
     var stepCompletionState: [Int: Bool] = [:]  // step_number: isComplete
     var cardProgress: Int = 0
     var isLoading = false
-    var error: String?
+    var error: AppError?
 
     // MARK: - Private
 

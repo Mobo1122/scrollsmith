@@ -22,7 +22,7 @@ final class SearchViewModel {
     var results: [VideoSearchResult] = []
 
     /// Error message if search failed.
-    var error: String?
+    var error: AppError?
 
     /// Optional playbook ID to scope search to a specific playbook.
     var playbookId: UUID?
@@ -74,7 +74,11 @@ final class SearchViewModel {
                 playbookId: playbookId
             )
         } catch {
-            self.error = error.localizedDescription
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "searchVideos",
+                "query": debouncedQuery
+            ])
             results = []
         }
 

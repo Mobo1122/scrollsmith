@@ -6,7 +6,7 @@ import SwiftUI
 final class HabitListViewModel {
     var habits: [HabitDTO] = []
     var isLoading = false
-    var error: String?
+    var error: AppError?
     var showingPermissionSheet = false
     var hasCheckedPermission = false
     var notificationsEnabled = false
@@ -36,7 +36,8 @@ final class HabitListViewModel {
             habits = try await APIClient.shared.getHabits()
             isLoading = false
         } catch {
-            self.error = "Failed to load habits: \(error.localizedDescription)"
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: ["action": "loadHabits"])
             isLoading = false
         }
     }
@@ -73,7 +74,11 @@ final class HabitListViewModel {
             generator.notificationOccurred(.success)
 
         } catch {
-            self.error = "Failed to complete habit: \(error.localizedDescription)"
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "completeHabit",
+                "habitId": habit.id.uuidString
+            ])
         }
     }
 
@@ -109,7 +114,8 @@ final class HabitListViewModel {
             notificationsEnabled = notificationManager.notificationsEnabled
             return granted
         } catch {
-            self.error = "Failed to request notification permission"
+            self.error = AppError.unknown(message: "Failed to request notification permission")
+            CrashReportingService.shared.captureError(error, context: ["action": "requestNotificationPermission"])
             return false
         }
     }
