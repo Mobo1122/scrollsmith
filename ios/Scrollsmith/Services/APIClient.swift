@@ -886,6 +886,32 @@ actor APIClient {
         return try decoder.decode(HabitDTO.self, from: data)
     }
 
+    /// Deletes a habit.
+    ///
+    /// - Parameter habitId: The habit to delete
+    func deleteHabit(habitId: UUID) async throws {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/habits/\(habitId.uuidString.lowercased())") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "DELETE"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (_, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+    }
+
     /// Gets habit completions for calendar display.
     ///
     /// - Parameter habitId: The habit to get completions for
