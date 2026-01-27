@@ -1,6 +1,6 @@
 # State: Scrollsmith
 
-**Last Updated:** 2026-01-27
+**Last Updated:** 2026-01-27 22:05
 
 ## Project Reference
 
@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 12 of 12 (Legal & Launch Prep)
 **Goal:** Terms of Service, Privacy Policy, App Store submission
-**Progress:** 0/5 plans
-**Plans:** 0/5 complete
+**Progress:** 1/5 plans
+**Plans:** 1/5 complete
 
 ## Milestone Progress
 
@@ -47,9 +47,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
 | 10 - Habit Tracking | ✓ Complete | 7/7 plans |
 | 11 - Infrastructure & Polish | ✓ Complete | 6/6 plans |
-| 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
+| 12 - Legal & Launch Prep | ◐ In Progress | 1/5 plans |
 
-**Overall Progress:** █████████░ 97% (65/68 plans)
+**Overall Progress:** █████████░ 97% (66/68 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-27: Completed Plan 12-01 Legal Document Hosting (2 tasks, 2min)
 - 2026-01-27: **Completed Phase 11 Infrastructure & Polish** (6/6 plans, INFR-08 to INFR-10 verified)
 - 2026-01-27: Completed Plan 11-06 LLM Error Handling (2 tasks, 3min)
 - 2026-01-27: Completed Plan 11-05 iOS Error Handling (2 tasks, 14min)
@@ -241,6 +242,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Separate APIError and NSError conversion | 11-05 | Specific handling for API errors vs network errors | ✓ Implemented |
 | Automatic paywall for Pro errors | 11-05 | 403 errors trigger paywall without manual check | ✓ Implemented |
 | CrashReportingService in catch blocks | 11-05 | Non-fatal errors tracked with context for debugging | ✓ Implemented |
+| Root-level legal endpoints | 12-01 | Public-facing pages at /terms, /privacy - not under /api/v1/ | ✓ Implemented |
+| GDPR-compliant AI disclosure | 12-01 | Third-party processor table with data destinations | ✓ Implemented |
+| England & Wales jurisdiction | 12-01 | Per CONTEXT.md business requirements | ✓ Implemented |
 
 ## Next Actions
 
