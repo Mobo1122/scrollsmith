@@ -20,7 +20,7 @@
 | 7 | Summary Display | iOS UI for bullets, steps, cards with deep-linking | 4 (SUMM-05 to SUMM-08) | ✓ 6 plans |
 | 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 15 (SUBS + INFR) | 8 plans |
 | 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 4 plans |
-| 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | 7 plans |
+| 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | ✓ 7 plans |
 | 11 | Infrastructure & Polish | Analytics, crash reporting, webhook retry, error handling | 8 (INFR) | 0/6 |
 | 12 | Legal & Launch Prep | Terms, Privacy Policy, App Store submission materials | 6 (LEGA) | 0/5 |
 
@@ -400,13 +400,13 @@ Plans:
 **Plans:** 7 plans
 
 Plans:
-- [ ] 10-01-PLAN.md — HabitCompletion model + schema migration (Wave 1)
-- [ ] 10-02-PLAN.md — Habit model updates (reminder_time, reminder_days, is_active) (Wave 1)
-- [ ] 10-03-PLAN.md — Habit completion endpoint + streak calculation with forgiveness (Wave 1)
-- [ ] 10-04-PLAN.md — NotificationManager + permission handling (Wave 2)
-- [ ] 10-05-PLAN.md — iOS HabitCompletion model + APIClient updates (Wave 2)
-- [ ] 10-06-PLAN.md — HabitListView + HabitRowView with streaks (Wave 3)
-- [ ] 10-07-PLAN.md — HabitDetailView (edit, delete, calendar visualization, source video link) (Wave 3)
+- [x] 10-01-PLAN.md — HabitCompletion model + schema migration (Wave 1)
+- [x] 10-02-PLAN.md — Habit model updates (reminder_time, reminder_days, is_active) (Wave 1)
+- [x] 10-03-PLAN.md — Habit completion endpoint + streak calculation with forgiveness (Wave 1)
+- [x] 10-04-PLAN.md — NotificationManager + permission handling (Wave 2)
+- [x] 10-05-PLAN.md — iOS HabitCompletion model + APIClient updates (Wave 2)
+- [x] 10-06-PLAN.md — HabitListView + HabitRowView with streaks (Wave 3)
+- [x] 10-07-PLAN.md — HabitDetailView (edit, delete, calendar visualization, source video link) (Wave 3)
 
 ---
 
@@ -491,4 +491,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-26 - Phase 10 Habit Tracking planned (7 plans in 3 waves)*
+*Last updated: 2026-01-27 - Phase 10 Habit Tracking complete (7/7 plans)*
