@@ -6,7 +6,7 @@ and Claude Sonnet (Pro tier steps/cards).
 
 from __future__ import annotations
 
-import logging
+import asyncio
 from typing import Optional
 
 from anthropic import AsyncAnthropic, RateLimitError, APIStatusError
@@ -18,9 +18,10 @@ from tenacity import (
 )
 
 from app.core.config import settings
+from app.core.logging import get_logger
 from app.schemas.summary import BulletSummary, StepChecklist, StepChecklistItem, CardsSummary, SwipeableCard
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class SummarizationError(Exception):
@@ -89,16 +90,26 @@ class SummarizationService:
                 "Claude API not configured. Set ANTHROPIC_API_KEY environment variable."
             )
 
+        model = kwargs.get("model", "unknown")
+        logger.info("summarization_api_call_start", model=model)
+
         try:
-            return await self.client.messages.create(**kwargs)
+            async with asyncio.timeout(30):
+                response = await self.client.messages.create(**kwargs)
+                logger.info("summarization_api_call_success", model=model)
+                return response
+        except asyncio.TimeoutError:
+            logger.error("summarization_timeout", model=model, timeout_seconds=30)
+            raise SummarizationFailedError("Claude API call timed out after 30 seconds")
         except RateLimitError:
-            logger.warning("Claude API rate limit hit, retrying with backoff...")
+            logger.warning("summarization_rate_limit", model=model)
             raise
         except APIStatusError as e:
             if e.status_code >= 500:
-                logger.warning(f"Claude API server error {e.status_code}, retrying...")
+                logger.warning("summarization_server_error", model=model, status_code=e.status_code)
                 raise
             # Don't retry 4xx errors
+            logger.error("summarization_client_error", model=model, status_code=e.status_code, error=str(e))
             raise SummarizationFailedError(f"Claude API error: {e}")
 
     def _validate_transcript(self, transcript: str, min_words: int = 50) -> None:
@@ -187,6 +198,77 @@ class SummarizationService:
             "recommendation": recommendation
         }
 
+    def _fallback_bullet_summary(self, reason: str) -> BulletSummary:
+        """Generate fallback bullet summary when LLM fails.
+
+        Args:
+            reason: Reason for fallback (timeout, API error, etc.)
+
+        Returns:
+            BulletSummary with error message
+        """
+        logger.warning("summarization_fallback_bullets", reason=reason)
+        return BulletSummary(
+            bullets=[
+                "Summary temporarily unavailable",
+                "Please try again in a few moments",
+                f"Reason: {reason}",
+            ],
+            tags=["error", "retry-later"],
+        )
+
+    def _fallback_step_checklist(self, reason: str) -> StepChecklist:
+        """Generate fallback step checklist when LLM fails.
+
+        Args:
+            reason: Reason for fallback (timeout, API error, etc.)
+
+        Returns:
+            StepChecklist with error message
+        """
+        logger.warning("summarization_fallback_steps", reason=reason)
+        return StepChecklist(
+            title="Checklist Unavailable",
+            steps=[
+                StepChecklistItem(
+                    step_number=1,
+                    instruction="Summary service is temporarily unavailable. Please try again in a few moments.",
+                    timestamp_seconds=None
+                )
+            ],
+            estimated_duration_minutes=None
+        )
+
+    def _fallback_cards(self, reason: str) -> CardsSummary:
+        """Generate fallback cards summary when LLM fails.
+
+        Args:
+            reason: Reason for fallback (timeout, API error, etc.)
+
+        Returns:
+            CardsSummary with error message
+        """
+        logger.warning("summarization_fallback_cards", reason=reason)
+        return CardsSummary(
+            cards=[
+                SwipeableCard(
+                    title="Summary Unavailable",
+                    content="The summary service is temporarily unavailable. Please try again in a few moments.",
+                    category="insight"
+                ),
+                SwipeableCard(
+                    title="What Happened",
+                    content=f"Reason: {reason}",
+                    category="insight"
+                ),
+                SwipeableCard(
+                    title="Next Steps",
+                    content="Wait a moment and try regenerating the summary.",
+                    category="action"
+                ),
+            ]
+        )
+
     async def generate_bullet_summary(
         self,
         transcript: str,
@@ -201,14 +283,13 @@ class SummarizationService:
             use_caching: Whether to use prompt caching (for regeneration)
 
         Returns:
-            BulletSummary with bullets and tags
+            BulletSummary with bullets and tags (or fallback on LLM failure)
 
         Raises:
-            TranscriptTooShortError: If transcript < 50 words
-            NoAPIKeyError: If ANTHROPIC_API_KEY not configured
-            SummarizationFailedError: If Claude API call fails
+            TranscriptTooShortError: If transcript < 50 words (validation error)
+            NoAPIKeyError: If ANTHROPIC_API_KEY not configured (validation error)
         """
-        # Validate transcript length
+        # Validate transcript length (still raise validation errors)
         self._validate_transcript(transcript, min_words=50)
 
         system_content = [
@@ -291,12 +372,19 @@ class SummarizationService:
                     tags=tags[:8] if tags else ["video"]
                 )
 
-            logger.info(f"Generated bullet summary: {len(result.bullets)} bullets, {len(result.tags)} tags")
+            logger.info("summarization_bullets_success", bullet_count=len(result.bullets), tag_count=len(result.tags))
             return result
 
+        except (NoAPIKeyError, TranscriptTooShortError):
+            # Re-raise validation errors (these should fail fast)
+            raise
+        except SummarizationFailedError as e:
+            # LLM errors return fallback
+            logger.error("summarization_bullets_failed", error=str(e))
+            return self._fallback_bullet_summary(str(e))
         except Exception as e:
-            logger.error(f"Bullet summary generation failed: {e}")
-            raise SummarizationFailedError(f"Failed to generate summary: {str(e)}")
+            logger.error("summarization_bullets_unexpected_error", error=str(e), error_type=type(e).__name__)
+            return self._fallback_bullet_summary(f"Unexpected error: {type(e).__name__}")
 
 
     async def generate_step_checklist(
@@ -314,12 +402,11 @@ class SummarizationService:
             use_caching: Whether to use prompt caching (for regeneration)
 
         Returns:
-            StepChecklist with numbered steps and optional timestamps
+            StepChecklist with numbered steps and optional timestamps (or fallback on LLM failure)
 
         Raises:
-            TranscriptTooShortError: If transcript < 50 words
-            NoAPIKeyError: If ANTHROPIC_API_KEY not configured
-            SummarizationFailedError: If Claude API call fails
+            TranscriptTooShortError: If transcript < 50 words (validation error)
+            NoAPIKeyError: If ANTHROPIC_API_KEY not configured (validation error)
         """
         self._validate_transcript(transcript, min_words=50)
 
@@ -404,12 +491,19 @@ class SummarizationService:
                     estimated_duration_minutes=None
                 )
 
-            logger.info(f"Generated step checklist: {len(result.steps)} steps")
+            logger.info("summarization_steps_success", step_count=len(result.steps))
             return result
 
+        except (NoAPIKeyError, TranscriptTooShortError):
+            # Re-raise validation errors (these should fail fast)
+            raise
+        except SummarizationFailedError as e:
+            # LLM errors return fallback
+            logger.error("summarization_steps_failed", error=str(e))
+            return self._fallback_step_checklist(str(e))
         except Exception as e:
-            logger.error(f"Step checklist generation failed: {e}")
-            raise SummarizationFailedError(f"Failed to generate checklist: {str(e)}")
+            logger.error("summarization_steps_unexpected_error", error=str(e), error_type=type(e).__name__)
+            return self._fallback_step_checklist(f"Unexpected error: {type(e).__name__}")
 
     async def generate_cards(
         self,
@@ -426,12 +520,11 @@ class SummarizationService:
             use_caching: Whether to use prompt caching (for regeneration)
 
         Returns:
-            CardsSummary with 3-12 categorized cards
+            CardsSummary with 3-12 categorized cards (or fallback on LLM failure)
 
         Raises:
-            TranscriptTooShortError: If transcript < 50 words
-            NoAPIKeyError: If ANTHROPIC_API_KEY not configured
-            SummarizationFailedError: If Claude API call fails
+            TranscriptTooShortError: If transcript < 50 words (validation error)
+            NoAPIKeyError: If ANTHROPIC_API_KEY not configured (validation error)
         """
         self._validate_transcript(transcript, min_words=50)
 
@@ -545,12 +638,19 @@ class SummarizationService:
                     ]
                 )
 
-            logger.info(f"Generated cards summary: {len(result.cards)} cards")
+            logger.info("summarization_cards_success", card_count=len(result.cards))
             return result
 
+        except (NoAPIKeyError, TranscriptTooShortError):
+            # Re-raise validation errors (these should fail fast)
+            raise
+        except SummarizationFailedError as e:
+            # LLM errors return fallback
+            logger.error("summarization_cards_failed", error=str(e))
+            return self._fallback_cards(str(e))
         except Exception as e:
-            logger.error(f"Cards generation failed: {e}")
-            raise SummarizationFailedError(f"Failed to generate cards: {str(e)}")
+            logger.error("summarization_cards_unexpected_error", error=str(e), error_type=type(e).__name__)
+            return self._fallback_cards(f"Unexpected error: {type(e).__name__}")
 
 
 # Singleton instance
