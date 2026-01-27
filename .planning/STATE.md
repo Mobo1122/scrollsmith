@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 11 of 12 (Infrastructure & Polish)
 **Goal:** Analytics, crash reporting, webhook retry, error handling
-**Progress:** 4/6 plans
-**Plans:** 4/6 complete
+**Progress:** 5/6 plans
+**Plans:** 5/6 complete
 
 ## Milestone Progress
 
@@ -46,10 +46,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 8 - Subscription System | ✓ Complete | 8/8 plans |
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
 | 10 - Habit Tracking | ✓ Complete | 7/7 plans |
-| 11 - Infrastructure & Polish | ◐ In Progress | 4/6 plans |
+| 11 - Infrastructure & Polish | ◐ In Progress | 5/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █████████░ 93% (63/68 plans)
+**Overall Progress:** █████████░ 94% (64/68 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-27: Completed Plan 11-06 LLM Error Handling (2 tasks, 3min)
 - 2026-01-27: Completed Plan 11-03 iOS Crash Reporting (2 tasks, 23min - pre-completed by 11-04)
 - 2026-01-27: Completed Plan 11-04 iOS Analytics (2 tasks, 17min)
 - 2026-01-27: Completed Plan 11-02 Webhook Retry Queue (2 tasks, 3min)
@@ -231,6 +232,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Sentry over Firebase Crashlytics | 11-03 | Explicit SwiftUI support with screenshot/view hierarchy capture | ✓ Implemented |
 | Crash reporting before other init | 11-03 | Capture crashes during app initialization | ✓ Implemented |
 | 20% iOS trace sample rate | 11-03 | Balance performance insight vs API cost (higher than backend 10%) | ✓ Implemented |
+| 30-second timeout for LLM calls | 11-06 | Prevents hanging requests and provides clear failure point | ✓ Implemented |
+| Return fallback on LLM errors | 11-06 | Better UX - users see error message instead of 500 error | ✓ Implemented |
+| Validation errors still raise | 11-06 | Validation failures (too short, no API key) should fail fast | ✓ Implemented |
 
 ## Next Actions
 
