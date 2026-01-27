@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 11 of 12 (Infrastructure & Polish)
 **Goal:** Analytics, crash reporting, webhook retry, error handling
-**Progress:** 2/6 plans
-**Plans:** 2/6 complete
+**Progress:** 3/6 plans
+**Plans:** 3/6 complete
 
 ## Milestone Progress
 
@@ -46,21 +46,22 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 8 - Subscription System | ✓ Complete | 8/8 plans |
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
 | 10 - Habit Tracking | ✓ Complete | 7/7 plans |
-| 11 - Infrastructure & Polish | ◐ In Progress | 2/6 plans |
+| 11 - Infrastructure & Polish | ◐ In Progress | 3/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █████████░ 90% (61/68 plans)
+**Overall Progress:** █████████░ 91% (62/68 plans)
 
 ## Requirements Coverage
 
 **Total v1 Requirements:** 85
 **Mapped to Phases:** 85
 **In Progress:** 0
-**Completed:** 65 (INFR-01 through INFR-07, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, SUMM-01 through SUMM-11, SUBS-01 through SUBS-13, HABT-01 through HABT-17)
+**Completed:** 67 (INFR-01 through INFR-09, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, SUMM-01 through SUMM-11, SUBS-01 through SUBS-13, HABT-01 through HABT-17)
 **Unmapped:** 0 ✓
 
 ## Recent Activity
 
+- 2026-01-27: Completed Plan 11-04 iOS Analytics (2 tasks, 17min)
 - 2026-01-27: Completed Plan 11-02 Webhook Retry Queue (2 tasks, 3min)
 - 2026-01-27: Completed Plan 11-01 Backend Logging & Monitoring (2 tasks, 163s)
 - 2026-01-27: **Completed Phase 10 Habit Tracking** (7/7 plans, HABT-05 to HABT-17 verified)
@@ -222,6 +223,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Webhook dead letter queue | 11-02 | 5 max attempts prevents infinite retries, allows manual review | ✓ Implemented |
 | RevenueCat event.id idempotency | 11-02 | Prevents duplicate webhook processing | ✓ Implemented |
 | Store webhook before processing | 11-02 | Ensures no event loss even if processing fails | ✓ Implemented |
+| Actor-based AnalyticsService | 11-04 | Thread-safe analytics tracking without locks | ✓ Implemented |
+| Task-wrapped analytics calls | 11-04 | Fire-and-forget pattern prevents blocking UI thread | ✓ Implemented |
+| trackAutomaticEvents=false | 11-04 | Explicit control over tracked events, reduces noise | ✓ Implemented |
+| Include streak length in habit completion | 11-04 | Enables cohort analysis by engagement level | ✓ Implemented |
 
 ## Next Actions
 
