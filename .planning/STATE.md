@@ -1,6 +1,6 @@
 # State: Scrollsmith
 
-**Last Updated:** 2026-01-27 22:06
+**Last Updated:** 2026-01-27 22:59
 
 ## Project Reference
 
@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 12 of 12 (Legal & Launch Prep)
 **Goal:** Terms of Service, Privacy Policy, App Store submission
-**Progress:** 2/5 plans
-**Plans:** 2/5 complete
+**Progress:** 3/5 plans
+**Plans:** 3/5 complete
 
 ## Milestone Progress
 
@@ -47,9 +47,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
 | 10 - Habit Tracking | ✓ Complete | 7/7 plans |
 | 11 - Infrastructure & Polish | ✓ Complete | 6/6 plans |
-| 12 - Legal & Launch Prep | ◐ In Progress | 2/5 plans |
+| 12 - Legal & Launch Prep | ◐ In Progress | 3/5 plans |
 
-**Overall Progress:** █████████░ 99% (67/68 plans)
+**Overall Progress:** █████████░ 99% (68/69 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-27: Completed Plan 12-03 iOS Legal Links Integration (3 tasks, 1min)
 - 2026-01-27: Completed Plan 12-02 iOS Legal Components (2 tasks, 3min)
 - 2026-01-27: Completed Plan 12-01 Legal Document Hosting (2 tasks, 2min)
 - 2026-01-27: **Completed Phase 11 Infrastructure & Polish** (6/6 plans, INFR-08 to INFR-10 verified)
@@ -250,6 +251,9 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Coordinator pattern for MailView | 12-02 | Required for delegate callback handling | ✓ Implemented |
 | Configuration.apiBaseURL for legal URLs | 12-02 | Centralized config matches existing pattern | ✓ Implemented |
 | DocumentType enum for legal docs | 12-02 | Type-safe document identification with computed URL | ✓ Implemented |
+| Legal footer between Apple Sign In and login | 12-03 | Maximum visibility during signup flow | ✓ Implemented |
+| MailView with mailto fallback | 12-03 | Support devices without Mail.app configured | ✓ Implemented |
+| About section before logout | 12-03 | Users see it while browsing Settings | ✓ Implemented |
 
 ## Next Actions
 
