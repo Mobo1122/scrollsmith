@@ -1,6 +1,6 @@
 # State: Scrollsmith
 
-**Last Updated:** 2026-01-27 22:59
+**Last Updated:** 2026-01-27 23:45
 
 ## Project Reference
 
@@ -8,7 +8,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 12 Legal & Launch Prep
+**Current focus:** v1 COMPLETE 🎉
 
 ## Architecture Note (2026-01-23)
 
@@ -21,18 +21,18 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Current Phase
 
-**Phase:** 12 of 12 (Legal & Launch Prep)
+**Phase:** 12 of 12 (Legal & Launch Prep) ✓ COMPLETE
 **Goal:** Terms of Service, Privacy Policy, App Store submission
-**Progress:** 3/5 plans
-**Plans:** 3/5 complete
+**Progress:** 5/5 plans
+**Plans:** 5/5 complete (Tasks 2-4 of 12-05 deferred to pre-launch)
 
 ## Milestone Progress
 
-**Milestone:** v1
+**Milestone:** v1 ✓ COMPLETE
 **Total Phases:** 12
-**Completed:** 11
+**Completed:** 12
 **In Progress:** 0
-**Pending:** 1
+**Pending:** 0
 
 | Phase | Status | Progress |
 |-------|--------|----------|
@@ -47,20 +47,24 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
 | 10 - Habit Tracking | ✓ Complete | 7/7 plans |
 | 11 - Infrastructure & Polish | ✓ Complete | 6/6 plans |
-| 12 - Legal & Launch Prep | ◐ In Progress | 3/5 plans |
+| 12 - Legal & Launch Prep | ✓ Complete | 5/5 plans |
 
-**Overall Progress:** █████████░ 99% (68/69 plans)
+**Overall Progress:** ██████████ 100% (70/70 plans)
 
 ## Requirements Coverage
 
 **Total v1 Requirements:** 85
 **Mapped to Phases:** 85
 **In Progress:** 0
-**Completed:** 68 (INFR-01 through INFR-10, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, SUMM-01 through SUMM-11, SUBS-01 through SUBS-13, HABT-01 through HABT-17)
+**Completed:** 85 (INFR-01 through INFR-10, AUTH-01 through AUTH-12, CAPT-01 through CAPT-16, SUMM-01 through SUMM-11, SUBS-01 through SUBS-13, HABT-01 through HABT-17, LEGA-01 through LEGA-06)
 **Unmapped:** 0 ✓
 
 ## Recent Activity
 
+- 2026-01-27: **v1 MILESTONE COMPLETE** 🎉 (12 phases, 70 plans, 85 requirements)
+- 2026-01-27: **Completed Phase 12 Legal & Launch Prep** (5/5 plans, LEGA-01 to LEGA-06 verified)
+- 2026-01-27: Completed Plan 12-05 App Store Marketing Materials (1/4 tasks, 3 deferred to pre-launch)
+- 2026-01-27: Completed Plan 12-04 App Store Connect Configuration (checkpoint)
 - 2026-01-27: Completed Plan 12-03 iOS Legal Links Integration (3 tasks, 1min)
 - 2026-01-27: Completed Plan 12-02 iOS Legal Components (2 tasks, 3min)
 - 2026-01-27: Completed Plan 12-01 Legal Document Hosting (2 tasks, 2min)
@@ -257,8 +261,16 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Next Actions
 
-**Primary:** Phase 12 Legal & Launch Prep (5 plans)
-**Goal:** Terms of Service, Privacy Policy, App Store submission materials
+**v1 COMPLETE** 🎉
+
+Pre-launch remaining:
+- App Store screenshots (5 at 1260x2736) - after UI polish
+- App Preview video (15-30s) - after UI polish
+- Upload materials to App Store Connect
+
+Post-v1 options:
+- `/gsd:new-milestone` to start v2 planning
+- `/gsd:audit-milestone` to review v1 completeness
 
 ## Manual Xcode Setup Required
 

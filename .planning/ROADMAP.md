@@ -22,7 +22,7 @@
 | 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 4 plans |
 | 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | ✓ 7 plans |
 | 11 | Infrastructure & Polish | Analytics, crash reporting, webhook retry, error handling | 8 (INFR) | ✓ 6 plans |
-| 12 | Legal & Launch Prep | Terms, Privacy Policy, App Store submission materials | 6 (LEGA) | 0/5 |
+| 12 | Legal & Launch Prep | Terms, Privacy Policy, App Store submission materials | 6 (LEGA) | ✓ 5 plans |
 
 ---
 
@@ -466,11 +466,11 @@ Plans:
 **Plans:** 5 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Legal documents and backend hosting (Wave 1)
-- [ ] 12-02-PLAN.md — iOS WebView and Mail components (Wave 1)
-- [ ] 12-03-PLAN.md — iOS Legal links integration (Wave 2)
-- [ ] 12-04-PLAN.md — App Store Connect configuration (Wave 1, checkpoints)
-- [ ] 12-05-PLAN.md — App Store marketing materials (Wave 2, checkpoints)
+- [x] 12-01-PLAN.md — Legal documents and backend hosting (Wave 1)
+- [x] 12-02-PLAN.md — iOS WebView and Mail components (Wave 1)
+- [x] 12-03-PLAN.md — iOS Legal links integration (Wave 2)
+- [x] 12-04-PLAN.md — App Store Connect configuration (Wave 1, checkpoints)
+- [x] 12-05-PLAN.md — App Store marketing materials (Wave 2, visuals deferred)
 
 ---
 
@@ -495,4 +495,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-27 - Phase 12 planned (5 plans in 2 waves)*
+*Last updated: 2026-01-27 - Phase 12 complete (v1 milestone complete!)*
