@@ -5,9 +5,12 @@ from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from asgi_correlation_id import CorrelationIdMiddleware
 
 from app.core.config import settings
 from app.core.database import async_engine
+from app.core.logging import configure_logging
+from app.core.sentry import init_sentry
 from app.api.v1 import api_router
 
 
@@ -21,6 +24,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     Yields:
         None: Control during application runtime.
     """
+    # Configure structured logging
+    configure_logging()
+    # Initialize Sentry error monitoring
+    init_sentry()
     # Startup: engine is already created
     print(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
     print(f"Environment: {settings.ENVIRONMENT}")
@@ -46,6 +53,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add correlation ID to all requests
+app.add_middleware(CorrelationIdMiddleware)
 
 # Include API routers
 app.include_router(api_router, prefix="/api/v1")
