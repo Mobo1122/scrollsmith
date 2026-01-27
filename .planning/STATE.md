@@ -1,6 +1,6 @@
 # State: Scrollsmith
 
-**Last Updated:** 2026-01-26
+**Last Updated:** 2026-01-27
 
 ## Project Reference
 
@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 10 of 12 (Habit Tracking)
 **Goal:** Notifications, completions, streaks, visualization
-**Progress:** 5/7 plans
-**Plans:** 5/7 complete
+**Progress:** 6/7 plans
+**Plans:** 6/7 complete
 
 ## Milestone Progress
 
@@ -45,11 +45,11 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 7 - Summary Display | ✓ Complete | 6/6 plans |
 | 8 - Subscription System | ✓ Complete | 8/8 plans |
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
-| 10 - Habit Tracking | ◐ In Progress | 5/7 plans |
+| 10 - Habit Tracking | ◐ In Progress | 6/7 plans |
 | 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** ████████░░ 84% (51/61 plans)
+**Overall Progress:** ████████░░ 85% (52/61 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-27: Completed Plan 10-06 Habit List UI (3 tasks, 21min)
 - 2026-01-26: Completed Plan 10-04 Notification Scheduling (2 tasks, 15min)
 - 2026-01-26: Completed Plan 10-05 iOS Habit Completion & Update APIs (3 tasks, 11min)
 - 2026-01-26: Completed Plan 10-03 Habit Completion Endpoints (2 tasks, 2min)
@@ -206,6 +207,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | Default timezone parameter | 10-05 | TimeZone.current.identifier reduces boilerplate | ✓ Implemented |
 | UNCalendarNotificationTrigger for reminders | 10-04 | Handles DST, device restarts, low power mode correctly | ✓ Implemented |
 | nonisolated delegate methods | 10-04 | UNUserNotificationCenterDelegate methods can't be @MainActor isolated | ✓ Implemented |
+| Method-level @MainActor for ViewModels | 10-06 | SwiftUI @State + @Observable requires non-isolated class | ✓ Implemented |
+| HabitDTO Hashable | 10-06 | Required for navigationDestination(item:destination:) | ✓ Implemented |
 
 ## Next Actions
 
