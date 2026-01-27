@@ -67,7 +67,7 @@ struct HabitExtractionResponse: Codable {
 // MARK: - Habit DTO (full habit from backend)
 
 /// Full habit object from backend (for list/detail views).
-struct HabitDTO: Codable, Identifiable {
+struct HabitDTO: Codable, Identifiable, Hashable {
     let id: UUID
     let videoId: UUID?
     let title: String

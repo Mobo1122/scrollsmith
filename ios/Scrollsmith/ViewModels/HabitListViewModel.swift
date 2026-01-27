@@ -3,15 +3,13 @@ import SwiftUI
 
 /// ViewModel for managing habit list, completions, and notifications.
 @Observable
-@MainActor
-class HabitListViewModel {
+final class HabitListViewModel {
     var habits: [HabitDTO] = []
     var isLoading = false
     var error: String?
     var showingPermissionSheet = false
     var hasCheckedPermission = false
-
-    private let notificationManager = NotificationManager.shared
+    var notificationsEnabled = false
 
     // MARK: - Computed Properties
 
@@ -29,6 +27,7 @@ class HabitListViewModel {
 
     // MARK: - Loading
 
+    @MainActor
     func loadHabits() async {
         isLoading = true
         error = nil
@@ -44,9 +43,10 @@ class HabitListViewModel {
 
     // MARK: - Completion
 
+    @MainActor
     func completeHabit(_ habit: HabitDTO) async {
         do {
-            let response = try await APIClient.shared.completeHabit(
+            _ = try await APIClient.shared.completeHabit(
                 habitId: habit.id,
                 timezone: TimeZone.current.identifier
             )
@@ -55,7 +55,7 @@ class HabitListViewModel {
             _completedToday.insert(habit.id)
 
             // Update habit in list with new streak
-            if let index = habits.firstIndex(where: { $0.id == habit.id }) {
+            if habits.firstIndex(where: { $0.id == habit.id }) != nil {
                 // Refetch to get updated streak (simple approach)
                 await loadHabits()
             }
@@ -75,11 +75,14 @@ class HabitListViewModel {
 
     // MARK: - Notifications
 
+    @MainActor
     func checkNotificationPermission() async {
         guard !hasCheckedPermission else { return }
         hasCheckedPermission = true
 
+        let notificationManager = NotificationManager.shared
         await notificationManager.checkAuthorizationStatus()
+        notificationsEnabled = notificationManager.notificationsEnabled
 
         // If not determined and user has habits with reminders, show priming
         if notificationManager.authorizationStatus == .notDetermined {
@@ -90,17 +93,17 @@ class HabitListViewModel {
         }
     }
 
+    @MainActor
     func requestNotificationPermission() async -> Bool {
         do {
-            return try await notificationManager.requestAuthorization()
+            let notificationManager = NotificationManager.shared
+            let granted = try await notificationManager.requestAuthorization()
+            notificationsEnabled = notificationManager.notificationsEnabled
+            return granted
         } catch {
             self.error = "Failed to request notification permission"
             return false
         }
-    }
-
-    var notificationsEnabled: Bool {
-        notificationManager.notificationsEnabled
     }
 
     // MARK: - Helpers

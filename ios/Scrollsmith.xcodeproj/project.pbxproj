@@ -89,6 +89,13 @@
 		CE781F2C2F28104400D238A3 /* FrequencyPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F2A2F28104400D238A3 /* FrequencyPickerView.swift */; };
 		CE781F2D2F28104400D238A3 /* HabitExtractionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F2B2F28104400D238A3 /* HabitExtractionSheet.swift */; };
 		CE781F2E2F28200000D238A3 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F2F2F28200000D238A3 /* NotificationManager.swift */; };
+		CE781F302F28500000D238A3 /* HabitListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F312F28500000D238A3 /* HabitListView.swift */; };
+		CE781F322F28500100D238A3 /* HabitRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F332F28500100D238A3 /* HabitRowView.swift */; };
+		CE781F342F28500200D238A3 /* NotificationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F352F28500200D238A3 /* NotificationPermissionView.swift */; };
+		CE781F362F28500300D238A3 /* HabitListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F372F28500300D238A3 /* HabitListViewModel.swift */; };
+		F81256B7D3A6473489DDA061 /* StreakCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A061E420CC1D473580647059 /* StreakCalendarView.swift */; };
+		03439A71BCB3478F97D726D4 /* HabitEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7992D2FAF34A4EE8A71B8838 /* HabitEditSheet.swift */; };
+		691CFF1AE5714BE681DC2A7F /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EB5A1DB313487886CCEC6F /* HabitDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -199,6 +206,13 @@
 		CE781F2A2F28104400D238A3 /* FrequencyPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyPickerView.swift; sourceTree = "<group>"; };
 		CE781F2B2F28104400D238A3 /* HabitExtractionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitExtractionSheet.swift; sourceTree = "<group>"; };
 		CE781F2F2F28200000D238A3 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		CE781F312F28500000D238A3 /* HabitListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitListView.swift; sourceTree = "<group>"; };
+		CE781F332F28500100D238A3 /* HabitRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitRowView.swift; sourceTree = "<group>"; };
+		CE781F352F28500200D238A3 /* NotificationPermissionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationPermissionView.swift; sourceTree = "<group>"; };
+		CE781F372F28500300D238A3 /* HabitListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitListViewModel.swift; sourceTree = "<group>"; };
+		A061E420CC1D473580647059 /* StreakCalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreakCalendarView.swift; sourceTree = "<group>"; };
+		7992D2FAF34A4EE8A71B8838 /* HabitEditSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitEditSheet.swift; sourceTree = "<group>"; };
+		C3EB5A1DB313487886CCEC6F /* HabitDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -322,6 +336,7 @@
 				CE2D7AA12F206FCB004CCAEF /* AuthViewModel.swift */,
 				A000002B /* SummaryViewModel.swift */,
 				A000003D /* HabitExtractionViewModel.swift */,
+				CE781F372F28500300D238A3 /* HabitListViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -442,6 +457,12 @@
 			children = (
 				CE781F2A2F28104400D238A3 /* FrequencyPickerView.swift */,
 				CE781F2B2F28104400D238A3 /* HabitExtractionSheet.swift */,
+				C3EB5A1DB313487886CCEC6F /* HabitDetailView.swift */,
+				7992D2FAF34A4EE8A71B8838 /* HabitEditSheet.swift */,
+				CE781F312F28500000D238A3 /* HabitListView.swift */,
+				CE781F332F28500100D238A3 /* HabitRowView.swift */,
+				CE781F352F28500200D238A3 /* NotificationPermissionView.swift */,
+				A061E420CC1D473580647059 /* StreakCalendarView.swift */,
 			);
 			path = Habits;
 			sourceTree = "<group>";
@@ -624,6 +645,13 @@
 				A0000009 /* HealthResponse.swift in Sources */,
 				CE781F082F25000E00D238A3 /* SearchViewModel.swift in Sources */,
 				CE781F2E2F28200000D238A3 /* NotificationManager.swift in Sources */,
+				CE781F302F28500000D238A3 /* HabitListView.swift in Sources */,
+				CE781F322F28500100D238A3 /* HabitRowView.swift in Sources */,
+				CE781F342F28500200D238A3 /* NotificationPermissionView.swift in Sources */,
+				CE781F362F28500300D238A3 /* HabitListViewModel.swift in Sources */,
+				F81256B7D3A6473489DDA061 /* StreakCalendarView.swift in Sources */,
+				03439A71BCB3478F97D726D4 /* HabitEditSheet.swift in Sources */,
+				691CFF1AE5714BE681DC2A7F /* HabitDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,7 @@ struct MainTabView: View {
     enum Tab: String, CaseIterable {
         case home = "Home"
         case capture = "Capture"
+        case habits = "Habits"
         case settings = "Settings"
 
         var icon: String {
@@ -20,6 +21,8 @@ struct MainTabView: View {
                 return "house"
             case .capture:
                 return "plus.circle.fill"
+            case .habits:
+                return "checkmark.circle"
             case .settings:
                 return "gearshape"
             }
@@ -40,6 +43,12 @@ struct MainTabView: View {
                 }
                 .tag(Tab.capture)
                 .badge(uploadQueueService.pendingCount)
+
+            HabitListView()
+                .tabItem {
+                    Label(Tab.habits.rawValue, systemImage: Tab.habits.icon)
+                }
+                .tag(Tab.habits)
 
             SettingsView()
                 .tabItem {
