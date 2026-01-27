@@ -14,8 +14,8 @@ Exports:
 
 from __future__ import annotations
 
+import asyncio
 import json
-import logging
 from typing import List, Optional
 
 from anthropic import AsyncAnthropic, RateLimitError, APIStatusError
@@ -27,9 +27,10 @@ from tenacity import (
 )
 
 from app.core.config import settings
+from app.core.logging import get_logger
 from app.schemas.habit import HabitSuggestion
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 # System prompt for habit extraction - constrains output to specific, actionable habits
@@ -114,16 +115,26 @@ class HabitExtractionService:
                 "Claude API not configured. Set ANTHROPIC_API_KEY environment variable."
             )
 
+        model = kwargs.get("model", "unknown")
+        logger.info("habit_extraction_api_call_start", model=model)
+
         try:
-            return await self.client.beta.messages.create(**kwargs)
+            async with asyncio.timeout(30):
+                response = await self.client.beta.messages.create(**kwargs)
+                logger.info("habit_extraction_api_call_success", model=model)
+                return response
+        except asyncio.TimeoutError:
+            logger.error("habit_extraction_timeout", model=model, timeout_seconds=30)
+            raise ExtractionFailedError("Claude API call timed out after 30 seconds")
         except RateLimitError:
-            logger.warning("Claude API rate limit hit, retrying with backoff...")
+            logger.warning("habit_extraction_rate_limit", model=model)
             raise
         except APIStatusError as e:
             if e.status_code >= 500:
-                logger.warning(f"Claude API server error {e.status_code}, retrying...")
+                logger.warning("habit_extraction_server_error", model=model, status_code=e.status_code)
                 raise
             # Don't retry 4xx errors
+            logger.error("habit_extraction_client_error", model=model, status_code=e.status_code, error=str(e))
             raise ExtractionFailedError(f"Claude API error: {e}")
 
     def _validate_transcript(self, transcript: str, min_words: int = 50) -> None:
@@ -151,15 +162,17 @@ class HabitExtractionService:
             transcript: Video transcript text
 
         Returns:
-            List of 1-3 HabitSuggestion objects
+            List of 1-3 HabitSuggestion objects (or empty list on LLM failure)
 
         Raises:
-            TranscriptTooShortError: If transcript < 50 words
-            NoAPIKeyError: If ANTHROPIC_API_KEY not configured
-            ExtractionFailedError: If Claude API call fails
+            TranscriptTooShortError: If transcript < 50 words (validation error)
+            NoAPIKeyError: If ANTHROPIC_API_KEY not configured (validation error)
         """
-        # Validate transcript length
+        # Validate transcript length (still raise validation errors)
         self._validate_transcript(transcript, min_words=50)
+
+        word_count = len(transcript.split())
+        logger.info("habit_extraction_start", word_count=word_count)
 
         try:
             response = await self._call_claude(
@@ -217,15 +230,21 @@ class HabitExtractionService:
                 for habit_data in parsed_data["habits"]
             ]
 
-            logger.info(f"Extracted {len(habits)} habits from transcript")
+            logger.info("habit_extraction_success", habit_count=len(habits))
             return habits
 
+        except (NoAPIKeyError, TranscriptTooShortError):
+            # Re-raise validation errors (these should fail fast)
+            raise
         except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse habit extraction response: {e}")
-            raise ExtractionFailedError(f"Failed to parse extraction response: {e}")
+            logger.error("habit_extraction_parse_error", error=str(e))
+            return []  # Return empty list as fallback
+        except ExtractionFailedError as e:
+            logger.error("habit_extraction_failed", error=str(e))
+            return []  # Return empty list as fallback
         except Exception as e:
-            logger.error(f"Habit extraction failed: {e}")
-            raise ExtractionFailedError(f"Failed to extract habits: {str(e)}")
+            logger.error("habit_extraction_unexpected_error", error=str(e), error_type=type(e).__name__)
+            return []  # Return empty list as fallback
 
 
 # Singleton instance
