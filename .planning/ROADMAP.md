@@ -21,7 +21,7 @@
 | 8 | Subscription System | RevenueCat integration, free/Pro tiers, usage tracking | 15 (SUBS + INFR) | 8 plans |
 | 9 | Habit Extraction | LLM habit suggestions from videos with Pro gating | 4 (HABT) | 4 plans |
 | 10 | Habit Tracking | Notifications, completions, streaks, visualization | 13 (HABT) | ✓ 7 plans |
-| 11 | Infrastructure & Polish | Analytics, crash reporting, webhook retry, error handling | 8 (INFR) | 6 plans |
+| 11 | Infrastructure & Polish | Analytics, crash reporting, webhook retry, error handling | 8 (INFR) | ✓ 6 plans |
 | 12 | Legal & Launch Prep | Terms, Privacy Policy, App Store submission materials | 6 (LEGA) | 0/5 |
 
 ---
@@ -432,12 +432,12 @@ Plans:
 **Plans:** 6 plans
 
 Plans:
-- [ ] 11-01-PLAN.md — Backend logging infrastructure (Sentry + structlog + correlation IDs) (Wave 1)
-- [ ] 11-02-PLAN.md — Webhook retry queue with dead letter handling (Wave 1)
-- [ ] 11-03-PLAN.md — iOS crash reporting with Sentry (Wave 1)
-- [ ] 11-04-PLAN.md — iOS analytics with Mixpanel (Wave 1)
-- [ ] 11-05-PLAN.md — iOS user-friendly error handling (Wave 2)
-- [ ] 11-06-PLAN.md — LLM error handling with timeout and fallback (Wave 2)
+- [x] 11-01-PLAN.md — Backend logging infrastructure (Sentry + structlog + correlation IDs) (Wave 1)
+- [x] 11-02-PLAN.md — Webhook retry queue with dead letter handling (Wave 1)
+- [x] 11-03-PLAN.md — iOS crash reporting with Sentry (Wave 1)
+- [x] 11-04-PLAN.md — iOS analytics with Mixpanel (Wave 1)
+- [x] 11-05-PLAN.md — iOS user-friendly error handling (Wave 2)
+- [x] 11-06-PLAN.md — LLM error handling with timeout and fallback (Wave 2)
 
 ---
 
@@ -493,4 +493,4 @@ The following features are deferred to v2 due to macOS 14+ requirement for Whisp
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-27 - Phase 11 planned (6 plans in 2 waves)*
+*Last updated: 2026-01-27 - Phase 11 complete (6 plans, INFR-08 to INFR-10 verified)*

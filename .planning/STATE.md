@@ -8,7 +8,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 11 Infrastructure & Polish
+**Current focus:** Phase 12 Legal & Launch Prep
 
 ## Architecture Note (2026-01-23)
 
@@ -21,19 +21,18 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Current Phase
 
-**Phase:** 11 of 12 (Infrastructure & Polish)
-**Goal:** Analytics, crash reporting, webhook retry, error handling
-**Progress:** 5/6 plans
-**Plans:** 5/6 complete
-**Last activity:** 2026-01-27 - Completed 11-05-PLAN.md (Error Handling)
+**Phase:** 12 of 12 (Legal & Launch Prep)
+**Goal:** Terms of Service, Privacy Policy, App Store submission
+**Progress:** 0/5 plans
+**Plans:** 0/5 complete
 
 ## Milestone Progress
 
 **Milestone:** v1
 **Total Phases:** 12
-**Completed:** 10
+**Completed:** 11
 **In Progress:** 0
-**Pending:** 2
+**Pending:** 1
 
 | Phase | Status | Progress |
 |-------|--------|----------|
@@ -47,10 +46,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 8 - Subscription System | ✓ Complete | 8/8 plans |
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
 | 10 - Habit Tracking | ✓ Complete | 7/7 plans |
-| 11 - Infrastructure & Polish | ◐ In Progress | 5/6 plans |
+| 11 - Infrastructure & Polish | ✓ Complete | 6/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █████████░ 94% (64/68 plans)
+**Overall Progress:** █████████░ 97% (65/68 plans)
 
 ## Requirements Coverage
 
@@ -62,10 +61,11 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
-- 2026-01-27: Completed Plan 11-05 iOS Error Handling (2 tasks, 14min)
+- 2026-01-27: **Completed Phase 11 Infrastructure & Polish** (6/6 plans, INFR-08 to INFR-10 verified)
 - 2026-01-27: Completed Plan 11-06 LLM Error Handling (2 tasks, 3min)
-- 2026-01-27: Completed Plan 11-03 iOS Crash Reporting (2 tasks, 23min - pre-completed by 11-04)
+- 2026-01-27: Completed Plan 11-05 iOS Error Handling (2 tasks, 14min)
 - 2026-01-27: Completed Plan 11-04 iOS Analytics (2 tasks, 17min)
+- 2026-01-27: Completed Plan 11-03 iOS Crash Reporting (2 tasks, 23min - pre-completed by 11-04)
 - 2026-01-27: Completed Plan 11-02 Webhook Retry Queue (2 tasks, 3min)
 - 2026-01-27: Completed Plan 11-01 Backend Logging & Monitoring (2 tasks, 163s)
 - 2026-01-27: **Completed Phase 10 Habit Tracking** (7/7 plans, HABT-05 to HABT-17 verified)
@@ -244,8 +244,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Next Actions
 
-**Primary:** Phase 11 Infrastructure & Polish (6 plans)
-**Goal:** Analytics, crash reporting, webhook retry, error handling
+**Primary:** Phase 12 Legal & Launch Prep (5 plans)
+**Goal:** Terms of Service, Privacy Policy, App Store submission materials
 
 ## Manual Xcode Setup Required
 

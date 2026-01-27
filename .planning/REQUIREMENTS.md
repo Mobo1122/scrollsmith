@@ -115,9 +115,9 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **INFR-05**: Backend integrates with YouTube Data API for captions
 - [ ] **INFR-06**: Backend integrates with RevenueCat for subscription validation
 - [ ] **INFR-07**: Backend handles RevenueCat webhooks for subscription events
-- [ ] **INFR-08**: Backend implements webhook retry logic for failed events
-- [ ] **INFR-09**: App includes crash reporting (Sentry or similar)
-- [ ] **INFR-10**: App includes analytics tracking (video views, habit completions, conversions)
+- [x] **INFR-08**: Backend implements webhook retry logic for failed events
+- [x] **INFR-09**: App includes crash reporting (Sentry or similar)
+- [x] **INFR-10**: App includes analytics tracking (video views, habit completions, conversions)
 
 ### Legal & Support
 
