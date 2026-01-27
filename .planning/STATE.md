@@ -23,8 +23,8 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 **Phase:** 11 of 12 (Infrastructure & Polish)
 **Goal:** Analytics, crash reporting, webhook retry, error handling
-**Progress:** 0/6 plans
-**Plans:** 0/6 complete
+**Progress:** 1/6 plans
+**Plans:** 1/6 complete
 
 ## Milestone Progress
 
@@ -46,10 +46,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 8 - Subscription System | ✓ Complete | 8/8 plans |
 | 9 - Habit Extraction | ✓ Complete | 4/4 plans |
 | 10 - Habit Tracking | ✓ Complete | 7/7 plans |
-| 11 - Infrastructure & Polish | ○ Pending | 0/6 plans |
+| 11 - Infrastructure & Polish | ◐ In Progress | 1/6 plans |
 | 12 - Legal & Launch Prep | ○ Pending | 0/5 plans |
 
-**Overall Progress:** █████████░ 87% (59/68 plans)
+**Overall Progress:** █████████░ 88% (60/68 plans)
 
 ## Requirements Coverage
 
@@ -61,6 +61,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-27: Completed Plan 11-01 Backend Logging & Monitoring (2 tasks, 163s)
 - 2026-01-27: **Completed Phase 10 Habit Tracking** (7/7 plans, HABT-05 to HABT-17 verified)
 - 2026-01-27: Completed Plan 10-07 Habit Detail UI (4 tasks, 15min)
 - 2026-01-27: Completed Plan 10-06 Habit List UI (3 tasks, 21min)
@@ -114,6 +115,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | `OPENAI_API_KEY` | Yes* | OpenAI API key for Whisper transcription |
 | `ASSEMBLYAI_API_KEY` | No | AssemblyAI API key (fallback transcription) |
 | `ANTHROPIC_API_KEY` | Yes | Anthropic Claude API key for AI summarization |
+| `SENTRY_DSN` | No | Sentry DSN for error monitoring (Phase 11) |
 
 *At least one transcription API key is required for camera roll uploads to work.
 
@@ -211,6 +213,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | nonisolated delegate methods | 10-04 | UNUserNotificationCenterDelegate methods can't be @MainActor isolated | ✓ Implemented |
 | Method-level @MainActor for ViewModels | 10-06 | SwiftUI @State + @Observable requires non-isolated class | ✓ Implemented |
 | HabitDTO Hashable | 10-06 | Required for navigationDestination(item:destination:) | ✓ Implemented |
+| JSON logs in production | 11-01 | Railway needs structured logs for aggregation/search | ✓ Implemented |
+| Correlation ID middleware | 11-01 | Track requests across async operations and distributed services | ✓ Implemented |
+| Sentry PII scrubbing | 11-01 | Prevent auth tokens and sensitive headers from leaking | ✓ Implemented |
+| 10% trace sampling | 11-01 | Balance performance insights vs Sentry quota usage | ✓ Implemented |
 
 ## Next Actions
 
