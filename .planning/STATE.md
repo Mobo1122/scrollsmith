@@ -25,6 +25,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 **Goal:** Analytics, crash reporting, webhook retry, error handling
 **Progress:** 5/6 plans
 **Plans:** 5/6 complete
+**Last activity:** 2026-01-27 - Completed 11-05-PLAN.md (Error Handling)
 
 ## Milestone Progress
 
@@ -61,6 +62,7 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 
 ## Recent Activity
 
+- 2026-01-27: Completed Plan 11-05 iOS Error Handling (2 tasks, 14min)
 - 2026-01-27: Completed Plan 11-06 LLM Error Handling (2 tasks, 3min)
 - 2026-01-27: Completed Plan 11-03 iOS Crash Reporting (2 tasks, 23min - pre-completed by 11-04)
 - 2026-01-27: Completed Plan 11-04 iOS Analytics (2 tasks, 17min)
@@ -235,6 +237,10 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-23)
 | 30-second timeout for LLM calls | 11-06 | Prevents hanging requests and provides clear failure point | ✓ Implemented |
 | Return fallback on LLM errors | 11-06 | Better UX - users see error message instead of 500 error | ✓ Implemented |
 | Validation errors still raise | 11-06 | Validation failures (too short, no API key) should fail fast | ✓ Implemented |
+| AppError enum for iOS errors | 11-05 | User-friendly error messages with localized descriptions | ✓ Implemented |
+| Separate APIError and NSError conversion | 11-05 | Specific handling for API errors vs network errors | ✓ Implemented |
+| Automatic paywall for Pro errors | 11-05 | 403 errors trigger paywall without manual check | ✓ Implemented |
+| CrashReportingService in catch blocks | 11-05 | Non-fatal errors tracked with context for debugging | ✓ Implemented |
 
 ## Next Actions
 
