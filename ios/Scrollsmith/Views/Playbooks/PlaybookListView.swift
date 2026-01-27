@@ -21,7 +21,7 @@ struct PlaybookListView: View {
                     ContentUnavailableView(
                         "Error",
                         systemImage: "exclamationmark.triangle",
-                        description: Text(error)
+                        description: Text(error.localizedDescription)
                     )
                 } else if viewModel.playbooks.isEmpty {
                     ContentUnavailableView(

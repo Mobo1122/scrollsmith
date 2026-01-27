@@ -62,7 +62,8 @@ final class CrashReportingService {
         guard isConfigured else { return }
 
         if let userId = userId {
-            let user = User(userId: userId.uuidString)
+            let user = User()
+            user.userId = userId.uuidString
             SentrySDK.setUser(user)
         } else {
             SentrySDK.setUser(nil)
