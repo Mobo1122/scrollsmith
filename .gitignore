@@ -6,3 +6,6 @@
 # Xcode user data
 *.xcuserstate
 xcuserdata/
+
+# Sensitive configuration (use Configuration.swift.example as template)
+ios/Scrollsmith/Configuration.swift
