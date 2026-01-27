@@ -29,5 +29,10 @@ aiohttp>=3.9.0
 anthropic>=0.70.0
 tenacity>=8.2.0
 
+# Logging & Monitoring (Phase 11)
+sentry-sdk>=2.0.0
+structlog>=24.0.0
+asgi-correlation-id>=4.0.0
+
 # Subscription & Usage (Phase 8)
 python-dateutil>=2.8.0

@@ -50,6 +50,9 @@ class Settings(BaseSettings):
     # Anthropic Claude API (AI summarization)
     ANTHROPIC_API_KEY: Optional[str] = None
 
+    # Sentry (error monitoring)
+    SENTRY_DSN: Optional[str] = None
+
     # RevenueCat (subscriptions)
     REVENUECAT_WEBHOOK_AUTH_KEY: Optional[str] = None
     REVENUECAT_API_KEY: Optional[str] = None
