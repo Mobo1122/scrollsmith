@@ -8,7 +8,7 @@ struct HabitRowView: View {
     let onTap: () -> Void
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: Spacing.md) {
             // Completion button
             Button(action: {
                 if !isCompletedToday {
@@ -17,33 +17,33 @@ struct HabitRowView: View {
             }) {
                 Image(systemName: isCompletedToday ? "checkmark.circle.fill" : "circle")
                     .font(.title2)
-                    .foregroundColor(isCompletedToday ? .green : .gray)
+                    .foregroundColor(isCompletedToday ? Theme.Semantic.success : Theme.Text.tertiary)
             }
             .buttonStyle(.plain)
             .disabled(isCompletedToday)
 
             // Habit info
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: Spacing.xxs) {
                 Text(habit.title)
-                    .font(.body)
-                    .foregroundColor(isCompletedToday ? .secondary : .primary)
+                    .font(Typography.body)
+                    .foregroundColor(isCompletedToday ? Theme.Text.secondary : Theme.Text.primary)
                     .strikethrough(isCompletedToday)
 
-                HStack(spacing: 12) {
+                HStack(spacing: Spacing.sm) {
                     // Frequency badge
                     Text(habit.frequencyEnum.displayName)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                        .font(Typography.footnote)
+                        .foregroundColor(Theme.Text.secondary)
 
                     // Streak display
                     if habit.currentStreak > 0 {
                         HStack(spacing: 2) {
                             Image(systemName: "flame.fill")
-                                .foregroundColor(.orange)
+                                .foregroundColor(Theme.Semantic.warning)
                             Text("\(habit.currentStreak)")
                                 .fontWeight(.semibold)
                         }
-                        .font(.caption)
+                        .font(Typography.footnote)
                     }
                 }
             }
@@ -52,10 +52,10 @@ struct HabitRowView: View {
 
             // Chevron for detail navigation
             Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundColor(.secondary)
+                .font(Typography.footnote)
+                .foregroundColor(Theme.Text.secondary)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, Spacing.xs)
         .contentShape(Rectangle())
         .onTapGesture(perform: onTap)
     }

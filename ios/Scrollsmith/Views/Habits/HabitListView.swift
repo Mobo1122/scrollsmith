@@ -24,7 +24,7 @@ struct HabitListView: View {
                             viewModel.showingPermissionSheet = true
                         } label: {
                             Image(systemName: "bell.slash")
-                                .foregroundColor(.orange)
+                                .foregroundColor(Theme.Semantic.warning)
                         }
                     }
                 }
@@ -134,24 +134,25 @@ struct HabitListView: View {
     }
 
     private var inAppReminderBanner: some View {
-        HStack {
+        HStack(spacing: Spacing.sm) {
             Image(systemName: "bell.slash")
-                .foregroundColor(.orange)
-            VStack(alignment: .leading) {
+                .foregroundColor(Theme.Semantic.warning)
+            VStack(alignment: .leading, spacing: 2) {
                 Text("Notifications Off")
-                    .font(.subheadline.bold())
+                    .font(Typography.subheadline.bold())
                 Text("Enable to get habit reminders")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(Typography.footnote)
+                    .foregroundColor(Theme.Text.secondary)
             }
             Spacer()
             Button("Enable") {
                 viewModel.showingPermissionSheet = true
             }
             .buttonStyle(.bordered)
+            .tint(Theme.accent)
             .controlSize(.small)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, Spacing.xs)
     }
 
     private var emptyStateView: some View {
