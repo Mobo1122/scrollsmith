@@ -75,18 +75,18 @@ struct PlaybookListView: View {
                     VideoGridView()
                         .navigationTitle("All Videos")
                 } label: {
-                    HStack(spacing: 12) {
+                    HStack(spacing: Spacing.sm) {
                         Image(systemName: "rectangle.stack")
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Theme.accent)
                             .font(.title2)
                             .frame(width: 32)
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text("All Videos")
-                                .font(.headline)
+                                .font(Typography.headline)
                             Text("View all your videos")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .font(Typography.footnote)
+                                .foregroundStyle(Theme.Text.secondary)
                         }
 
                         Spacer()
@@ -107,18 +107,18 @@ struct PlaybookListView: View {
                 VideoGridView(playbookId: nil, showUncategorized: true)
                     .navigationTitle("Uncategorized")
             } label: {
-                HStack(spacing: 12) {
+                HStack(spacing: Spacing.sm) {
                     Image(systemName: "tray")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.Text.secondary)
                         .font(.title2)
                         .frame(width: 32)
 
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Uncategorized")
-                            .font(.headline)
+                            .font(Typography.headline)
                         Text("Videos not in any playbook")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(Typography.footnote)
+                            .foregroundStyle(Theme.Text.secondary)
                     }
 
                     Spacer()
@@ -143,7 +143,7 @@ struct PlaybookListView: View {
                             Button("Edit") {
                                 editingPlaybook = playbook
                             }
-                            .tint(.blue)
+                            .tint(Theme.accent)
                         }
                     }
                 }
@@ -159,18 +159,18 @@ struct PlaybookRow: View {
     let playbook: PlaybookDTO
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Spacing.sm) {
             Image(systemName: playbook.icon ?? "folder")
-                .foregroundStyle(playbook.isSystem ? .yellow : .blue)
+                .foregroundStyle(playbook.isSystem ? .yellow : Theme.accent)
                 .font(.title2)
                 .frame(width: 32)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(playbook.name)
-                    .font(.headline)
+                    .font(Typography.headline)
                 Text("\(playbook.videoCount) \(playbook.videoCount == 1 ? "video" : "videos")")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(Typography.footnote)
+                    .foregroundStyle(Theme.Text.secondary)
             }
 
             Spacer()
