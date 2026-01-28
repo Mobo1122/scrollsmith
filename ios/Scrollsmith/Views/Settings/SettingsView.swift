@@ -26,7 +26,7 @@ struct SettingsView: View {
 
                         LabeledContent("Status") {
                             Text(subscriptionViewModel.isPro ? "Pro" : "Free")
-                                .foregroundColor(subscriptionViewModel.isPro ? .yellow : .secondary)
+                                .foregroundColor(subscriptionViewModel.isPro ? Theme.accent : Theme.Text.secondary)
                                 .fontWeight(.medium)
                         }
                     }
@@ -36,17 +36,18 @@ struct SettingsView: View {
                 Section("Subscription") {
                     if subscriptionViewModel.isPro {
                         Label("You have Scrollsmith Pro", systemImage: "crown.fill")
-                            .foregroundColor(.yellow)
+                            .foregroundColor(Theme.accent)
                     } else {
                         Button {
                             subscriptionViewModel.showPaywall = true
                         } label: {
                             Label("Upgrade to Pro", systemImage: "arrow.up.circle.fill")
                         }
+                        .tint(Theme.accent)
 
                         LabeledContent("Videos this month") {
                             Text("\(subscriptionViewModel.videosUsed) / \(subscriptionViewModel.videosLimit)")
-                                .foregroundColor(subscriptionViewModel.isNearLimit ? .orange : .secondary)
+                                .foregroundColor(subscriptionViewModel.isNearLimit ? Theme.Semantic.warning : Theme.Text.secondary)
                         }
                     }
 
@@ -60,6 +61,7 @@ struct SettingsView: View {
                                 Text("Restore Purchases")
                                 Spacer()
                                 ProgressView()
+                                    .tint(Theme.accent)
                             }
                         } else {
                             Text("Restore Purchases")
@@ -69,8 +71,8 @@ struct SettingsView: View {
 
                     if let error = restoreError {
                         Text(error)
-                            .font(.caption)
-                            .foregroundColor(.red)
+                            .font(Typography.footnote)
+                            .foregroundColor(Theme.Semantic.error)
                     }
                 }
 
