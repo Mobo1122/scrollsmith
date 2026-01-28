@@ -2,36 +2,51 @@
 
 ## What This Is
 
-Scrollsmith is an ADHD-friendly iOS app that transforms saved short-form videos (TikTok, Instagram Reels, YouTube Shorts, camera-roll uploads) into organized Playbooks with AI-generated summaries and actionable habits. Users capture scattered video inspiration, get structured summaries (bullets, step-by-step checklists, swipeable cards), organize content into themed Playbooks, and convert insights into trackable recurring habits with reminders and streak tracking.
+Scrollsmith is an ADHD-friendly iOS app that transforms saved short-form videos (YouTube Shorts, camera-roll uploads including downloaded TikTok/Reels) into organized Playbooks with AI-generated summaries and actionable habits. Users capture scattered video inspiration, get structured summaries (bullets, step-by-step checklists, swipeable cards), organize content into themed Playbooks, and convert insights into trackable recurring habits with reminders and streak tracking.
 
 ## Core Value
 
 Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits, addressing ADHD challenges of information overload, action paralysis, and memory issues.
 
+## Current State
+
+**v1 MVP shipped: 2026-01-28**
+
+- iOS app: SwiftUI + SwiftData (13,128 LOC)
+- Backend: FastAPI + PostgreSQL on Railway (6,963 LOC)
+- 85 requirements satisfied
+- App Store submission pending (screenshots/video needed)
+
+See [MILESTONES.md](MILESTONES.md) for v1 details.
+
 ## Requirements
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Users can capture videos via camera-roll upload, YouTube URL paste, or iOS share sheet — v1
+- ✓ Backend transcribes camera roll videos (Whisper/AssemblyAI) and fetches YouTube captions — v1
+- ✓ Backend generates three summary formats: key bullets, step-by-step checklist with timestamps, and swipeable cards — v1
+- ✓ Videos are organized into Playbooks with auto-generated tags users can edit — v1
+- ✓ Users can create 1-3 concrete recurring habits from any summarized video with customizable frequency and reminder times — v1
+- ✓ App tracks habit completions and streaks with 1-day forgiveness — v1
+- ✓ Free tier: 10 videos/month, bullet summaries only, auto-tags + playbooks, no habit extraction — v1
+- ✓ Pro tier (subscription): unlimited videos, all summary formats, habit extraction — v1
+- ✓ Apple Sign In and email/password authentication — v1
+- ✓ Push notifications for habit reminders with quick completion — v1
+- ✓ Terms of Service and Privacy Policy — v1
+- ✓ Crash reporting (Sentry) and analytics (Mixpanel) — v1
 
 ### Active
 
-- [ ] Users can capture videos via camera-roll upload, paste-link (TikTok/IG/YouTube), or iOS share sheet
-- [ ] Backend transcribes videos and generates three summary formats: key bullets, step-by-step checklist with timestamps, and swipeable cards
-- [ ] Videos are organized into Playbooks (Business, Fitness, Cooking, Productivity, Mindset) with auto-generated tags users can edit
-- [ ] Users can create 1-3 concrete recurring habits from any summarized video with customizable frequency (daily/3×weekly/weekly) and reminder times
-- [ ] App tracks habit completions, streaks, and shows progress per Playbook
-- [ ] Free tier: 10 videos/month, bullet summaries only, auto-tags + playbooks, no habit extraction
-- [ ] Pro tier (subscription): 100+ videos/month, all summary formats, habit mode, weekly LLM-generated digest email
-- [ ] Apple Sign In and email/password authentication
-- [ ] Push notifications for habit reminders with quick completion check-off
+- [ ] TikTok/Instagram URL paste with on-device WhisperKit transcription (deferred from v1 — requires macOS 14+)
+- [ ] Weekly LLM-generated digest email
 - [ ] Marketing landing page for App Store conversion
 
 ### Out of Scope
 
 - Android app — iOS-first, platform expansion deferred to v2+
-- Social sharing or collaborative Playbooks — single-user experience for v1
-- Web app with feature parity — mobile-only for v1 (marketing site only)
+- Social sharing or collaborative Playbooks — single-user experience
+- Web app with feature parity — mobile-only (marketing site only)
 - Real-time chat or community features — focus is personal organization and habits
 - Video editing capabilities — content is consumed and summarized, not modified
 
@@ -43,56 +58,47 @@ Turn video hoarding into action—users extract value from saved videos through 
 - Mitigating memory issues (forgetting video content or why it was saved)
 
 **Technical Environment:**
-- iOS 17+ minimum (iOS 18+ for on-device Whisper transcription)
-- SwiftUI native app for best iOS performance
-- Python/FastAPI backend deployed on Railway
-- PostgreSQL database for structured data
-- RevenueCat for subscription management (Apple IAP)
+- iOS 17+ minimum
+- SwiftUI + SwiftData native app
+- Python/FastAPI backend on Railway
+- PostgreSQL database
+- RevenueCat for subscriptions (Apple IAP)
+- Sentry for crash reporting, Mixpanel for analytics
 
-**Video Processing Strategy (v1):**
-- **Camera-roll uploads** (including downloaded TikTok/IG/YouTube Shorts):
-  - iOS uploads video/audio file to backend
-  - Backend transcribes via OpenAI Whisper API or AssemblyAI
-  - Backend deletes file immediately after transcription
-  - Store only transcript + summaries + metadata
-- **YouTube URLs:**
-  - Backend fetches captions via youtube-transcript-api (no API key needed)
-  - If no captions available, show "Transcript unavailable" message
-- **TikTok/Instagram URLs:** **DEFERRED TO v2**
-  - Requires macOS 14+ for WhisperKit toolchain (dev machine is macOS 13)
-  - For v1, users download TikTok/IG videos to camera roll and upload from there
+**Video Processing (v1):**
+- **Camera-roll uploads:** iOS uploads video → Backend transcribes via Whisper/AssemblyAI → Deletes file
+- **YouTube URLs:** Backend fetches captions via youtube-transcript-api
+- **TikTok/Instagram URLs:** Deferred to v2 (requires macOS 14+ for WhisperKit)
 
 **AI Stack:**
-- OpenAI Whisper API or AssemblyAI for audio transcription (camera-roll uploads only)
-- youtube-transcript-api for YouTube captions (free, no API key)
-- Anthropic Claude for summaries, tags, habit extraction, weekly synthesis
-
-**Privacy-First:**
-- Minimal server-side video storage (transcripts and metadata only)
-- Video files deleted immediately after transcription
-- v2 will add on-device WhisperKit transcription for TikTok/IG URLs
+- OpenAI Whisper API or AssemblyAI for transcription
+- youtube-transcript-api for YouTube captions
+- Anthropic Claude (Haiku for bullets, Sonnet for Pro formats and habits)
 
 ## Constraints
 
-- **Platform**: iOS 17+ only — Ensures access to modern SwiftUI and Apple Speech Framework; iOS 18+ unlocks on-device Whisper
-- **Backend**: Python/FastAPI on Railway with PostgreSQL — Full control over API design, good for LLM integrations and async processing
-- **Storage**: S3 or similar for rare video storage (camera-roll only when needed) — Cost-conscious approach, prefer transcript storage
-- **Monetization**: Apple IAP via RevenueCat — Required for iOS subscriptions, handles receipt validation and webhooks
-- **LLM Provider**: Anthropic Claude — Strong structured output for summaries, tags, and habit extraction
-- **Transcription**: OpenAI Whisper for uploads, on-device for social links — Balance between accuracy and privacy
+- **Platform**: iOS 17+ only
+- **Backend**: Python/FastAPI on Railway with PostgreSQL
+- **Monetization**: Apple IAP via RevenueCat
+- **LLM Provider**: Anthropic Claude
+- **Transcription**: Server-side Whisper/AssemblyAI for v1
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| SwiftUI native (not React Native) | Best iOS performance, access to latest Apple frameworks, pure native experience | — Pending |
-| Transcript-only storage for URL videos | Privacy-friendly, cost-efficient, lean architecture | — Pending |
-| Server-side transcription for v1 | macOS 13 dev environment cannot build WhisperKit (requires macOS 14+) | — Active |
-| TikTok/IG URL support deferred to v2 | On-device WhisperKit requires macOS 14+ toolchain; users download to camera roll for v1 | — Active |
-| youtube-transcript-api for YouTube | No API key needed, free captions, handles rate limits gracefully | — Active |
-| RevenueCat for subscriptions | Simplifies IAP implementation, handles receipt validation, analytics | — Pending |
-| Python/FastAPI backend | Team familiarity, excellent async support, good LLM integration ecosystem | — Pending |
-| Free tier at 10 videos/month | Enough to prove value without being punitive, drives Pro conversion | — Pending |
+| SwiftUI native (not React Native) | Best iOS performance, access to latest Apple frameworks | ✓ Good |
+| Transcript-only storage for URL videos | Privacy-friendly, cost-efficient, lean architecture | ✓ Good |
+| Server-side transcription for v1 | macOS 13 dev environment cannot build WhisperKit | ✓ Good (workaround) |
+| TikTok/IG URL support deferred to v2 | On-device WhisperKit requires macOS 14+ toolchain | ✓ Good (clear tradeoff) |
+| youtube-transcript-api for YouTube | No API key needed, free captions | ✓ Good |
+| RevenueCat for subscriptions | Simplifies IAP implementation | ✓ Good |
+| Free tier at 10 videos/month | Enough to prove value without being punitive | — Pending validation |
+| Sentry for iOS crash reporting | SwiftUI screenshot support, view hierarchy capture | ✓ Good |
+| Mixpanel for analytics | Event tracking, user identification | ✓ Good |
+| Claude Haiku for free tier | Cost efficiency ($1/$5 per MTok) | ✓ Good |
+| Claude Sonnet for Pro formats | Better reasoning for complex extraction | ✓ Good |
+| 1-day streak forgiveness | ADHD users need grace period | ✓ Good (per RESEARCH.md) |
 
 ---
-*Last updated: 2026-01-23 - deferred TikTok/IG URL support to v2 (macOS 14+ required for WhisperKit)*
+*Last updated: 2026-01-28 after v1 milestone*
