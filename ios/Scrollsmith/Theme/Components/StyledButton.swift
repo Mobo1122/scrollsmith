@@ -4,7 +4,7 @@ import SwiftUI
 struct PrimaryButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: ButtonStyle.Configuration) -> some View {
         configuration.label
             .font(.body.weight(.semibold))
             .foregroundColor(.white)
@@ -22,7 +22,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 struct SecondaryButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: ButtonStyle.Configuration) -> some View {
         configuration.label
             .font(.body.weight(.medium))
             .foregroundColor(Theme.accent)
@@ -40,7 +40,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 struct GhostButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: ButtonStyle.Configuration) -> some View {
         configuration.label
             .font(.body.weight(.medium))
             .foregroundColor(Theme.accent)
@@ -53,7 +53,7 @@ struct GhostButtonStyle: ButtonStyle {
 struct DestructiveButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: ButtonStyle.Configuration) -> some View {
         configuration.label
             .font(.body.weight(.medium))
             .foregroundColor(Theme.Semantic.error)
