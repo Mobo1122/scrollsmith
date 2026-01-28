@@ -11,6 +11,8 @@ struct ScrollsmithPaywallView: View {
     @EnvironmentObject private var subscriptionViewModel: SubscriptionViewModel
 
     var body: some View {
+        // Note: Paywall styling is configured in RevenueCat dashboard
+        // Set accent color to match brand violet (#7C3AED)
         PaywallView()
             .onPurchaseCompleted { customerInfo in
                 Task {
@@ -24,11 +26,13 @@ struct ScrollsmithPaywallView: View {
                     dismiss()
                 }
             }
+            .tint(Theme.accent)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") {
                         dismiss()
                     }
+                    .tint(Theme.accent)
                 }
             }
     }
