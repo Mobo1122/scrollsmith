@@ -16,7 +16,7 @@ struct VideoConfirmationSheet: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
+            VStack(spacing: Spacing.lg) {
                 VideoPreviewCard(
                     thumbnail: thumbnail,
                     duration: duration,
@@ -25,31 +25,32 @@ struct VideoConfirmationSheet: View {
                 )
 
                 Text("Ready to process this video?")
-                    .font(.headline)
+                    .font(Typography.headline)
 
                 Text("The video will be transcribed and summarized.")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .font(Typography.subheadline)
+                    .foregroundColor(Theme.Text.secondary)
                     .multilineTextAlignment(.center)
 
                 Spacer()
 
-                VStack(spacing: 12) {
+                VStack(spacing: Spacing.sm) {
                     Button(action: onConfirm) {
                         Text("Process Video")
-                            .fontWeight(.semibold)
+                            .font(Typography.body.weight(.semibold))
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
+                            .background(Theme.accent)
                             .foregroundColor(.white)
-                            .cornerRadius(10)
+                            .clipShape(RoundedRectangle(cornerRadius: Spacing.buttonRadius))
                     }
 
                     Button(action: onCancel) {
                         Text("Cancel")
+                            .font(Typography.body.weight(.medium))
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .foregroundColor(.red)
+                            .foregroundColor(Theme.Semantic.error)
                     }
                 }
             }

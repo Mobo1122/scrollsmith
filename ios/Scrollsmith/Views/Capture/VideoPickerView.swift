@@ -20,11 +20,12 @@ struct VideoPickerView: View {
             photoLibrary: .shared()
         ) {
             Label("Select from Camera Roll", systemImage: "photo.on.rectangle")
+                .font(Typography.body.weight(.semibold))
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.blue)
+                .background(Theme.accent)
                 .foregroundColor(.white)
-                .cornerRadius(10)
+                .clipShape(RoundedRectangle(cornerRadius: Spacing.buttonRadius))
         }
         .onChange(of: selectedItem) { _, newValue in
             guard let item = newValue else { return }

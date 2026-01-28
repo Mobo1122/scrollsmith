@@ -29,13 +29,13 @@ struct URLInputView: View {
         var color: Color {
             switch self {
             case .empty:
-                return .secondary
+                return Theme.Text.secondary
             case .invalid:
-                return .red
+                return Theme.Semantic.error
             case .unsupportedPlatform:
-                return .orange
+                return Theme.Semantic.warning
             case .valid:
-                return .green
+                return Theme.Semantic.success
             }
         }
 
@@ -77,7 +77,7 @@ struct URLInputView: View {
                     pasteFromClipboard()
                 } label: {
                     Image(systemName: "doc.on.clipboard")
-                        .foregroundColor(.blue)
+                        .foregroundColor(Theme.accent)
                 }
                 .buttonStyle(.plain)
 
@@ -89,14 +89,14 @@ struct URLInputView: View {
                         validatedSource = nil
                     } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.gray)
+                            .foregroundColor(Theme.Text.tertiary)
                     }
                     .buttonStyle(.plain)
                 }
             }
             .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(10)
+            .background(Theme.Background.tertiary)
+            .clipShape(RoundedRectangle(cornerRadius: Spacing.buttonRadius))
 
             // Validation feedback
             if let message = validationState.message {
@@ -115,11 +115,12 @@ struct URLInputView: View {
                     validateAndSubmit()
                 } label: {
                     Label("Fetch Captions", systemImage: "text.badge.checkmark")
+                        .font(Typography.body.weight(.semibold))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.red)  // YouTube red
+                        .background(Theme.accent)
                         .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .clipShape(RoundedRectangle(cornerRadius: Spacing.buttonRadius))
                 }
             }
         }
