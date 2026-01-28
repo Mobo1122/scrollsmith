@@ -18,7 +18,7 @@ struct MainTabView: View {
         var icon: String {
             switch self {
             case .home:
-                return "house"
+                return "book.closed"
             case .capture:
                 return "plus.circle.fill"
             case .habits:
@@ -56,6 +56,7 @@ struct MainTabView: View {
                 }
                 .tag(Tab.settings)
         }
+        .tint(Theme.accent)
     }
 }
 
