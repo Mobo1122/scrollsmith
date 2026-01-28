@@ -33,7 +33,7 @@ struct CaptureView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
+            VStack(spacing: Spacing.lg) {
                 // Processing indicator
                 if uploadQueueService.isProcessing {
                     UploadProgressView()
@@ -107,18 +107,18 @@ struct CaptureView: View {
     // MARK: - Camera Roll Tab
 
     private var cameraRollContent: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: Spacing.lg) {
             Image(systemName: "photo.on.rectangle.angled")
                 .font(.system(size: 60))
-                .foregroundColor(.blue.opacity(0.8))
+                .foregroundColor(Theme.accent.opacity(0.8))
 
             Text("Select a video from your camera roll")
-                .font(.headline)
+                .font(Typography.headline)
                 .multilineTextAlignment(.center)
 
             Text("The video will be transcribed and summarized using AI.")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(Typography.subheadline)
+                .foregroundColor(Theme.Text.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
@@ -131,12 +131,13 @@ struct CaptureView: View {
 
             if isLoading {
                 ProgressView("Loading video...")
+                    .tint(Theme.accent)
             }
 
             if let error = errorMessage {
                 Text(error)
-                    .font(.caption)
-                    .foregroundColor(.red)
+                    .font(Typography.footnote)
+                    .foregroundColor(Theme.Semantic.error)
             }
         }
         .padding()
@@ -147,18 +148,18 @@ struct CaptureView: View {
     // v1: Only YouTube URLs supported (caption fetching)
     // TODO v2: Add TikTok/Instagram URL support with on-device WhisperKit transcription
     private var urlContent: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: Spacing.lg) {
             Image(systemName: "play.rectangle.fill")
                 .font(.system(size: 60))
-                .foregroundColor(.red.opacity(0.8))
+                .foregroundColor(Theme.accent.opacity(0.8))
 
             Text("Paste a YouTube URL")
-                .font(.headline)
+                .font(Typography.headline)
                 .multilineTextAlignment(.center)
 
             Text("YouTube videos with captions will be transcribed automatically.")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(Typography.subheadline)
+                .foregroundColor(Theme.Text.secondary)
                 .multilineTextAlignment(.center)
 
             URLInputView(
@@ -168,22 +169,22 @@ struct CaptureView: View {
             .padding(.horizontal)
 
             // v1: Hint about TikTok/IG workaround
-            VStack(spacing: 8) {
+            VStack(spacing: Spacing.xs) {
                 Divider()
-                    .padding(.vertical, 8)
+                    .padding(.vertical, Spacing.xs)
 
-                HStack(spacing: 4) {
+                HStack(spacing: Spacing.xxs) {
                     Image(systemName: "info.circle")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Theme.Text.secondary)
                     Text("TikTok & Instagram")
-                        .font(.caption)
+                        .font(Typography.footnote)
                         .fontWeight(.medium)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Theme.Text.secondary)
                 }
 
                 Text("Save the video to your camera roll first, then upload from there.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(Typography.footnote)
+                    .foregroundColor(Theme.Text.secondary)
                     .multilineTextAlignment(.center)
             }
             .padding(.horizontal)
