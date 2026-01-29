@@ -8,7 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		03439A71BCB3478F97D726D4 /* HabitEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7992D2FAF34A4EE8A71B8838 /* HabitEditSheet.swift */; };
+		4E45B60C2F0C3D6409A4FF8D /* RootNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D3876C3D63CC3B6B609080 /* RootNavigationView.swift */; };
+		54E4FE6ADE40A67FEF481D26 /* NavigationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9135235BF0435B8BABCBAE /* NavigationModel.swift */; };
 		691CFF1AE5714BE681DC2A7F /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EB5A1DB313487886CCEC6F /* HabitDetailView.swift */; };
+		755953D881DEFE1E644EC914 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2588FC3203C30483F3D6B323 /* SidebarView.swift */; };
+		9FEC7601AE512382942D0724 /* SidebarSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC9AAF76ACF6F0C3755FB05 /* SidebarSection.swift */; };
 		A0000001 /* ScrollsmithApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000011 /* ScrollsmithApp.swift */; };
 		A0000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000012 /* ContentView.swift */; };
 		A0000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0000013 /* Assets.xcassets */; };
@@ -41,9 +45,9 @@
 		CE17CB6C2F2A50060054BABF /* ScreenTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB642F2A50050054BABF /* ScreenTitle.swift */; };
 		CE17CB6D2F2A50060054BABF /* StyledTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB652F2A50050054BABF /* StyledTextField.swift */; };
 		CE17CB6E2F2A50060054BABF /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB662F2A50050054BABF /* Theme.swift */; };
+		CE17CB702F2A63B50054BABF /* app5e6a9632bf.storekit in Resources */ = {isa = PBXBuildFile; fileRef = CE17CB6F2F2A63B40054BABF /* app5e6a9632bf.storekit */; };
 		CE17CB712F2A50070054BABF /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB6F2F2A50070054BABF /* CelebrationView.swift */; };
 		CE17CB722F2A50080054BABF /* SuccessAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB702F2A50080054BABF /* SuccessAnimationView.swift */; };
-		CE17CB702F2A63B50054BABF /* app5e6a9632bf.storekit in Resources */ = {isa = PBXBuildFile; fileRef = CE17CB6F2F2A63B40054BABF /* app5e6a9632bf.storekit */; };
 		CE2D7A6A2F205D99004CCAEF /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE2D7A682F205D99004CCAEF /* MainInterface.storyboard */; };
 		CE2D7A6E2F205D99004CCAEF /* ScrollsmithShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE2D7A642F205D98004CCAEF /* ScrollsmithShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CE2D7A772F20661A004CCAEF /* MovieTransferable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2D7A742F20661A004CCAEF /* MovieTransferable.swift */; };
@@ -147,7 +151,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2588FC3203C30483F3D6B323 /* SidebarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SidebarView.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		3EC9AAF76ACF6F0C3755FB05 /* SidebarSection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SidebarSection.swift; path = SidebarSection.swift; sourceTree = "<group>"; };
+		40D3876C3D63CC3B6B609080 /* RootNavigationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootNavigationView.swift; path = RootNavigationView.swift; sourceTree = "<group>"; };
 		7992D2FAF34A4EE8A71B8838 /* HabitEditSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitEditSheet.swift; sourceTree = "<group>"; };
+		7C9135235BF0435B8BABCBAE /* NavigationModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationModel.swift; path = NavigationModel.swift; sourceTree = "<group>"; };
 		A0000010 /* Scrollsmith.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrollsmith.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0000011 /* ScrollsmithApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollsmithApp.swift; sourceTree = "<group>"; };
 		A0000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -182,8 +190,8 @@
 		CE17CB652F2A50050054BABF /* StyledTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyledTextField.swift; sourceTree = "<group>"; };
 		CE17CB662F2A50050054BABF /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		CE17CB6F2F2A50070054BABF /* CelebrationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CelebrationView.swift; sourceTree = "<group>"; };
-		CE17CB702F2A50080054BABF /* SuccessAnimationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessAnimationView.swift; sourceTree = "<group>"; };
 		CE17CB6F2F2A63B40054BABF /* app5e6a9632bf.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = app5e6a9632bf.storekit; path = ../../../Downloads/app5e6a9632bf.storekit; sourceTree = "<group>"; };
+		CE17CB702F2A50080054BABF /* SuccessAnimationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessAnimationView.swift; sourceTree = "<group>"; };
 		CE2D7A5F2F20100A004CCAEF /* Scrollsmith.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Scrollsmith.entitlements; sourceTree = "<group>"; };
 		CE2D7A642F205D98004CCAEF /* ScrollsmithShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScrollsmithShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE2D7A692F205D99004CCAEF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -283,6 +291,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1BEE648CDC6B492538C02B79 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				3EC9AAF76ACF6F0C3755FB05 /* SidebarSection.swift */,
+				2588FC3203C30483F3D6B323 /* SidebarView.swift */,
+				40D3876C3D63CC3B6B609080 /* RootNavigationView.swift */,
+			);
+			name = Navigation;
+			path = Navigation;
+			sourceTree = "<group>";
+		};
 		A0000030 = {
 			isa = PBXGroup;
 			children = (
@@ -445,6 +464,7 @@
 				A000002B /* SummaryViewModel.swift */,
 				A000003D /* HabitExtractionViewModel.swift */,
 				CE781F372F28500300D238A3 /* HabitListViewModel.swift */,
+				7C9135235BF0435B8BABCBAE /* NavigationModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -462,6 +482,7 @@
 				CE781EE92F24FF3900D238A3 /* Videos */,
 				CE2D7AA42F206FCB004CCAEF /* Capture */,
 				CE2D7AAB2F206FCB004CCAEF /* Auth */,
+				1BEE648CDC6B492538C02B79 /* Navigation */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -788,6 +809,10 @@
 				F81256B7D3A6473489DDA061 /* StreakCalendarView.swift in Sources */,
 				03439A71BCB3478F97D726D4 /* HabitEditSheet.swift in Sources */,
 				691CFF1AE5714BE681DC2A7F /* HabitDetailView.swift in Sources */,
+				9FEC7601AE512382942D0724 /* SidebarSection.swift in Sources */,
+				755953D881DEFE1E644EC914 /* SidebarView.swift in Sources */,
+				4E45B60C2F0C3D6409A4FF8D /* RootNavigationView.swift in Sources */,
+				54E4FE6ADE40A67FEF481D26 /* NavigationModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

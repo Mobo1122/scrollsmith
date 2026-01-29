@@ -15,8 +15,8 @@ struct ContentView: View {
                 AuthContainerView()
 
             case .authenticated:
-                // Show main app content with tab navigation
-                MainTabView()
+                // Show main app content with sidebar navigation
+                RootNavigationView()
             }
         }
     }

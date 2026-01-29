@@ -1017,7 +1017,7 @@ struct SummarizeResponse: Decodable {
 
 // MARK: - Playbook DTOs
 
-struct PlaybookDTO: Codable, Identifiable {
+struct PlaybookDTO: Codable, Identifiable, Hashable {
     let id: UUID
     let name: String
     let icon: String?
@@ -1044,7 +1044,7 @@ struct UpdatePlaybookRequest: Codable {
 
 // MARK: - Video DTOs
 
-struct VideoDTO: Codable, Identifiable {
+struct VideoDTO: Codable, Identifiable, Hashable {
     let id: UUID
     let sourceUrl: String?
     let summaryBullets: String?
