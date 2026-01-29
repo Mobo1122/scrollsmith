@@ -34,10 +34,12 @@ Phases 1-12 completed across authentication, video processing, AI summarization,
   3. iPad users see persistent sidebar in split-view layout
   4. Tapping sidebar items navigates to corresponding detail views without lag
   5. Navigation state persists when rotating iPad or switching between sections
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 13-01: TBD
+- [ ] 13-01-PLAN.md — Navigation foundation (SidebarSection enum + NavigationModel)
+- [ ] 13-02-PLAN.md — Navigation shell (SidebarView + RootNavigationView + ContentView wiring)
+- [ ] 13-03-PLAN.md — Verify navigation on iPhone and iPad
 
 ### Phase 14: Video Feed & Cards
 **Goal**: Users see video library as rich feed with cards instead of basic grid
@@ -95,7 +97,7 @@ Phases execute in numeric order: 13 → 14 → 15 → 16
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-12. v1.0 MVP | v1.0 | All | Complete | 2026-01-28 |
-| 13. Navigation Architecture | v1.1 | 0/? | Not started | - |
+| 13. Navigation Architecture | v1.1 | 0/3 | Ready to execute | - |
 | 14. Video Feed & Cards | v1.1 | 0/? | Not started | - |
 | 15. Sidebar Population & Bug Fixes | v1.1 | 0/? | Not started | - |
 | 16. Summary Enhancements & Polish | v1.1 | 0/? | Not started | - |
