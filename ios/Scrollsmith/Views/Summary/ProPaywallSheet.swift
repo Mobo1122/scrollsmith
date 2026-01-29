@@ -10,6 +10,7 @@ import SwiftUI
 struct ProPaywallSheet: View {
     let requestedFormat: SummaryFormat
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var subscriptionViewModel: SubscriptionViewModel
 
     var body: some View {
         VStack(spacing: 24) {
@@ -96,9 +97,11 @@ struct ProPaywallSheet: View {
         VStack(spacing: 12) {
             // Primary - Upgrade
             Button {
-                // TODO: Phase 8 will implement RevenueCat purchase flow
-                // For now, just dismiss
                 dismiss()
+                // Small delay to let the sheet dismiss before showing paywall
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    subscriptionViewModel.showPaywall = true
+                }
             } label: {
                 Text("Upgrade to Pro")
                     .font(.headline)
@@ -131,5 +134,6 @@ struct ProPaywallSheet: View {
     Text("Trigger Sheet")
         .sheet(isPresented: .constant(true)) {
             ProPaywallSheet(requestedFormat: .steps)
+                .environmentObject(SubscriptionViewModel())
         }
 }

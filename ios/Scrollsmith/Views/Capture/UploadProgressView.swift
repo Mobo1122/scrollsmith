@@ -26,7 +26,7 @@ struct UploadProgressView: View {
                 Spacer()
             }
             .padding()
-            .background(Color.blue.opacity(0.1))
+            .background(Theme.accent.opacity(0.1))
             .cornerRadius(10)
         }
     }
@@ -94,7 +94,7 @@ struct PendingUploadRow: View {
             // Platform icon
             Image(systemName: upload.videoPlatform.iconName)
                 .font(.title2)
-                .foregroundColor(.blue)
+                .foregroundColor(Theme.accent)
                 .frame(width: 40)
 
             // Info
@@ -131,7 +131,7 @@ struct PendingUploadRow: View {
         case .downloading, .extractingAudio, .loadingModel, .transcribing, .saving:
             Label("Processing", systemImage: "arrow.triangle.2.circlepath")
                 .font(.caption2)
-                .foregroundColor(.blue)
+                .foregroundColor(Theme.accent)
         case .completed:
             Label("Done", systemImage: "checkmark.circle")
                 .font(.caption2)

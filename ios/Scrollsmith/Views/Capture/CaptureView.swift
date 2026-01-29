@@ -61,13 +61,25 @@ struct CaptureView: View {
                 Spacer()
             }
             .padding(.top)
-            .navigationTitle("Add Video")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Add Video")
+                        .font(Typography.title3)
+                }
+            }
             .toolbar {
                 if uploadQueueService.pendingCount > 0 {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         NavigationLink {
                             PendingUploadsListView()
-                                .navigationTitle("Pending")
+                                .navigationBarTitleDisplayMode(.inline)
+                                .toolbar {
+                                    ToolbarItem(placement: .principal) {
+                                        Text("Pending")
+                                            .font(Typography.title3)
+                                    }
+                                }
                         } label: {
                             ZStack(alignment: .topTrailing) {
                                 Image(systemName: "tray")

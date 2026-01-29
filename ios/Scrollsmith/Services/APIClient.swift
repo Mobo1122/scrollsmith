@@ -116,7 +116,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode(VideoCreateResponse.self, from: data)
     }
 
@@ -179,7 +179,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode(VideoCreateResponse.self, from: data)
     }
 
@@ -239,7 +239,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode(SummarizeResponse.self, from: data)
     }
 
@@ -270,7 +270,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
 
         let listResponse = try decoder.decode(PlaybookListResponse.self, from: data)
         return listResponse.playbooks
@@ -305,7 +305,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode(PlaybookDTO.self, from: data)
     }
 
@@ -338,7 +338,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode(PlaybookDTO.self, from: data)
     }
 
@@ -457,7 +457,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
 
         let listResponse = try decoder.decode(VideoListResponse.self, from: data)
         return listResponse.videos
@@ -500,7 +500,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
 
         let searchResponse = try decoder.decode(VideoSearchResponse.self, from: data)
         return searchResponse.videos
@@ -776,7 +776,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode(HabitDTO.self, from: data)
     }
 
@@ -805,7 +805,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode([HabitDTO].self, from: data)
     }
 
@@ -843,7 +843,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode(HabitCompletionResponse.self, from: data)
     }
 
@@ -882,7 +882,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode(HabitDTO.self, from: data)
     }
 
@@ -940,7 +940,7 @@ actor APIClient {
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .flexibleISO8601
         return try decoder.decode([HabitCompletionResponse].self, from: data)
     }
 
@@ -1190,4 +1190,53 @@ struct UpdateTagsRequest: Codable {
 struct UpdateTagsResponse: Codable {
     let id: UUID
     let tags: [String]
+}
+
+// MARK: - Flexible Date Decoder
+
+extension JSONDecoder {
+    /// Creates a decoder configured for API responses with flexible date parsing.
+    static func flexibleAPIDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .flexibleISO8601
+        return decoder
+    }
+}
+
+extension JSONDecoder.DateDecodingStrategy {
+    /// Flexible ISO8601 date decoding that handles multiple formats.
+    static var flexibleISO8601: JSONDecoder.DateDecodingStrategy {
+        .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+
+            // Try ISO8601 with fractional seconds (Python/FastAPI default)
+            let formatterWithFractional = ISO8601DateFormatter()
+            formatterWithFractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            if let date = formatterWithFractional.date(from: dateString) {
+                return date
+            }
+
+            // Try standard ISO8601
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime]
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+
+            // Try without timezone (assume UTC)
+            let noTZFormatter = DateFormatter()
+            noTZFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            noTZFormatter.timeZone = TimeZone(identifier: "UTC")
+            if let date = noTZFormatter.date(from: dateString) {
+                return date
+            }
+
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Cannot decode date: \(dateString)"
+            )
+        }
+    }
 }

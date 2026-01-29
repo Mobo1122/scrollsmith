@@ -35,8 +35,13 @@ struct LegalDocumentView: View {
     var body: some View {
         NavigationStack {
             WebView(url: documentType.url)
-                .navigationTitle(documentType.title)
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text(documentType.title)
+                            .font(Typography.title3)
+                    }
+                }
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Done") {

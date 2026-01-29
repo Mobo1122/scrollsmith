@@ -162,13 +162,14 @@ class HabitExtractionService:
             transcript: Video transcript text
 
         Returns:
-            List of 1-3 HabitSuggestion objects (or empty list on LLM failure)
+            List of 1-3 HabitSuggestion objects
 
         Raises:
-            TranscriptTooShortError: If transcript < 50 words (validation error)
-            NoAPIKeyError: If ANTHROPIC_API_KEY not configured (validation error)
+            TranscriptTooShortError: If transcript < 50 words
+            NoAPIKeyError: If ANTHROPIC_API_KEY not configured
+            ExtractionFailedError: If Claude API call fails or parsing fails
         """
-        # Validate transcript length (still raise validation errors)
+        # Validate transcript length
         self._validate_transcript(transcript, min_words=50)
 
         word_count = len(transcript.split())
@@ -234,17 +235,17 @@ class HabitExtractionService:
             return habits
 
         except (NoAPIKeyError, TranscriptTooShortError):
-            # Re-raise validation errors (these should fail fast)
+            # Re-raise validation errors
             raise
         except json.JSONDecodeError as e:
             logger.error("habit_extraction_parse_error", error=str(e))
-            return []  # Return empty list as fallback
-        except ExtractionFailedError as e:
-            logger.error("habit_extraction_failed", error=str(e))
-            return []  # Return empty list as fallback
+            raise ExtractionFailedError(f"Failed to parse Claude response: {str(e)}")
+        except ExtractionFailedError:
+            # Re-raise extraction failures
+            raise
         except Exception as e:
             logger.error("habit_extraction_unexpected_error", error=str(e), error_type=type(e).__name__)
-            return []  # Return empty list as fallback
+            raise ExtractionFailedError(f"Unexpected error during habit extraction: {str(e)}")
 
 
 # Singleton instance

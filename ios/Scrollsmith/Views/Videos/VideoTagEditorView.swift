@@ -74,8 +74,13 @@ struct VideoTagEditorView: View {
                 }
             }
             .padding(.top)
-            .navigationTitle("Edit Tags")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Edit Tags")
+                        .font(Typography.title3)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -155,8 +160,8 @@ struct TagChip: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
-        .background(Color.blue.opacity(0.15))
-        .foregroundStyle(.blue)
+        .background(Theme.accent.opacity(0.15))
+        .foregroundStyle(Theme.accent)
         .clipShape(Capsule())
     }
 }

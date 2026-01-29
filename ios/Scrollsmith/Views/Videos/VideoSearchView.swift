@@ -44,7 +44,13 @@ struct VideoSearchView: View {
                     }
                 }
             }
-            .navigationTitle("Search")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Search")
+                        .font(Typography.title3)
+                }
+            }
             .searchable(text: $viewModel.searchText, prompt: "Search videos...")
             .onChange(of: viewModel.searchText) { _, newValue in
                 viewModel.onSearchTextChanged(newValue)

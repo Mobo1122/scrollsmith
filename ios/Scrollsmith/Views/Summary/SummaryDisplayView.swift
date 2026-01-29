@@ -40,8 +40,13 @@ struct SummaryDisplayView: View {
             // View Original FAB
             viewOriginalButton
         }
-        .navigationTitle("Summary")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Summary")
+                    .font(Typography.title3)
+            }
+        }
         .sheet(isPresented: $showPaywall) {
             ProPaywallSheet(requestedFormat: paywallFormat)
         }
@@ -251,7 +256,13 @@ struct SummaryDisplayView: View {
                 // Camera roll - show inline player option
                 NavigationLink {
                     InlineVideoPlayerView(localIdentifier: sourceUrl)
-                        .navigationTitle("Video Preview")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                Text("Video Preview")
+                                    .font(Typography.title3)
+                            }
+                        }
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "play.fill")

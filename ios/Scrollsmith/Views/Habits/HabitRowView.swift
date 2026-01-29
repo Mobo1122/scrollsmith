@@ -9,18 +9,11 @@ struct HabitRowView: View {
 
     var body: some View {
         HStack(spacing: Spacing.md) {
-            // Completion button
-            Button(action: {
-                if !isCompletedToday {
-                    onComplete()
-                }
-            }) {
-                Image(systemName: isCompletedToday ? "checkmark.circle.fill" : "circle")
-                    .font(.title2)
-                    .foregroundColor(isCompletedToday ? Theme.Semantic.success : Theme.Text.tertiary)
-            }
-            .buttonStyle(.plain)
-            .disabled(isCompletedToday)
+            // Animated completion button with celebration
+            CompletionButton(
+                isCompleted: isCompletedToday,
+                onComplete: onComplete
+            )
 
             // Habit info
             VStack(alignment: .leading, spacing: Spacing.xxs) {

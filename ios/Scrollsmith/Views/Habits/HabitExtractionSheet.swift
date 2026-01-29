@@ -16,8 +16,13 @@ struct HabitExtractionSheet: View {
     var body: some View {
         NavigationStack {
             content
-                .navigationTitle("Action Points")
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Action Points")
+                            .font(Typography.title3)
+                    }
+                }
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Cancel") {
@@ -143,26 +148,23 @@ struct HabitExtractionSheet: View {
     // MARK: - Success
 
     private func successView(count: Int) -> some View {
-        VStack(spacing: 20) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 60))
-                .foregroundStyle(.green)
+        VStack(spacing: 24) {
+            Spacer()
 
-            Text("\(count) Habit\(count == 1 ? "" : "s") Created!")
-                .font(.title2)
-                .fontWeight(.semibold)
+            SuccessAnimationView(
+                title: "\(count) Habit\(count == 1 ? "" : "s") Created!",
+                subtitle: "You'll find your new habits in the Habits tab."
+            )
 
-            Text("You'll find your new habits in the Habits tab.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
+            Spacer()
 
             Button("Done") {
                 dismiss()
             }
             .buttonStyle(.borderedProminent)
-            .padding(.top)
+            .tint(Theme.accent)
+            .padding(.horizontal, Spacing.lg)
+            .padding(.bottom, Spacing.lg)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

@@ -72,7 +72,13 @@ struct AboutView: View {
                 }
             }
         }
-        .navigationTitle("About")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("About")
+                    .font(Typography.title3)
+            }
+        }
         .sheet(isPresented: $showingMailComposer) {
             MailView(recipient: supportEmail, subject: supportSubject)
         }

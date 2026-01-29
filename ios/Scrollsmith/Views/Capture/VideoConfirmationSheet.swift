@@ -55,8 +55,13 @@ struct VideoConfirmationSheet: View {
                 }
             }
             .padding()
-            .navigationTitle("Confirm Video")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Confirm Video")
+                        .font(Typography.title3)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel", action: onCancel)

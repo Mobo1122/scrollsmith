@@ -69,17 +69,7 @@ struct TranscriptionProgressView: View {
             }
 
         case .completed(let transcript):
-            VStack(spacing: 8) {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
-                    .font(.title)
-
-                Text(transcript.prefix(150) + (transcript.count > 150 ? "..." : ""))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(4)
-                    .multilineTextAlignment(.center)
-            }
+            CompletedStateView(transcript: transcript)
 
         case .unavailable(let message):
             VStack(spacing: 8) {
@@ -126,7 +116,7 @@ struct TranscriptionProgressView: View {
         case .tiktok: return .pink
         case .instagram: return .purple
         case .youtube: return .red
-        case .cameraRoll: return .blue
+        case .cameraRoll: return Theme.accent
         case .unknown: return .secondary
         }
     }
@@ -137,6 +127,41 @@ struct TranscriptionProgressView: View {
         case .completed: return .green
         case .unavailable: return .orange
         default: return .accentColor
+        }
+    }
+}
+
+/// Animated completion state with full celebration animation.
+private struct CompletedStateView: View {
+    let transcript: String
+
+    @State private var showTranscript = false
+
+    var body: some View {
+        VStack(spacing: Spacing.md) {
+            // Full success animation with confetti
+            SuccessAnimationView(
+                title: "Processing Complete!",
+                subtitle: nil,
+                showConfetti: true
+            )
+            .frame(height: 140)
+
+            // Transcript preview fades in after animation
+            if showTranscript {
+                Text(transcript.prefix(150) + (transcript.count > 150 ? "..." : ""))
+                    .font(Typography.caption)
+                    .foregroundColor(Theme.Text.secondary)
+                    .lineLimit(4)
+                    .multilineTextAlignment(.center)
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+            }
+        }
+        .onAppear {
+            // Fade in transcript after success animation plays
+            withAnimation(.easeOut(duration: 0.3).delay(0.6)) {
+                showTranscript = true
+            }
         }
     }
 }

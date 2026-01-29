@@ -16,8 +16,12 @@ struct HabitListView: View {
                     habitList
                 }
             }
-            .navigationTitle("Habits")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Habits")
+                        .font(Typography.title3)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !viewModel.notificationsEnabled && !viewModel.habits.isEmpty {
                         Button {

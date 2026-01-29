@@ -111,8 +111,13 @@ struct PlaybookPickerSheet: View {
                     PlaybookRow(playbook: playbook)
                 }
             }
-            .navigationTitle("All Playbooks")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("All Playbooks")
+                        .font(Typography.title3)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -156,7 +161,7 @@ struct PlaybookChip: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
-            .background(isSelected ? Color.blue : Color(.systemGray5))
+            .background(isSelected ? Theme.accent : Color(.systemGray5))
             .foregroundStyle(isSelected ? .white : .primary)
             .clipShape(Capsule())
         }
@@ -185,7 +190,7 @@ struct CreatePlaybookChip: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
             .background(Color(.systemGray5))
-            .foregroundStyle(.blue)
+            .foregroundStyle(Theme.accent)
             .clipShape(Capsule())
         }
         .buttonStyle(.plain)

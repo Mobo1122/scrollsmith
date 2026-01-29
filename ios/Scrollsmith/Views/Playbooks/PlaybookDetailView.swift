@@ -33,8 +33,13 @@ struct PlaybookDetailView: View {
                 videoGrid
             }
         }
-        .navigationTitle(playbook.name)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(playbook.name)
+                    .font(Typography.title3)
+            }
+        }
         .task {
             await loadVideos()
         }

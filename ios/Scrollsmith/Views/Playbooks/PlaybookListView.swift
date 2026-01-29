@@ -33,7 +33,13 @@ struct PlaybookListView: View {
                     playbookList
                 }
             }
-            .navigationTitle("Playbooks")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Playbooks")
+                        .font(Typography.title3)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -73,7 +79,13 @@ struct PlaybookListView: View {
             Section {
                 NavigationLink {
                     VideoGridView()
-                        .navigationTitle("All Videos")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                Text("All Videos")
+                                    .font(Typography.title3)
+                            }
+                        }
                 } label: {
                     HStack(spacing: Spacing.sm) {
                         Image(systemName: "rectangle.stack")
@@ -105,7 +117,13 @@ struct PlaybookListView: View {
             // Uncategorized videos
             NavigationLink {
                 VideoGridView(playbookId: nil, showUncategorized: true)
-                    .navigationTitle("Uncategorized")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            Text("Uncategorized")
+                                .font(Typography.title3)
+                        }
+                    }
             } label: {
                 HStack(spacing: Spacing.sm) {
                     Image(systemName: "tray")
@@ -196,8 +214,13 @@ struct CreatePlaybookSheet: View {
                         .textInputAutocapitalization(.words)
                 }
             }
-            .navigationTitle("New Playbook")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("New Playbook")
+                        .font(Typography.title3)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -245,8 +268,13 @@ struct EditPlaybookSheet: View {
                         .textInputAutocapitalization(.words)
                 }
             }
-            .navigationTitle("Edit Playbook")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Edit Playbook")
+                        .font(Typography.title3)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

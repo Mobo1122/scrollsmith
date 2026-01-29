@@ -96,7 +96,13 @@ struct SettingsView: View {
                     }
                 }
             }
-            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Settings")
+                        .font(Typography.title3)
+                }
+            }
             .alert("Purchases Restored", isPresented: $showRestoreSuccess) {
                 Button("OK") { }
             } message: {
@@ -113,11 +119,15 @@ struct SettingsView: View {
         isRestoringPurchases = true
         restoreError = nil
 
+        print("🔄 Starting restore purchases...")
+
         do {
-            _ = try await SubscriptionService.shared.restorePurchases()
+            let isPro = try await SubscriptionService.shared.restorePurchases()
+            print("🔄 Restore completed, isPro: \(isPro)")
             await subscriptionViewModel.refresh()
             showRestoreSuccess = true
         } catch {
+            print("🔄 Restore failed: \(error)")
             restoreError = "Failed to restore: \(error.localizedDescription)"
         }
 

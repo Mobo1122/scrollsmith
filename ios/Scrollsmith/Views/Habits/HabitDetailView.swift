@@ -48,9 +48,13 @@ struct HabitDetailView: View {
             }
             .padding(.vertical)
         }
-        .navigationTitle(habit.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(habit.title)
+                    .font(Typography.title3)
+                    .lineLimit(1)
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Edit") {
                     showingEditSheet = true

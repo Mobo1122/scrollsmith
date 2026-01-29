@@ -65,7 +65,8 @@ class AuthViewModel: ObservableObject {
         } catch let error as AuthError {
             errorMessage = error.localizedDescription
         } catch {
-            errorMessage = "Registration failed. Please try again."
+            print("🔴 Register error: \(error)")
+            errorMessage = "Registration failed: \(error.localizedDescription)"
         }
 
         isLoading = false
@@ -85,7 +86,8 @@ class AuthViewModel: ObservableObject {
         } catch let error as AuthError {
             errorMessage = error.localizedDescription
         } catch {
-            errorMessage = "Login failed. Please try again."
+            print("🔴 Login error: \(error)")
+            errorMessage = "Login failed: \(error.localizedDescription)"
         }
 
         isLoading = false

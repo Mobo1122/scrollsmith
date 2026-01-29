@@ -175,7 +175,7 @@ extension CardCategory {
         switch self {
         case .tip: return .yellow
         case .warning: return .orange
-        case .insight: return .blue
+        case .insight: return Theme.accent
         case .action: return .green
         }
     }

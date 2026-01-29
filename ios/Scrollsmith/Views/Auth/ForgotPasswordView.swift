@@ -64,7 +64,7 @@ struct ForgotPasswordView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(isFormValid ? Color.blue : Color.gray)
+                .background(isFormValid ? Theme.accent : Color.gray)
                 .foregroundColor(.white)
                 .cornerRadius(10)
             }

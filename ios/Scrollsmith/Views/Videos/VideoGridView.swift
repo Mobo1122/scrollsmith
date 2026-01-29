@@ -296,7 +296,7 @@ struct VideoGridItem: View {
             if isSelecting {
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.title2)
-                    .foregroundStyle(isSelected ? .blue : .white)
+                    .foregroundStyle(isSelected ? Theme.accent : .white)
                     .padding(8)
             }
         }
@@ -358,8 +358,13 @@ struct BulkMoveSheet: View {
                     MovePlaybookRow(playbook: playbook)
                 }
             }
-            .navigationTitle("Move \(selectedCount) video\(selectedCount == 1 ? "" : "s")")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Move \(selectedCount) video\(selectedCount == 1 ? "" : "s")")
+                        .font(Typography.title3)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -377,7 +382,7 @@ private struct MovePlaybookRow: View {
     var body: some View {
         HStack {
             Image(systemName: playbook.icon ?? "folder")
-                .foregroundStyle(playbook.isSystem ? .yellow : .blue)
+                .foregroundStyle(playbook.isSystem ? .yellow : Theme.accent)
                 .font(.title2)
 
             VStack(alignment: .leading) {

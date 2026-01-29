@@ -70,8 +70,13 @@ struct HabitEditSheet: View {
                     }
                 }
             }
-            .navigationTitle("Edit Habit")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Edit Habit")
+                        .font(Typography.title3)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel", action: onCancel)

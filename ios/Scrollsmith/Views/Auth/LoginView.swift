@@ -87,7 +87,7 @@ struct LoginView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(isFormValid ? Color.blue : Color.gray)
+                .background(isFormValid ? Theme.accent : Color.gray)
                 .foregroundColor(.white)
                 .cornerRadius(10)
             }
@@ -97,7 +97,7 @@ struct LoginView: View {
             Button(action: onForgotPassword) {
                 Text("Forgot password?")
                     .font(.subheadline)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Theme.accent)
             }
 
             // Divider with "or"

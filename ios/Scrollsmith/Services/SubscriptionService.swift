@@ -10,7 +10,12 @@ actor SubscriptionService {
 
     private var isConfigured = false
     private let entitlementID = "Scrollsmith Pro"
+
+    #if targetEnvironment(simulator)
     private let apiKey = "test_mVpCDZKcwncLwtHIsjlmGAWbTag"
+    #else
+    private let apiKey = "appl_xZlHeSQqvyNExlXwQOLgumOfbVz"
+    #endif
 
     private init() {}
 
@@ -27,6 +32,7 @@ actor SubscriptionService {
 
         #if DEBUG
         Purchases.logLevel = .debug
+        print("🔑 Using RevenueCat API key: \(apiKey.prefix(10))...")
         #endif
 
         Purchases.configure(
@@ -79,6 +85,87 @@ actor SubscriptionService {
         return try await Purchases.shared.customerInfo()
     }
 
+    // MARK: - Debug
+
+    /// Debug function to check offerings configuration.
+    func debugOfferings() async {
+        print("🔍 RevenueCat Debug - isConfigured: \(isConfigured)")
+
+        guard isConfigured else {
+            print("❌ RevenueCat not configured")
+            return
+        }
+
+        do {
+            let offerings = try await Purchases.shared.offerings()
+            print("🔍 Offerings: \(offerings)")
+            print("🔍 Current offering: \(String(describing: offerings.current))")
+            print("🔍 All offerings: \(offerings.all.keys)")
+
+            if let current = offerings.current {
+                print("🔍 Packages in current offering: \(current.availablePackages.count)")
+                for package in current.availablePackages {
+                    print("  📦 Package: \(package.identifier) - \(package.storeProduct.productIdentifier)")
+                }
+            }
+        } catch {
+            print("❌ Failed to fetch offerings: \(error)")
+        }
+
+        // Also try fetching products directly from StoreKit
+        let products = await Purchases.shared.products(["scrollsmith_monthly", "scrollsmith_yearly"])
+        print("🔍 Direct product fetch: \(products.count) products")
+        for product in products {
+            print("  🏷️ Product: \(product.productIdentifier) - \(product.localizedTitle)")
+        }
+    }
+
+    // MARK: - Offerings
+
+    /// Fetch available subscription packages from RevenueCat.
+    ///
+    /// Returns packages from the current offering (configured in RevenueCat dashboard).
+    /// Use this to display subscription options in a custom paywall.
+    ///
+    /// - Returns: Array of available packages (monthly, yearly, etc.)
+    func fetchPackages() async throws -> [Package] {
+        guard isConfigured else {
+            throw SubscriptionError.notConfigured
+        }
+
+        let offerings = try await Purchases.shared.offerings()
+
+        guard let current = offerings.current else {
+            throw SubscriptionError.noOfferings
+        }
+
+        return current.availablePackages
+    }
+
+    // MARK: - Purchase
+
+    /// Purchase a subscription package.
+    ///
+    /// Initiates StoreKit purchase flow for the selected package.
+    /// RevenueCat handles receipt validation and entitlement provisioning.
+    ///
+    /// - Parameter package: The package to purchase (from fetchPackages)
+    /// - Returns: True if Pro entitlement is now active after purchase
+    func purchase(_ package: Package) async throws -> Bool {
+        guard isConfigured else {
+            throw SubscriptionError.notConfigured
+        }
+
+        let result = try await Purchases.shared.purchase(package: package)
+
+        // Check if user cancelled (not an error, just return false)
+        if result.userCancelled {
+            return false
+        }
+
+        return result.customerInfo.entitlements[entitlementID]?.isActive == true
+    }
+
     // MARK: - Restore Purchases
 
     /// Restore previous purchases from App Store.
@@ -101,11 +188,17 @@ actor SubscriptionService {
 
 enum SubscriptionError: LocalizedError {
     case notConfigured
+    case noOfferings
+    case purchaseFailed(String)
 
     var errorDescription: String? {
         switch self {
         case .notConfigured:
             return "Subscription service not configured. Please log in first."
+        case .noOfferings:
+            return "No subscription plans available. Please try again later."
+        case .purchaseFailed(let reason):
+            return "Purchase failed: \(reason)"
         }
     }
 }

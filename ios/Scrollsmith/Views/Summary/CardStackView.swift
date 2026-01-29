@@ -191,10 +191,15 @@ struct CardStackView: View {
     @ViewBuilder
     private var completionOverlay: some View {
         if currentIndex >= cards.count {
-            ContentUnavailableView {
-                Label("All Done!", systemImage: "checkmark.circle.fill")
-            } description: {
-                Text("You've reviewed all \(cards.count) cards.")
+            ZStack {
+                // Semi-transparent background
+                Color(.systemBackground)
+                    .opacity(0.95)
+
+                SuccessAnimationView(
+                    title: "All Done!",
+                    subtitle: "You've reviewed all \(cards.count) cards."
+                )
             }
         }
     }

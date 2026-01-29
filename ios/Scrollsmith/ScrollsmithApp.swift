@@ -50,6 +50,7 @@ struct ScrollsmithApp: App {
                     if let userId = newUser?.id {
                         Task {
                             await SubscriptionService.shared.configure(userId: userId)
+                            await SubscriptionService.shared.debugOfferings()
                             await subscriptionViewModel.refresh()
 
                             // Identify user for analytics
