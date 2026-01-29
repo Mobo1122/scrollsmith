@@ -8,6 +8,20 @@ Scrollsmith is an ADHD-friendly iOS app that transforms saved short-form videos 
 
 Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits, addressing ADHD challenges of information overload, action paralysis, and memory issues.
 
+## Current Milestone: v1.1 UI Polish
+
+**Goal:** Production-grade UI redesign inspired by Readwise Reader — transform Scrollsmith into a polished "second brain for doomscrolling"
+
+**Target features:**
+- Central video feed homepage (Inbox-style layout)
+- Sidebar navigation: Library, Types (YouTube/Camera Roll), Playbooks, Tags, Trash
+- Video cards with thumbnails, creator credits, duration
+- Embedded YouTube player above summaries
+- Fix: View Original / Create Action Points button overlap
+- Fix: Steps/cards panel not functional for free tier
+
+**Design inspiration:** Readwise Reader's clean feed, sidebar navigation, and content card patterns
+
 ## Current State
 
 **v1 MVP shipped: 2026-01-28**
@@ -36,9 +50,18 @@ See [MILESTONES.md](MILESTONES.md) for v1 details.
 - ✓ Terms of Service and Privacy Policy — v1
 - ✓ Crash reporting (Sentry) and analytics (Mixpanel) — v1
 
-### Active
+### Active (v1.1)
 
-- [ ] TikTok/Instagram URL paste with on-device WhisperKit transcription (deferred from v1 — requires macOS 14+)
+- [ ] Central video feed homepage with Inbox-style layout
+- [ ] Sidebar navigation (Library, Types, Playbooks, Tags, Trash)
+- [ ] Video cards with thumbnails, creator credits, duration estimates
+- [ ] Embedded YouTube player in summary view
+- [ ] Fix button overlap in summary view (View Original / Create Action Points)
+- [ ] Fix steps/cards panel for free tier (currently non-functional)
+
+### Deferred
+
+- [ ] TikTok/Instagram URL paste with on-device WhisperKit transcription (requires macOS 14+)
 - [ ] Weekly LLM-generated digest email
 - [ ] Marketing landing page for App Store conversion
 
@@ -101,4 +124,4 @@ See [MILESTONES.md](MILESTONES.md) for v1 details.
 | 1-day streak forgiveness | ADHD users need grace period | ✓ Good (per RESEARCH.md) |
 
 ---
-*Last updated: 2026-01-28 after v1 milestone*
+*Last updated: 2026-01-29 after v1.1 milestone started*

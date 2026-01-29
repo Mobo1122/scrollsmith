@@ -1,22 +1,22 @@
 # State: Scrollsmith
 
-**Last Updated:** 2026-01-28
+**Last Updated:** 2026-01-29
 
 ## Project Reference
 
-See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-28)
+See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-29)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** v1 shipped — ready for next milestone
+**Current focus:** v1.1 UI Polish — Production-grade redesign inspired by Readwise Reader
 
 ## Current Position
 
-**Milestone:** v1 MVP ✅ SHIPPED
-**Status:** Milestone complete, archived
-**Last activity:** 2026-01-28 — v1 milestone complete
+**Milestone:** v1.1 UI Polish
+**Status:** Defining requirements
+**Last activity:** 2026-01-29 — Milestone v1.1 started
 
-**Progress:** v1 complete (12 phases, 70 plans, 85 requirements)
+**Progress:** Requirements gathering
 
 ## Milestone History
 
@@ -26,13 +26,16 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-28)
 
 See [MILESTONES.md](MILESTONES.md) for details.
 
-## Next Milestone
+## v1.1 Target Features
 
-Not yet defined. Run `/gsd:new-milestone` to:
-1. Define v2 focus (TikTok/IG support? Marketing site? etc.)
-2. Gather requirements through questioning
-3. Research implementation approaches
-4. Create new ROADMAP.md and REQUIREMENTS.md
+- Central video feed homepage (Inbox-style layout)
+- Sidebar navigation: Library, Types, Playbooks, Tags, Trash
+- Video cards with thumbnails, creator credits, duration
+- Embedded YouTube player above summaries
+- Fix: View Original / Create Action Points button overlap
+- Fix: Steps/cards panel not functional for free tier
+
+**Design inspiration:** Readwise Reader
 
 ## Pre-Launch Tasks (v1)
 
