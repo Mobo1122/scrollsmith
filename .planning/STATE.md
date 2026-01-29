@@ -8,34 +8,86 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-29)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** v1.1 UI Polish — Production-grade redesign inspired by Readwise Reader
+**Current focus:** Phase 13 - Navigation Architecture
 
 ## Current Position
 
 **Milestone:** v1.1 UI Polish
-**Status:** Defining requirements
-**Last activity:** 2026-01-29 — Milestone v1.1 started
+Phase: 13 of 16 (Navigation Architecture)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-01-29 — Roadmap created for v1.1 (Phases 13-16)
 
-**Progress:** Requirements gathering
+Progress: [████████░░░░░░░░░░░░] 75% (v1.0 complete, v1.1 starting)
+
+## Performance Metrics
+
+**Velocity:**
+- v1.0 (Phases 1-12): Complete (70 plans)
+- v1.1 (Phases 13-16): Not started
+- Total plans completed: 70 (from v1.0)
+- Average duration: [TBD after first v1.1 plan]
+
+**By Phase (v1.1):**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| 13. Navigation Architecture | 0/? | - | - |
+| 14. Video Feed & Cards | 0/? | - | - |
+| 15. Sidebar Population & Bug Fixes | 0/? | - | - |
+| 16. Summary Enhancements & Polish | 0/? | - | - |
+
+**Recent Trend:**
+- v1.1 just started (no trend data yet)
+
+## Accumulated Context
+
+### Decisions
+
+Recent decisions affecting v1.1 work:
+
+- v1.0: SwiftUI native architecture provides foundation for v1.1 redesign
+- v1.0: SwiftData + AsyncImage patterns will extend to feed implementation
+- v1.1: 4-phase structure prioritizes navigation foundation before feed features (per research)
+- v1.1: NavigationSplitView is correct pattern for sidebar + detail (iOS 17+ native)
+
+Full decision log in PROJECT.md Key Decisions table.
+
+### Pending Todos
+
+None yet.
+
+### Blockers/Concerns
+
+**Phase 13 (Navigation):**
+- NavigationSplitView selection binding must be tested immediately (critical pitfall per research)
+- Navigation state reset on iPad rotation needs architecture decision upfront (path dictionary pattern)
+
+**Phase 14 (Feed):**
+- Image memory explosion risk requires thumbnail URLs + disk caching from day one
+- Feed performance needs early profiling with 100+ videos on iPhone SE
+
+**Phase 15 (Sidebar):**
+- Button overlap fix needs SafeAreaInset testing with keyboard + toolbar visible simultaneously
+
+**Phase 16 (Summary):**
+- YouTube embed must respect TOS (official iframe only, no background audio)
+
+## Session Continuity
+
+Last session: 2026-01-29
+Stopped at: Roadmap created for v1.1 UI Polish (Phases 13-16)
+Resume file: None
+Next action: /gsd:plan-phase 13
 
 ## Milestone History
 
 | Milestone | Phases | Plans | Status | Shipped |
 |-----------|--------|-------|--------|---------|
 | v1 MVP | 1-12 | 70 | ✅ Complete | 2026-01-28 |
+| v1.1 UI Polish | 13-16 | 0 | 🚧 In progress | - |
 
-See [MILESTONES.md](MILESTONES.md) for details.
-
-## v1.1 Target Features
-
-- Central video feed homepage (Inbox-style layout)
-- Sidebar navigation: Library, Types, Playbooks, Tags, Trash
-- Video cards with thumbnails, creator credits, duration
-- Embedded YouTube player above summaries
-- Fix: View Original / Create Action Points button overlap
-- Fix: Steps/cards panel not functional for free tier
-
-**Design inspiration:** Readwise Reader
+See [MILESTONES.md](MILESTONES.md) for v1 details.
 
 ## Pre-Launch Tasks (v1)
 
@@ -70,7 +122,7 @@ Before App Store submission:
 - Mode: YOLO (auto-approve)
 - Depth: Comprehensive
 - Parallelization: Enabled
-- No blockers
+- No blockers (v1.1 ready to plan)
 
 ## Archives
 

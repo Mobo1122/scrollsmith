@@ -72,28 +72,34 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | TBD | Pending |
-| NAV-02 | TBD | Pending |
-| NAV-03 | TBD | Pending |
-| NAV-04 | TBD | Pending |
-| NAV-05 | TBD | Pending |
-| NAV-06 | TBD | Pending |
-| FEED-01 | TBD | Pending |
-| FEED-02 | TBD | Pending |
-| FEED-03 | TBD | Pending |
-| FEED-04 | TBD | Pending |
-| FEED-05 | TBD | Pending |
-| FEED-06 | TBD | Pending |
-| FEED-07 | TBD | Pending |
-| SUMM-01 | TBD | Pending |
-| SUMM-02 | TBD | Pending |
-| SUMM-03 | TBD | Pending |
+| NAV-01 | Phase 13 | Pending |
+| NAV-02 | Phase 13 | Pending |
+| NAV-03 | Phase 15 | Pending |
+| NAV-04 | Phase 15 | Pending |
+| NAV-05 | Phase 15 | Pending |
+| NAV-06 | Phase 15 | Pending |
+| FEED-01 | Phase 14 | Pending |
+| FEED-02 | Phase 14 | Pending |
+| FEED-03 | Phase 14 | Pending |
+| FEED-04 | Phase 14 | Pending |
+| FEED-05 | Phase 15 | Pending |
+| FEED-06 | Phase 15 | Pending |
+| FEED-07 | Phase 14 | Pending |
+| SUMM-01 | Phase 16 | Pending |
+| SUMM-02 | Phase 15 | Pending |
+| SUMM-03 | Phase 15 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 16 total
-- Mapped to phases: 0
-- Unmapped: 16
+- Mapped to phases: 16
+- Unmapped: 0 ✓
+
+**Phase Distribution:**
+- Phase 13 (Navigation Architecture): 2 requirements
+- Phase 14 (Video Feed & Cards): 5 requirements
+- Phase 15 (Sidebar Population & Bug Fixes): 8 requirements
+- Phase 16 (Summary Enhancements & Polish): 1 requirement
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-01-29 after initial definition*
+*Last updated: 2026-01-29 with phase mappings*
