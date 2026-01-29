@@ -6,7 +6,6 @@ import Foundation
 /// associated icon and display title.
 enum SidebarSection: String, CaseIterable, Identifiable, Hashable {
     case library = "Library"
-    case types = "Types"
     case playbooks = "Playbooks"
     case tags = "Tags"
     case trash = "Trash"
@@ -18,7 +17,6 @@ enum SidebarSection: String, CaseIterable, Identifiable, Hashable {
     var icon: String {
         switch self {
         case .library: return "books.vertical"
-        case .types: return "square.stack.3d.up"
         case .playbooks: return "folder"
         case .tags: return "tag"
         case .trash: return "trash"

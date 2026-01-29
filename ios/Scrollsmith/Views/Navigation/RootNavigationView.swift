@@ -52,18 +52,9 @@ struct RootNavigationView: View {
             ZStack {
                 switch navigationModel.selectedSection {
                 case .library:
-                    VideoGridView()
+                    VideoFeedView()
                         .navigationTitle("Library")
                         .navigationBarTitleDisplayMode(.large)
-
-                case .types:
-                    ContentUnavailableView(
-                        "Types",
-                        systemImage: SidebarSection.types.icon,
-                        description: Text("Filter by video type - Coming in Phase 15")
-                    )
-                    .navigationTitle("Types")
-                    .navigationBarTitleDisplayMode(.large)
 
                 case .playbooks:
                     // PlaybookListView has its own NavigationStack internally.
@@ -172,29 +163,6 @@ private struct PlaybookListContent: View {
 
     private var playbookList: some View {
         List {
-            // All Videos at the very top
-            Section {
-                NavigationLink(value: "all_videos") {
-                    HStack(spacing: Spacing.sm) {
-                        Image(systemName: "rectangle.stack")
-                            .foregroundStyle(Theme.accent)
-                            .font(.title2)
-                            .frame(width: 32)
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("All Videos")
-                                .font(Typography.headline)
-                            Text("View all your videos")
-                                .font(Typography.footnote)
-                                .foregroundStyle(Theme.Text.secondary)
-                        }
-
-                        Spacer()
-                    }
-                    .contentShape(Rectangle())
-                }
-            }
-
             // Favorites (system Playbook)
             if let favorites = viewModel.favoritesPlaybook {
                 NavigationLink(value: favorites) {
@@ -248,12 +216,8 @@ private struct PlaybookListContent: View {
         }
         .navigationDestination(for: String.self) { destination in
             switch destination {
-            case "all_videos":
-                VideoGridView()
-                    .navigationTitle("All Videos")
-                    .navigationBarTitleDisplayMode(.large)
             case "uncategorized":
-                VideoGridView(playbookId: nil, showUncategorized: true)
+                VideoFeedView(playbookId: nil, showUncategorized: true)
                     .navigationTitle("Uncategorized")
                     .navigationBarTitleDisplayMode(.large)
             default:

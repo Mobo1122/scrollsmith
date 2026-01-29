@@ -34,11 +34,11 @@ final class NavigationModel {
 
     /// Returns a binding to the appropriate navigation path based on current selection.
     ///
-    /// Library, Types, Tags, and Trash share the library path since they
+    /// Library, Tags, and Trash share the library path since they
     /// operate on the same video collection with different filters.
     var currentPath: Binding<NavigationPath> {
         switch selectedSection {
-        case .library, .types, .tags, .trash:
+        case .library, .tags, .trash:
             return Binding(
                 get: { self.libraryPath },
                 set: { self.libraryPath = $0 }

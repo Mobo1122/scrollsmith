@@ -37,18 +37,12 @@ struct SidebarView: View {
                     .tag(SidebarSection.library)
             }
 
-            // Filters section
-            Section("Filters") {
-                Label("Types", systemImage: SidebarSection.types.icon)
-                    .tag(SidebarSection.types)
-                Label("Tags", systemImage: SidebarSection.tags.icon)
-                    .tag(SidebarSection.tags)
-            }
-
             // Organization section
             Section("Organization") {
                 Label("Playbooks", systemImage: SidebarSection.playbooks.icon)
                     .tag(SidebarSection.playbooks)
+                Label("Tags", systemImage: SidebarSection.tags.icon)
+                    .tag(SidebarSection.tags)
             }
 
             // Trash section (no header)
