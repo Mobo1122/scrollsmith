@@ -14,31 +14,32 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-29)
 
 **Milestone:** v1.1 UI Polish
 Phase: 13 of 16 (Navigation Architecture)
-Plan: 1 of TBD in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-01-29 — Completed 13-01-PLAN.md (Navigation Foundation)
+Last activity: 2026-01-29 — Completed 13-02-PLAN.md (Navigation Wiring)
 
-Progress: [████████░░░░░░░░░░░░] 76% (v1.0 complete, v1.1 plan 1 done)
+Progress: [████████░░░░░░░░░░░░] 77% (v1.0 complete, v1.1 plan 2 done)
 
 ## Performance Metrics
 
 **Velocity:**
 - v1.0 (Phases 1-12): Complete (70 plans)
-- v1.1 (Phases 13-16): 1 plan completed
-- Total plans completed: 71 (70 from v1.0 + 1 from v1.1)
-- Average duration: 5 min (v1.1 only)
+- v1.1 (Phases 13-16): 2 plans completed
+- Total plans completed: 72 (70 from v1.0 + 2 from v1.1)
+- Average duration: 26 min (v1.1 only)
 
 **By Phase (v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 13. Navigation Architecture | 1/? | 5 min | 5 min |
+| 13. Navigation Architecture | 2/3 | 52 min | 26 min |
 | 14. Video Feed & Cards | 0/? | - | - |
 | 15. Sidebar Population & Bug Fixes | 0/? | - | - |
 | 16. Summary Enhancements & Polish | 0/? | - | - |
 
 **Recent Trend:**
 - 13-01: 5 min (navigation foundation - SidebarSection + NavigationModel)
+- 13-02: 47 min (navigation wiring - SidebarView + RootNavigationView)
 
 ## Accumulated Context
 
@@ -53,6 +54,9 @@ Recent decisions affecting v1.1 work:
 - 13-01: @Observable preferred over ObservableObject for iOS 17+ cleaner code
 - 13-01: Library/Types/Tags/Trash share libraryPath (same video collection, different filters)
 - 13-01: Path dictionary pattern adopted for navigation state (prevents iPad rotation reset)
+- 13-02: Settings as sheet, Capture as fullScreenCover from sidebar toolbar
+- 13-02: preferredCompactColumn set to .detail so iPhone starts on Library view
+- 13-02: PlaybookListContent helper extracts body to avoid nested NavigationStack
 
 Full decision log in PROJECT.md Key Decisions table.
 
@@ -63,8 +67,9 @@ None yet.
 ### Blockers/Concerns
 
 **Phase 13 (Navigation):**
-- NavigationSplitView selection binding must be tested immediately (critical pitfall per research)
+- NavigationSplitView selection binding must be tested immediately (critical pitfall per research): RESOLVED - List(selection:) binding implemented in SidebarView
 - Navigation state reset on iPad rotation: RESOLVED - path dictionary pattern adopted in NavigationModel
+- PlaybookListView has internal NavigationStack that may need refactoring in Phase 15
 
 **Phase 14 (Feed):**
 - Image memory explosion risk requires thumbnail URLs + disk caching from day one
@@ -79,16 +84,16 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-29
-Stopped at: Completed 13-01-PLAN.md (Navigation Foundation)
+Stopped at: Completed 13-02-PLAN.md (Navigation Wiring)
 Resume file: None
-Next action: Continue Phase 13 (RootNavigationView, SidebarView)
+Next action: Continue Phase 13 (13-03 Navigation Refinements)
 
 ## Milestone History
 
 | Milestone | Phases | Plans | Status | Shipped |
 |-----------|--------|-------|--------|---------|
 | v1 MVP | 1-12 | 70 | ✅ Complete | 2026-01-28 |
-| v1.1 UI Polish | 13-16 | 1 | 🚧 In progress | - |
+| v1.1 UI Polish | 13-16 | 2 | 🚧 In progress | - |
 
 See [MILESTONES.md](MILESTONES.md) for v1 details.
 
