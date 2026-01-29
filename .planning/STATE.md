@@ -14,31 +14,31 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-29)
 
 **Milestone:** v1.1 UI Polish
 Phase: 13 of 16 (Navigation Architecture)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-01-29 — Roadmap created for v1.1 (Phases 13-16)
+Plan: 1 of TBD in current phase
+Status: In progress
+Last activity: 2026-01-29 — Completed 13-01-PLAN.md (Navigation Foundation)
 
-Progress: [████████░░░░░░░░░░░░] 75% (v1.0 complete, v1.1 starting)
+Progress: [████████░░░░░░░░░░░░] 76% (v1.0 complete, v1.1 plan 1 done)
 
 ## Performance Metrics
 
 **Velocity:**
 - v1.0 (Phases 1-12): Complete (70 plans)
-- v1.1 (Phases 13-16): Not started
-- Total plans completed: 70 (from v1.0)
-- Average duration: [TBD after first v1.1 plan]
+- v1.1 (Phases 13-16): 1 plan completed
+- Total plans completed: 71 (70 from v1.0 + 1 from v1.1)
+- Average duration: 5 min (v1.1 only)
 
 **By Phase (v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 13. Navigation Architecture | 0/? | - | - |
+| 13. Navigation Architecture | 1/? | 5 min | 5 min |
 | 14. Video Feed & Cards | 0/? | - | - |
 | 15. Sidebar Population & Bug Fixes | 0/? | - | - |
 | 16. Summary Enhancements & Polish | 0/? | - | - |
 
 **Recent Trend:**
-- v1.1 just started (no trend data yet)
+- 13-01: 5 min (navigation foundation - SidebarSection + NavigationModel)
 
 ## Accumulated Context
 
@@ -50,6 +50,9 @@ Recent decisions affecting v1.1 work:
 - v1.0: SwiftData + AsyncImage patterns will extend to feed implementation
 - v1.1: 4-phase structure prioritizes navigation foundation before feed features (per research)
 - v1.1: NavigationSplitView is correct pattern for sidebar + detail (iOS 17+ native)
+- 13-01: @Observable preferred over ObservableObject for iOS 17+ cleaner code
+- 13-01: Library/Types/Tags/Trash share libraryPath (same video collection, different filters)
+- 13-01: Path dictionary pattern adopted for navigation state (prevents iPad rotation reset)
 
 Full decision log in PROJECT.md Key Decisions table.
 
@@ -61,7 +64,7 @@ None yet.
 
 **Phase 13 (Navigation):**
 - NavigationSplitView selection binding must be tested immediately (critical pitfall per research)
-- Navigation state reset on iPad rotation needs architecture decision upfront (path dictionary pattern)
+- Navigation state reset on iPad rotation: RESOLVED - path dictionary pattern adopted in NavigationModel
 
 **Phase 14 (Feed):**
 - Image memory explosion risk requires thumbnail URLs + disk caching from day one
@@ -76,16 +79,16 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-29
-Stopped at: Roadmap created for v1.1 UI Polish (Phases 13-16)
+Stopped at: Completed 13-01-PLAN.md (Navigation Foundation)
 Resume file: None
-Next action: /gsd:plan-phase 13
+Next action: Continue Phase 13 (RootNavigationView, SidebarView)
 
 ## Milestone History
 
 | Milestone | Phases | Plans | Status | Shipped |
 |-----------|--------|-------|--------|---------|
 | v1 MVP | 1-12 | 70 | ✅ Complete | 2026-01-28 |
-| v1.1 UI Polish | 13-16 | 0 | 🚧 In progress | - |
+| v1.1 UI Polish | 13-16 | 1 | 🚧 In progress | - |
 
 See [MILESTONES.md](MILESTONES.md) for v1 details.
 
