@@ -36,6 +36,7 @@ class VideoResponse(BaseModel):
     """Video entity response."""
     id: UUID
     source_url: Optional[str] = None
+    thumbnail_url: Optional[str] = None
     transcript: Optional[str] = None
     summary_bullets: Optional[str] = None
     summary_steps: Optional[str] = None
@@ -140,6 +141,7 @@ class VideoSearchResult(BaseModel):
 
     id: UUID
     source_url: Optional[str]
+    thumbnail_url: Optional[str]
     summary_bullets: Optional[str]
     tags: Optional[List[str]]
     created_at: datetime
