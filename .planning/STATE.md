@@ -1,6 +1,6 @@
 # State: Scrollsmith
 
-**Last Updated:** 2026-01-29
+**Last Updated:** 2026-01-31
 
 ## Project Reference
 
@@ -8,38 +8,39 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-29)
 
 **Core value:** Turn video hoarding into action—users extract value from saved videos through AI summaries and convert insights into tracked habits
 
-**Current focus:** Phase 13 - Navigation Architecture
+**Current focus:** Phase 14 - Video Feed & Cards
 
 ## Current Position
 
 **Milestone:** v1.1 UI Polish
-Phase: 13 of 16 (Navigation Architecture)
-Plan: 2 of 3 in current phase
+Phase: 14 of 16 (Video Feed & Cards)
+Plan: 1 of 3 in current phase
 Status: In progress
-Last activity: 2026-01-29 — Completed 13-02-PLAN.md (Navigation Wiring)
+Last activity: 2026-01-31 — Completed 14-01-PLAN.md (Backend Thumbnail URL Support)
 
-Progress: [████████░░░░░░░░░░░░] 77% (v1.0 complete, v1.1 plan 2 done)
+Progress: [████████░░░░░░░░░░░░] 78% (v1.0 complete, v1.1 plan 3 done)
 
 ## Performance Metrics
 
 **Velocity:**
 - v1.0 (Phases 1-12): Complete (70 plans)
-- v1.1 (Phases 13-16): 2 plans completed
-- Total plans completed: 72 (70 from v1.0 + 2 from v1.1)
-- Average duration: 26 min (v1.1 only)
+- v1.1 (Phases 13-16): 3 plans completed
+- Total plans completed: 73 (70 from v1.0 + 3 from v1.1)
+- Average duration: 19 min (v1.1 only)
 
 **By Phase (v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 13. Navigation Architecture | 2/3 | 52 min | 26 min |
-| 14. Video Feed & Cards | 0/? | - | - |
+| 14. Video Feed & Cards | 1/3 | 4 min | 4 min |
 | 15. Sidebar Population & Bug Fixes | 0/? | - | - |
 | 16. Summary Enhancements & Polish | 0/? | - | - |
 
 **Recent Trend:**
 - 13-01: 5 min (navigation foundation - SidebarSection + NavigationModel)
 - 13-02: 47 min (navigation wiring - SidebarView + RootNavigationView)
+- 14-01: 4 min (backend thumbnail URL support - API schema + YouTube extraction)
 
 ## Accumulated Context
 
@@ -57,6 +58,9 @@ Recent decisions affecting v1.1 work:
 - 13-02: Settings as sheet, Capture as fullScreenCover from sidebar toolbar
 - 13-02: preferredCompactColumn set to .detail so iPhone starts on Library view
 - 13-02: PlaybookListContent helper extracts body to avoid nested NavigationStack
+- 14-01: Thumbnail URLs derived from source_url (not stored in DB, no migration required)
+- 14-01: YouTube maxresdefault.jpg resolution chosen for best quality
+- 14-01: VideoResponse constructed explicitly to add derived thumbnail_url field
 
 Full decision log in PROJECT.md Key Decisions table.
 
@@ -72,7 +76,7 @@ None yet.
 - PlaybookListView has internal NavigationStack that may need refactoring in Phase 15
 
 **Phase 14 (Feed):**
-- Image memory explosion risk requires thumbnail URLs + disk caching from day one
+- Image memory explosion risk requires thumbnail URLs + disk caching from day one: RESOLVED - Backend now provides thumbnail_url field
 - Feed performance needs early profiling with 100+ videos on iPhone SE
 
 **Phase 15 (Sidebar):**
@@ -83,17 +87,17 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-29
-Stopped at: Completed 13-02-PLAN.md (Navigation Wiring)
+Last session: 2026-01-31
+Stopped at: Completed 14-01-PLAN.md (Backend Thumbnail URL Support)
 Resume file: None
-Next action: Continue Phase 13 (13-03 Navigation Refinements)
+Next action: Continue Phase 14 (14-02 iOS Feed UI)
 
 ## Milestone History
 
 | Milestone | Phases | Plans | Status | Shipped |
 |-----------|--------|-------|--------|---------|
 | v1 MVP | 1-12 | 70 | ✅ Complete | 2026-01-28 |
-| v1.1 UI Polish | 13-16 | 2 | 🚧 In progress | - |
+| v1.1 UI Polish | 13-16 | 3 | 🚧 In progress | - |
 
 See [MILESTONES.md](MILESTONES.md) for v1 details.
 
