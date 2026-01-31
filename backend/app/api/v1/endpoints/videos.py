@@ -5,6 +5,7 @@ TikTok/Instagram URL support deferred to v2 (requires WhisperKit on iOS).
 """
 
 import logging
+import re
 from datetime import datetime, timezone
 from typing import Optional
 from uuid import UUID
@@ -64,6 +65,36 @@ from app.services.summarization import (
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/videos", tags=["videos"])
+
+
+# ============================================================
+# Thumbnail URL Extraction
+# ============================================================
+
+
+def _extract_thumbnail_url(source_url: Optional[str]) -> Optional[str]:
+    """Extract thumbnail URL from video source URL.
+
+    YouTube: https://img.youtube.com/vi/<video_id>/maxresdefault.jpg
+    Camera roll: None (no external thumbnail available)
+    """
+    if not source_url:
+        return None
+
+    # YouTube patterns: youtube.com/watch?v=ID or youtu.be/ID
+    youtube_patterns = [
+        r'youtube\.com/watch\?v=([a-zA-Z0-9_-]{11})',
+        r'youtu\.be/([a-zA-Z0-9_-]{11})',
+        r'youtube\.com/embed/([a-zA-Z0-9_-]{11})',
+    ]
+
+    for pattern in youtube_patterns:
+        match = re.search(pattern, source_url)
+        if match:
+            video_id = match.group(1)
+            return f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg"
+
+    return None
 
 
 # ============================================================
@@ -139,7 +170,7 @@ async def transcribe_audio(
     platform: str = Form("camera_roll", description="Video source platform"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
-) -> Video:
+) -> VideoResponse:
     """Upload audio file for server-side transcription.
 
     v1: Primary path for camera roll uploads.
@@ -223,7 +254,18 @@ async def transcribe_audio(
             f"via {metadata.get('service', 'unknown')} transcription"
         )
 
-        return video
+        return VideoResponse(
+            id=video.id,
+            source_url=video.source_url,
+            thumbnail_url=_extract_thumbnail_url(video.source_url),
+            transcript=video.transcript,
+            summary_bullets=video.summary_bullets,
+            summary_steps=video.summary_steps,
+            summary_cards=video.summary_cards,
+            user_edited_summary=video.user_edited_summary,
+            tags=video.tags,
+            created_at=video.created_at,
+        )
 
     except TranscriptionNoAPIKeyError as e:
         logger.error(f"Transcription API not configured: {e}")
@@ -327,7 +369,7 @@ async def create_video(
     request: VideoCreateRequest,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
-) -> Video:
+) -> VideoResponse:
     """Create a video record with transcript from iOS.
 
     v2 TODO: Used for on-device transcription results from WhisperKit.
@@ -353,7 +395,18 @@ async def create_video(
 
     logger.info(f"Created video {video.id} for user {current_user.id} from {request.platform}")
 
-    return video
+    return VideoResponse(
+        id=video.id,
+        source_url=video.source_url,
+        thumbnail_url=_extract_thumbnail_url(video.source_url),
+        transcript=video.transcript,
+        summary_bullets=video.summary_bullets,
+        summary_steps=video.summary_steps,
+        summary_cards=video.summary_cards,
+        user_edited_summary=video.user_edited_summary,
+        tags=video.tags,
+        created_at=video.created_at,
+    )
 
 
 @router.post("/{video_id}/summarize", response_model=SummarizeResponse)
@@ -602,7 +655,7 @@ async def update_summary(
     request: UpdateSummaryRequest,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
-) -> Video:
+) -> VideoResponse:
     """Manually update AI-generated video summary fields.
 
     Allows users to edit AI-generated summaries and tags. Supports partial
@@ -716,7 +769,18 @@ async def update_summary(
 
     logger.info(f"Updated summary for video {video_id}: {', '.join(updates)} (user_edited=True)")
 
-    return video
+    return VideoResponse(
+        id=video.id,
+        source_url=video.source_url,
+        thumbnail_url=_extract_thumbnail_url(video.source_url),
+        transcript=video.transcript,
+        summary_bullets=video.summary_bullets,
+        summary_steps=video.summary_steps,
+        summary_cards=video.summary_cards,
+        user_edited_summary=video.user_edited_summary,
+        tags=video.tags,
+        created_at=video.created_at,
+    )
 
 
 @router.post("/{video_id}/playbooks", response_model=VideoPlaybooksResponse, status_code=status.HTTP_201_CREATED)
@@ -957,6 +1021,7 @@ async def search_videos(
         VideoSearchResult(
             id=row["id"],
             source_url=row["source_url"],
+            thumbnail_url=_extract_thumbnail_url(row["source_url"]),
             summary_bullets=row["summary_bullets"],
             tags=row["tags"],
             created_at=row["created_at"],
@@ -976,7 +1041,7 @@ async def get_video(
     video_id: UUID,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
-) -> Video:
+) -> VideoResponse:
     """Get a video by ID.
 
     Only returns videos owned by the current user.
@@ -995,7 +1060,18 @@ async def get_video(
             detail="Video not found"
         )
 
-    return video
+    return VideoResponse(
+        id=video.id,
+        source_url=video.source_url,
+        thumbnail_url=_extract_thumbnail_url(video.source_url),
+        transcript=video.transcript,
+        summary_bullets=video.summary_bullets,
+        summary_steps=video.summary_steps,
+        summary_cards=video.summary_cards,
+        user_edited_summary=video.user_edited_summary,
+        tags=video.tags,
+        created_at=video.created_at,
+    )
 
 
 @router.get("", response_model=VideoListResponse)
@@ -1060,7 +1136,21 @@ async def list_videos(
         videos = result.scalars().all()
 
         return VideoListResponse(
-            videos=[VideoResponse.model_validate(v) for v in videos],
+            videos=[
+                VideoResponse(
+                    id=v.id,
+                    source_url=v.source_url,
+                    thumbnail_url=_extract_thumbnail_url(v.source_url),
+                    transcript=v.transcript,
+                    summary_bullets=v.summary_bullets,
+                    summary_steps=v.summary_steps,
+                    summary_cards=v.summary_cards,
+                    user_edited_summary=v.user_edited_summary,
+                    tags=v.tags,
+                    created_at=v.created_at,
+                )
+                for v in videos
+            ],
             total=total
         )
 
@@ -1075,6 +1165,7 @@ async def list_videos(
         videos=[VideoResponse(
             id=v["id"],
             source_url=v["source_url"],
+            thumbnail_url=_extract_thumbnail_url(v["source_url"]),
             transcript=v["transcript"],
             summary_bullets=v["summary_bullets"],
             summary_steps=v["summary_steps"],
