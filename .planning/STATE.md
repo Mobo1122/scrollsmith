@@ -14,18 +14,18 @@ See: [.planning/PROJECT.md](.planning/PROJECT.md) (updated 2026-01-29)
 
 **Milestone:** v1.1 UI Polish
 Phase: 14 of 16 (Video Feed & Cards)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-01-31 — Completed 14-01-PLAN.md (Backend Thumbnail URL Support)
+Last activity: 2026-01-31 — Completed 14-02-PLAN.md (iOS Feed UI with Kingfisher Thumbnails)
 
-Progress: [████████░░░░░░░░░░░░] 78% (v1.0 complete, v1.1 plan 3 done)
+Progress: [████████░░░░░░░░░░░░] 79% (v1.0 complete, v1.1 plan 4 done)
 
 ## Performance Metrics
 
 **Velocity:**
 - v1.0 (Phases 1-12): Complete (70 plans)
-- v1.1 (Phases 13-16): 3 plans completed
-- Total plans completed: 73 (70 from v1.0 + 3 from v1.1)
+- v1.1 (Phases 13-16): 4 plans completed
+- Total plans completed: 74 (70 from v1.0 + 4 from v1.1)
 - Average duration: 19 min (v1.1 only)
 
 **By Phase (v1.1):**
@@ -33,7 +33,7 @@ Progress: [████████░░░░░░░░░░░░] 78% (v1
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 13. Navigation Architecture | 2/3 | 52 min | 26 min |
-| 14. Video Feed & Cards | 1/3 | 4 min | 4 min |
+| 14. Video Feed & Cards | 2/3 | 22 min | 11 min |
 | 15. Sidebar Population & Bug Fixes | 0/? | - | - |
 | 16. Summary Enhancements & Polish | 0/? | - | - |
 
@@ -41,6 +41,7 @@ Progress: [████████░░░░░░░░░░░░] 78% (v1
 - 13-01: 5 min (navigation foundation - SidebarSection + NavigationModel)
 - 13-02: 47 min (navigation wiring - SidebarView + RootNavigationView)
 - 14-01: 4 min (backend thumbnail URL support - API schema + YouTube extraction)
+- 14-02: 18 min (iOS feed UI - Kingfisher thumbnails + skeleton loading)
 
 ## Accumulated Context
 
@@ -61,6 +62,10 @@ Recent decisions affecting v1.1 work:
 - 14-01: Thumbnail URLs derived from source_url (not stored in DB, no migration required)
 - 14-01: YouTube maxresdefault.jpg resolution chosen for best quality
 - 14-01: VideoResponse constructed explicitly to add derived thumbnail_url field
+- 14-02: Kingfisher chosen for image caching (mature, SwiftUI-friendly, .cancelOnDisappear)
+- 14-02: Skeleton loading only on initial load (not refresh) to avoid visual flashing
+- 14-02: 6 skeleton rows fills typical iPhone screen without overwhelming
+- 14-02: 16:9 aspect ratio enforced for thumbnail consistency
 
 Full decision log in PROJECT.md Key Decisions table.
 
@@ -76,8 +81,8 @@ None yet.
 - PlaybookListView has internal NavigationStack that may need refactoring in Phase 15
 
 **Phase 14 (Feed):**
-- Image memory explosion risk requires thumbnail URLs + disk caching from day one: RESOLVED - Backend now provides thumbnail_url field
-- Feed performance needs early profiling with 100+ videos on iPhone SE
+- Image memory explosion risk requires thumbnail URLs + disk caching from day one: RESOLVED - Kingfisher caching implemented with .cancelOnDisappear
+- Feed performance needs early profiling with 100+ videos on iPhone SE: PENDING - should test with real data
 
 **Phase 15 (Sidebar):**
 - Button overlap fix needs SafeAreaInset testing with keyboard + toolbar visible simultaneously
@@ -88,9 +93,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-31
-Stopped at: Completed 14-01-PLAN.md (Backend Thumbnail URL Support)
+Stopped at: Completed 14-02-PLAN.md (iOS Feed UI with Kingfisher Thumbnails)
 Resume file: None
-Next action: Continue Phase 14 (14-02 iOS Feed UI)
+Next action: Continue Phase 14 (14-03 Card-Based Feed Layout)
 
 ## Milestone History
 
