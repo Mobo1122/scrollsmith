@@ -624,6 +624,7 @@
 				CE781F172F2506E700D238A3 /* RevenueCatUI */,
 				AAAA11032F2A000001234567 /* Mixpanel */,
 				BBBB22032F2B000001234567 /* Sentry */,
+			DDDD33032F2D000001234567 /* Kingfisher */,
 			);
 			productName = Scrollsmith;
 			productReference = A0000010 /* Scrollsmith.app */;
@@ -1151,6 +1152,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+	DDDD33022F2D000001234567 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		isa = XCRemoteSwiftPackageReference;
+		repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+		requirement = {
+			kind = upToNextMajorVersion;
+			minimumVersion = 8.0.0;
+		};
+	};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1174,6 +1183,11 @@
 			package = CE781F142F2506E500D238A3 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
 			productName = RevenueCatUI;
 		};
+	DDDD33032F2D000001234567 /* Kingfisher */ = {
+		isa = XCSwiftPackageProductDependency;
+		package = DDDD33022F2D000001234567 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+		productName = Kingfisher;
+	};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A0000050 /* Project object */;

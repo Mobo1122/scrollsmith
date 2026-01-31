@@ -1047,6 +1047,7 @@ struct UpdatePlaybookRequest: Codable {
 struct VideoDTO: Codable, Identifiable, Hashable {
     let id: UUID
     let sourceUrl: String?
+    let thumbnailUrl: String?
     let summaryBullets: String?
     let summarySteps: String?       // Pro tier: JSON string of StepChecklist
     let summaryCards: String?       // Pro tier: JSON string of CardsSummary
@@ -1058,6 +1059,7 @@ struct VideoDTO: Codable, Identifiable, Hashable {
     init(
         id: UUID,
         sourceUrl: String? = nil,
+        thumbnailUrl: String? = nil,
         summaryBullets: String? = nil,
         summarySteps: String? = nil,
         summaryCards: String? = nil,
@@ -1067,6 +1069,7 @@ struct VideoDTO: Codable, Identifiable, Hashable {
     ) {
         self.id = id
         self.sourceUrl = sourceUrl
+        self.thumbnailUrl = thumbnailUrl
         self.summaryBullets = summaryBullets
         self.summarySteps = summarySteps
         self.summaryCards = summaryCards
@@ -1122,6 +1125,7 @@ struct VideoListResponse: Codable {
 struct VideoSearchResult: Codable, Identifiable {
     let id: UUID
     let sourceUrl: String?
+    let thumbnailUrl: String?
     let summaryBullets: String?
     let summarySteps: String?       // Pro tier: JSON string of StepChecklist
     let summaryCards: String?       // Pro tier: JSON string of CardsSummary
