@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 /// Feed view displaying videos in a list with thumbnail and description.
 ///
@@ -142,15 +143,24 @@ struct VideoFeedRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            // Thumbnail placeholder
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.gray.opacity(0.3))
-                .frame(width: 100, height: 60)
-                .overlay {
-                    Image(systemName: platformIcon)
-                        .font(.title2)
-                        .foregroundStyle(.white)
+            // Thumbnail with Kingfisher caching
+            KFImage(URL(string: video.thumbnailUrl ?? ""))
+                .placeholder {
+                    // Fallback while loading or if no URL
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.gray.opacity(0.3))
+                        .overlay {
+                            Image(systemName: platformIcon)
+                                .font(.title2)
+                                .foregroundStyle(.white)
+                        }
                 }
+                .resizable()
+                .aspectRatio(16/9, contentMode: .fill)
+                .frame(width: 100, height: 60)
+                .cornerRadius(8)
+                .clipped()
+                .cancelOnDisappear(true)  // Critical: cancel download when scrolled off-screen
 
             // Content
             VStack(alignment: .leading, spacing: 4) {
