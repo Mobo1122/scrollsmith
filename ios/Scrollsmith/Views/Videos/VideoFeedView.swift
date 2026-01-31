@@ -19,7 +19,12 @@ struct VideoFeedView: View {
     var body: some View {
         Group {
             if isLoading && videos.isEmpty {
-                ProgressView("Loading...")
+                // Skeleton loading state
+                List(0..<6, id: \.self) { _ in
+                    VideoFeedSkeletonRow()
+                }
+                .listStyle(.plain)
+                .redacted(reason: .placeholder)
             } else if videos.isEmpty {
                 ContentUnavailableView(
                     "No Videos",
@@ -168,6 +173,40 @@ struct VideoFeedRow: View {
             Spacer()
         }
         .contentShape(Rectangle())
+    }
+}
+
+// MARK: - Skeleton Loading Row
+
+/// Skeleton placeholder row for loading state
+private struct VideoFeedSkeletonRow: View {
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            // Thumbnail placeholder
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.gray.opacity(0.3))
+                .frame(width: 100, height: 60)
+
+            // Content placeholders
+            VStack(alignment: .leading, spacing: 4) {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 16)
+
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 14)
+                    .frame(maxWidth: 200)
+
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 12)
+                    .frame(maxWidth: 80)
+            }
+
+            Spacer()
+        }
+        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
     }
 }
 
