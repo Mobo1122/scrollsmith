@@ -9,8 +9,8 @@ Requirements for UI polish milestone. Each maps to roadmap phases.
 
 ### Navigation
 
-- [ ] **NAV-01**: App uses sidebar navigation with sections: Library, Types, Playbooks, Tags, Trash
-- [ ] **NAV-02**: Sidebar adapts between iPhone (sheet/overlay) and iPad (persistent sidebar)
+- [x] **NAV-01**: App uses sidebar navigation with sections: Library, Playbooks, Tags, Trash *(Types removed per user feedback)*
+- [x] **NAV-02**: Sidebar adapts between iPhone (NavigationSplitView standard) and iPad (persistent sidebar)
 - [ ] **NAV-03**: Types section shows filters: YouTube, Camera Roll, Has Habits
 - [ ] **NAV-04**: Playbooks section shows user's playbooks with video counts
 - [ ] **NAV-05**: Tags section shows user's tags with video counts
@@ -72,8 +72,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | Phase 13 | Pending |
-| NAV-02 | Phase 13 | Pending |
+| NAV-01 | Phase 13 | Complete |
+| NAV-02 | Phase 13 | Complete |
 | NAV-03 | Phase 15 | Pending |
 | NAV-04 | Phase 15 | Pending |
 | NAV-05 | Phase 15 | Pending |
@@ -102,4 +102,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-01-29 with phase mappings*
+*Last updated: 2026-01-31 with Phase 13 completion*

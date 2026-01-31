@@ -24,22 +24,25 @@ Phases 1-12 completed across authentication, video processing, AI summarization,
 
 **Milestone Goal:** Production-grade UI redesign inspired by Readwise Reader — transform Scrollsmith into a polished "second brain for doomscrolling" with sidebar navigation, video feed homepage, and embedded playback.
 
-### Phase 13: Navigation Architecture
+### Phase 13: Navigation Architecture ✅
 **Goal**: Users can navigate via sidebar on iPhone/iPad with automatic layout adaptation
 **Depends on**: Phase 12 (v1.0 complete)
 **Requirements**: NAV-01, NAV-02
 **Success Criteria** (what must be TRUE):
-  1. App displays sidebar navigation with Library, Types, Playbooks, Tags, Trash sections
-  2. iPhone users see overlay sidebar (sheet/overlay) that slides in from side
-  3. iPad users see persistent sidebar in split-view layout
-  4. Tapping sidebar items navigates to corresponding detail views without lag
-  5. Navigation state persists when rotating iPad or switching between sections
+  1. ✅ App displays sidebar navigation with Library, Playbooks, Tags, Trash sections
+  2. ✅ iPhone users see NavigationSplitView with sidebar as separate screen (standard iOS pattern)
+  3. ✅ iPad users see persistent sidebar in split-view layout (toggleable in portrait/landscape)
+  4. ✅ Tapping sidebar items navigates to corresponding detail views without lag
+  5. ✅ Navigation state persists when rotating iPad or switching between sections
 **Plans**: 3 plans
+**Completed**: 2026-01-31
 
 Plans:
-- [ ] 13-01-PLAN.md — Navigation foundation (SidebarSection enum + NavigationModel)
-- [ ] 13-02-PLAN.md — Navigation shell (SidebarView + RootNavigationView + ContentView wiring)
-- [ ] 13-03-PLAN.md — Verify navigation on iPhone and iPad
+- [x] 13-01-PLAN.md — Navigation foundation (SidebarSection enum + NavigationModel)
+- [x] 13-02-PLAN.md — Navigation shell (SidebarView + RootNavigationView + ContentView wiring)
+- [x] 13-03-PLAN.md — Verify navigation on iPhone and iPad
+
+**Notes**: Types section removed per user feedback (redundant with Playbooks). Library changed to feed layout.
 
 ### Phase 14: Video Feed & Cards
 **Goal**: Users see video library as rich feed with cards instead of basic grid
@@ -97,8 +100,8 @@ Phases execute in numeric order: 13 → 14 → 15 → 16
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-12. v1.0 MVP | v1.0 | All | Complete | 2026-01-28 |
-| 13. Navigation Architecture | v1.1 | 0/3 | Ready to execute | - |
-| 14. Video Feed & Cards | v1.1 | 0/? | Not started | - |
+| 13. Navigation Architecture | v1.1 | 3/3 | Complete | 2026-01-31 |
+| 14. Video Feed & Cards | v1.1 | 0/? | Ready to execute | - |
 | 15. Sidebar Population & Bug Fixes | v1.1 | 0/? | Not started | - |
 | 16. Summary Enhancements & Polish | v1.1 | 0/? | Not started | - |
 
