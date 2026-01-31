@@ -55,10 +55,12 @@ Plans:
   4. Feed displays helpful empty state with call-to-action when no videos exist
   5. Scrolling through 100+ videos maintains 60 FPS performance on iPhone SE
   6. Thumbnails load quickly and remain cached when scrolling back up
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 14-01: TBD
+- [ ] 14-01-PLAN.md — Backend thumbnail URL support
+- [ ] 14-02-PLAN.md — iOS feed with Kingfisher thumbnails and skeleton loading
+- [ ] 14-03-PLAN.md — Verify feed UX on iPhone
 
 ### Phase 15: Sidebar Population & Bug Fixes
 **Goal**: Sidebar sections filter video library and existing UI bugs are resolved
@@ -101,7 +103,7 @@ Phases execute in numeric order: 13 → 14 → 15 → 16
 |-------|-----------|----------------|--------|-----------|
 | 1-12. v1.0 MVP | v1.0 | All | Complete | 2026-01-28 |
 | 13. Navigation Architecture | v1.1 | 3/3 | Complete | 2026-01-31 |
-| 14. Video Feed & Cards | v1.1 | 0/? | Ready to execute | - |
+| 14. Video Feed & Cards | v1.1 | 0/3 | Ready to execute | - |
 | 15. Sidebar Population & Bug Fixes | v1.1 | 0/? | Not started | - |
 | 16. Summary Enhancements & Polish | v1.1 | 0/? | Not started | - |
 
