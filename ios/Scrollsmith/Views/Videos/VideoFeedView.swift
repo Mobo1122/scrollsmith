@@ -11,6 +11,7 @@ struct VideoFeedView: View {
     let playbookId: UUID?
     let showUncategorized: Bool
     let type: VideoType?
+    let tag: String?
 
     @State private var videos: [VideoDTO] = []
     @State private var isLoading = false
@@ -123,14 +124,16 @@ struct VideoFeedView: View {
         do {
             videos = try await APIClient.shared.getVideos(
                 playbookId: playbookId,
-                uncategorized: showUncategorized
+                uncategorized: showUncategorized,
+                tag: tag
             )
         } catch {
             self.error = AppError.from(error)
             CrashReportingService.shared.captureError(error, context: [
                 "action": "loadVideos",
                 "playbookId": playbookId?.uuidString ?? "nil",
-                "uncategorized": showUncategorized
+                "uncategorized": showUncategorized,
+                "tag": tag ?? "nil"
             ])
         }
         isLoading = false
@@ -345,7 +348,7 @@ private struct VideoFeedSkeletonRow: View {
 extension VideoFeedView {
     /// Creates a VideoFeedView for "All Videos" view (Library).
     init() {
-        self.init(playbookId: nil, showUncategorized: false, type: nil)
+        self.init(playbookId: nil, showUncategorized: false, type: nil, tag: nil)
     }
 }
 

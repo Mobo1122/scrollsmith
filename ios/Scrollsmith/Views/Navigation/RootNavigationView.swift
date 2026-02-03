@@ -72,7 +72,8 @@ struct RootNavigationView: View {
                     VideoFeedView(
                         playbookId: navigationModel.selectedPlaybookId,
                         showUncategorized: false,
-                        type: navigationModel.selectedType
+                        type: navigationModel.selectedType,
+                        tag: navigationModel.selectedTag
                     )
                     .navigationTitle(navigationTitle)
                     .navigationBarTitleDisplayMode(.large)
@@ -87,22 +88,19 @@ struct RootNavigationView: View {
                         .navigationBarTitleDisplayMode(.large)
 
                 case .tags:
+                    // Tags are handled inline in sidebar - this case shouldn't be reached
+                    // since clicking a tag navigates to library with tag filter
                     ContentUnavailableView(
-                        "Tags",
+                        "Select a Tag",
                         systemImage: SidebarSection.tags.icon,
-                        description: Text("Filter by tags - Coming in Phase 15")
+                        description: Text("Choose a tag from the sidebar to filter videos")
                     )
                     .navigationTitle("Tags")
                     .navigationBarTitleDisplayMode(.large)
 
                 case .trash:
-                    ContentUnavailableView(
-                        "Trash",
-                        systemImage: SidebarSection.trash.icon,
-                        description: Text("Deleted videos - Coming in Phase 15")
-                    )
-                    .navigationTitle("Trash")
-                    .navigationBarTitleDisplayMode(.large)
+                    RecentlyDeletedView()
+                        .navigationBarTitleDisplayMode(.large)
 
                 case .none:
                     ContentUnavailableView(
@@ -238,7 +236,7 @@ private struct PlaybookListContent: View {
         .navigationDestination(for: String.self) { destination in
             switch destination {
             case "uncategorized":
-                VideoFeedView(playbookId: nil, showUncategorized: true, type: nil)
+                VideoFeedView(playbookId: nil, showUncategorized: true, type: nil, tag: nil)
                     .navigationTitle("Uncategorized")
                     .navigationBarTitleDisplayMode(.large)
             default:

@@ -22,6 +22,9 @@ struct SidebarView: View {
     /// Playbook data for sidebar display
     @State private var playbookViewModel = PlaybookViewModel()
 
+    /// Tag data for sidebar display
+    @State private var tagViewModel = TagViewModel()
+
     // MARK: - Environment
 
     @EnvironmentObject private var authViewModel: AuthViewModel
@@ -91,23 +94,59 @@ struct SidebarView: View {
                 }
             }
 
-            // Organization section (Tags only for now)
-            Section("Organization") {
-                Label("Tags", systemImage: SidebarSection.tags.icon)
-                    .tag(SidebarSection.tags)
+            // Tags section - shows all tags with video counts
+            Section("Tags") {
+                if tagViewModel.isLoading {
+                    HStack {
+                        ProgressView()
+                            .controlSize(.small)
+                        Text("Loading tags...")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                } else if tagViewModel.tags.isEmpty {
+                    Text("No tags yet")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(tagViewModel.tags) { tag in
+                        Button {
+                            // Set tag filter and navigate to library
+                            navigationModel.selectedTag = tag.name
+                            navigationModel.selectedType = nil as VideoType?  // Clear type filter
+                            navigationModel.selectedPlaybookId = nil as UUID?  // Clear playbook filter
+                            selection = .library
+                        } label: {
+                            Label {
+                                HStack {
+                                    Text(tag.name)
+                                    Spacer()
+                                    Text("\(tag.videoCount)")
+                                        .foregroundStyle(.secondary)
+                                        .font(.caption)
+                                }
+                            } icon: {
+                                Image(systemName: "tag")
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
             }
 
-            // Trash section (no header)
+            // Recently Deleted section (no header)
             Section {
-                Label("Trash", systemImage: SidebarSection.trash.icon)
+                Label("Recently Deleted", systemImage: SidebarSection.trash.icon)
                     .tag(SidebarSection.trash)
             }
         }
         .listStyle(.sidebar)
         .navigationTitle("Scrollsmith")
         .task {
-            // Load playbooks when sidebar appears
-            await playbookViewModel.loadPlaybooks()
+            // Load playbooks and tags when sidebar appears
+            async let playbooks: Void = playbookViewModel.loadPlaybooks()
+            async let tags: Void = tagViewModel.loadTags()
+            _ = await (playbooks, tags)
         }
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {

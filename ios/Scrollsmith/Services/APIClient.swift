@@ -418,8 +418,8 @@ actor APIClient {
         }
     }
 
-    /// Fetches videos, optionally filtered by Playbook or uncategorized.
-    func getVideos(playbookId: UUID? = nil, uncategorized: Bool = false) async throws -> [VideoDTO] {
+    /// Fetches videos, optionally filtered by Playbook, tag, or uncategorized status.
+    func getVideos(playbookId: UUID? = nil, uncategorized: Bool = false, tag: String? = nil) async throws -> [VideoDTO] {
         var urlString = "\(baseURL)/api/v1/videos"
         var queryItems: [String] = []
 
@@ -428,6 +428,9 @@ actor APIClient {
         }
         if uncategorized {
             queryItems.append("uncategorized=true")
+        }
+        if let tag = tag, let encoded = tag.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            queryItems.append("tag=\(encoded)")
         }
 
         if !queryItems.isEmpty {
@@ -609,7 +612,8 @@ actor APIClient {
 
     // MARK: - Video CRUD
 
-    /// Deletes a single video.
+    /// Deletes a single video (soft delete - moves to Recently Deleted).
+    /// Video will be permanently deleted after 30 days.
     func deleteVideo(id: UUID) async throws {
         guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/\(id.uuidString.lowercased())") else {
             throw APIError.invalidURL
@@ -631,6 +635,123 @@ actor APIClient {
         guard (200...299).contains(httpResponse.statusCode) else {
             throw APIError.httpError(statusCode: httpResponse.statusCode)
         }
+    }
+
+    /// Gets soft-deleted videos (Recently Deleted).
+    /// Only returns videos deleted within the last 30 days.
+    func getDeletedVideos() async throws -> [VideoDTO] {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos?deleted=true") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "GET"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .flexibleISO8601
+
+        let listResponse = try decoder.decode(VideoListResponse.self, from: data)
+        return listResponse.videos
+    }
+
+    /// Restores a soft-deleted video from Recently Deleted.
+    func restoreVideo(id: UUID) async throws -> VideoDTO {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/\(id.uuidString.lowercased())/restore") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "PATCH"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .flexibleISO8601
+
+        return try decoder.decode(VideoDTO.self, from: data)
+    }
+
+    /// Permanently deletes a video immediately (bypasses 30-day retention).
+    /// This is irreversible.
+    func permanentlyDeleteVideo(id: UUID) async throws {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/\(id.uuidString.lowercased())/permanent") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "DELETE"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (_, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+    }
+
+    /// Gets all tags with video counts, sorted by most used first.
+    func getTags() async throws -> [TagDTO] {
+        guard let endpoint = URL(string: "\(baseURL)/api/v1/videos/tags") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = "GET"
+
+        if let token = await getAccessToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidResponse
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .flexibleISO8601
+
+        return try decoder.decode([TagDTO].self, from: data)
     }
 
     /// Updates tags for a video.
@@ -1060,6 +1181,19 @@ struct VideoDTO: Codable, Identifiable, Hashable {
     let userEditedSummary: Bool?    // Indicates user edited the summary
     let tags: [String]?
     let createdAt: Date
+    let deletedAt: Date?            // Timestamp when video was soft deleted
+
+    /// Whether this video is soft-deleted (in Recently Deleted)
+    var isDeleted: Bool {
+        deletedAt != nil
+    }
+
+    /// Number of days remaining before permanent deletion (max 30)
+    var daysUntilPermanentDeletion: Int? {
+        guard let deletedAt = deletedAt else { return nil }
+        let daysSinceDeletion = Calendar.current.dateComponents([.day], from: deletedAt, to: Date()).day ?? 0
+        return max(0, 30 - daysSinceDeletion)
+    }
 
     // Memberwise init for Previews
     init(
@@ -1071,7 +1205,8 @@ struct VideoDTO: Codable, Identifiable, Hashable {
         summaryCards: String? = nil,
         userEditedSummary: Bool? = nil,
         tags: [String]? = nil,
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        deletedAt: Date? = nil
     ) {
         self.id = id
         self.sourceUrl = sourceUrl
@@ -1082,6 +1217,7 @@ struct VideoDTO: Codable, Identifiable, Hashable {
         self.userEditedSummary = userEditedSummary
         self.tags = tags
         self.createdAt = createdAt
+        self.deletedAt = deletedAt
     }
 }
 

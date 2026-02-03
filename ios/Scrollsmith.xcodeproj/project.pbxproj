@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		03439A71BCB3478F97D726D4 /* HabitEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7992D2FAF34A4EE8A71B8838 /* HabitEditSheet.swift */; };
+		11890D9773D09589311D592E /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D535E072FEB5B3F40D724A6 /* Tag.swift */; };
 		1F12E7981F5FF3B858BE936D /* VideoFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFAC1397D2015BE889246FD2 /* VideoFeedView.swift */; };
 		4E45B60C2F0C3D6409A4FF8D /* RootNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D3876C3D63CC3B6B609080 /* RootNavigationView.swift */; };
 		54E4FE6ADE40A67FEF481D26 /* NavigationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9135235BF0435B8BABCBAE /* NavigationModel.swift */; };
@@ -30,7 +31,6 @@
 		AAAA11042F2A000001234567 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = AAAA11032F2A000001234567 /* Mixpanel */; };
 		AAAA11062F2A000001234568 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA11052F2A000001234568 /* AnalyticsService.swift */; };
 		BBBB22042F2B000001234567 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = BBBB22032F2B000001234567 /* Sentry */; };
-		DDDD33042F2D000001234567 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = DDDD33032F2D000001234567 /* Kingfisher */; };
 		CE17CB4B2F29815E0054BABF /* ErrorHandlingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB4A2F29815E0054BABF /* ErrorHandlingService.swift */; };
 		CE17CB502F29819D0054BABF /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB4D2F29819D0054BABF /* MailView.swift */; };
 		CE17CB512F29819D0054BABF /* LegalDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB4E2F29819D0054BABF /* LegalDocumentView.swift */; };
@@ -125,6 +125,9 @@
 		CE781F362F28500300D238A3 /* HabitListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE781F372F28500300D238A3 /* HabitListViewModel.swift */; };
 		CONFIG122F2A000001234570 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CONFIG112F2A000001234569 /* Configuration.swift */; };
 		CRASH1062F2A000001234572 /* CrashReportingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRASH1052F2A000001234571 /* CrashReportingService.swift */; };
+		D6B93C5A5D1ACD4553CCBD8D /* TagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116EB5F0CEB78A6052E72A5B /* TagViewModel.swift */; };
+		DDDD33042F2D000001234567 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = DDDD33032F2D000001234567 /* Kingfisher */; };
+		E511581EE1FA2F22ABE70F68 /* RecentlyDeletedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660E5839D749871E716022B7 /* RecentlyDeletedView.swift */; };
 		F81256B7D3A6473489DDA061 /* StreakCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A061E420CC1D473580647059 /* StreakCalendarView.swift */; };
 /* End PBXBuildFile section */
 
@@ -153,9 +156,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		116EB5F0CEB78A6052E72A5B /* TagViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TagViewModel.swift; path = Scrollsmith/ViewModels/TagViewModel.swift; sourceTree = "<group>"; };
 		2588FC3203C30483F3D6B323 /* SidebarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SidebarView.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		3EC9AAF76ACF6F0C3755FB05 /* SidebarSection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SidebarSection.swift; path = SidebarSection.swift; sourceTree = "<group>"; };
 		40D3876C3D63CC3B6B609080 /* RootNavigationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootNavigationView.swift; path = RootNavigationView.swift; sourceTree = "<group>"; };
+		4D535E072FEB5B3F40D724A6 /* Tag.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Tag.swift; path = Scrollsmith/Models/Tag.swift; sourceTree = "<group>"; };
+		660E5839D749871E716022B7 /* RecentlyDeletedView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecentlyDeletedView.swift; path = Scrollsmith/Views/Videos/RecentlyDeletedView.swift; sourceTree = "<group>"; };
 		7992D2FAF34A4EE8A71B8838 /* HabitEditSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitEditSheet.swift; sourceTree = "<group>"; };
 		7C9135235BF0435B8BABCBAE /* NavigationModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationModel.swift; path = NavigationModel.swift; sourceTree = "<group>"; };
 		A0000010 /* Scrollsmith.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrollsmith.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -312,6 +318,9 @@
 				A0000031 /* Scrollsmith */,
 				CE2D7A652F205D98004CCAEF /* ScrollsmithShare */,
 				A0000032 /* Products */,
+				4D535E072FEB5B3F40D724A6 /* Tag.swift */,
+				116EB5F0CEB78A6052E72A5B /* TagViewModel.swift */,
+				660E5839D749871E716022B7 /* RecentlyDeletedView.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -821,6 +830,9 @@
 				4E45B60C2F0C3D6409A4FF8D /* RootNavigationView.swift in Sources */,
 				54E4FE6ADE40A67FEF481D26 /* NavigationModel.swift in Sources */,
 				1F12E7981F5FF3B858BE936D /* VideoFeedView.swift in Sources */,
+				11890D9773D09589311D592E /* Tag.swift in Sources */,
+				D6B93C5A5D1ACD4553CCBD8D /* TagViewModel.swift in Sources */,
+				E511581EE1FA2F22ABE70F68 /* RecentlyDeletedView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1155,14 +1167,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
-	DDDD33022F2D000001234567 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-		isa = XCRemoteSwiftPackageReference;
-		repositoryURL = "https://github.com/onevcat/Kingfisher.git";
-		requirement = {
-			kind = upToNextMajorVersion;
-			minimumVersion = 8.0.0;
+		DDDD33022F2D000001234567 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
 		};
-	};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1186,11 +1198,11 @@
 			package = CE781F142F2506E500D238A3 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
 			productName = RevenueCatUI;
 		};
-	DDDD33032F2D000001234567 /* Kingfisher */ = {
-		isa = XCSwiftPackageProductDependency;
-		package = DDDD33022F2D000001234567 /* XCRemoteSwiftPackageReference "Kingfisher" */;
-		productName = Kingfisher;
-	};
+		DDDD33032F2D000001234567 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DDDD33022F2D000001234567 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A0000050 /* Project object */;
