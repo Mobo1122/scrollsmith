@@ -193,7 +193,9 @@ struct ShareExtensionView: View {
 
     private func processURL(_ url: URL) async {
         let urlString = url.absoluteString
+        print("DEBUG ShareExtension: Processing URL: \(urlString)")
         let (isValid, platform) = VideoURLValidator.validate(urlString)
+        print("DEBUG ShareExtension: URL validation - isValid: \(isValid), platform: \(platform.rawValue)")
 
         await MainActor.run {
             if isValid {
@@ -239,18 +241,22 @@ struct ShareExtensionView: View {
         }
 
         // Create pending upload record
+        print("DEBUG ShareExtension: Creating PendingUpload - URL: \(urlString), Platform: \(detectedPlatform.rawValue)")
         let pendingUpload = PendingUpload(
             sourceURL: urlString,
             platform: detectedPlatform.rawValue
         )
 
         modelContext.insert(pendingUpload)
+        print("DEBUG ShareExtension: PendingUpload inserted, attempting to save...")
 
         do {
             try modelContext.save()
+            print("DEBUG ShareExtension: PendingUpload saved successfully! ID: \(pendingUpload.id)")
             savedSuccessfully = true
             isProcessing = false
         } catch {
+            print("DEBUG ShareExtension: Failed to save PendingUpload: \(error)")
             isProcessing = false
             errorMessage = "Failed to save: \(error.localizedDescription)"
         }

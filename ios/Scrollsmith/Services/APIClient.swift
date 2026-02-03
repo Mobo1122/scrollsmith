@@ -947,7 +947,13 @@ actor APIClient {
     // MARK: - Private
 
     private func getAccessToken() async -> String? {
-        await KeychainService.shared.getAccessToken()
+        let token = await KeychainService.shared.getAccessToken()
+        if token == nil {
+            print("DEBUG APIClient: No access token found - user may not be logged in")
+        } else {
+            print("DEBUG APIClient: Access token found (length: \(token!.count))")
+        }
+        return token
     }
 }
 

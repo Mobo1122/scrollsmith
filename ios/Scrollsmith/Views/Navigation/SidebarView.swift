@@ -19,11 +19,15 @@ struct SidebarView: View {
     /// Controls display of capture fullScreenCover.
     @State private var showCapture = false
 
+    /// Playbook data for sidebar display
+    @State private var playbookViewModel = PlaybookViewModel()
+
     // MARK: - Environment
 
     @EnvironmentObject private var authViewModel: AuthViewModel
     @EnvironmentObject private var subscriptionViewModel: SubscriptionViewModel
     @EnvironmentObject private var uploadQueueService: UploadQueueService
+    @Environment(NavigationModel.self) private var navigationModel
     @Environment(\.modelContext) private var modelContext
 
     // MARK: - Body
@@ -31,16 +35,64 @@ struct SidebarView: View {
     var body: some View {
         // CRITICAL: List MUST use selection binding
         List(selection: $selection) {
-            // Library section
-            Section("Library") {
-                Label("All Videos", systemImage: SidebarSection.library.icon)
-                    .tag(SidebarSection.library)
+            // Types section - filters by video source
+            Section("Types") {
+                ForEach(VideoType.allCases) { type in
+                    Button {
+                        // Set type filter and navigate to library
+                        navigationModel.selectedType = type
+                        selection = .library
+                    } label: {
+                        Label(type.rawValue, systemImage: type.icon)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
 
-            // Organization section
+            // Library section
+            Section("Library") {
+                Button {
+                    // Clear all filters to show all videos
+                    navigationModel.selectedType = nil as VideoType?
+                    navigationModel.selectedPlaybookId = nil as UUID?
+                    navigationModel.selectedPlaybookName = nil as String?
+                    navigationModel.selectedTag = nil as String?
+                    selection = .library
+                } label: {
+                    Label("All Videos", systemImage: SidebarSection.library.icon)
+                }
+                .buttonStyle(.plain)
+            }
+
+            // Playbooks section - shows user's playbooks with filtering
+            Section("Playbooks") {
+                ForEach(playbookViewModel.playbooks) { playbook in
+                    Button {
+                        // Set playbook filter and navigate to library
+                        navigationModel.selectedPlaybookId = playbook.id
+                        navigationModel.selectedPlaybookName = playbook.name
+                        navigationModel.selectedType = nil as VideoType?  // Clear type filter
+                        selection = .library
+                    } label: {
+                        Label {
+                            HStack {
+                                Text(playbook.name)
+                                Spacer()
+                                Text("\(playbook.videoCount)")
+                                    .foregroundStyle(.secondary)
+                                    .font(.caption)
+                            }
+                        } icon: {
+                            Image(systemName: playbook.isSystem ? "star.fill" : "folder")
+                                .foregroundStyle(playbook.isSystem ? .yellow : .primary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
+            // Organization section (Tags only for now)
             Section("Organization") {
-                Label("Playbooks", systemImage: SidebarSection.playbooks.icon)
-                    .tag(SidebarSection.playbooks)
                 Label("Tags", systemImage: SidebarSection.tags.icon)
                     .tag(SidebarSection.tags)
             }
@@ -53,6 +105,10 @@ struct SidebarView: View {
         }
         .listStyle(.sidebar)
         .navigationTitle("Scrollsmith")
+        .task {
+            // Load playbooks when sidebar appears
+            await playbookViewModel.loadPlaybooks()
+        }
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 // Capture button

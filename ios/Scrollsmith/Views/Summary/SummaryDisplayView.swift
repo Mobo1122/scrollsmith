@@ -33,8 +33,12 @@ struct SummaryDisplayView: View {
                 if video.summaryBullets != nil {
                     makeActionPointsButton
                         .padding(.horizontal)
-                        .padding(.bottom, 8)
+                        .padding(.top, 16)
                 }
+            }
+            .safeAreaInset(edge: .bottom) {
+                // Reserve space for View Original FAB to prevent overlap
+                Color.clear.frame(height: 70)
             }
 
             // View Original FAB
@@ -68,45 +72,22 @@ struct SummaryDisplayView: View {
 
     private var formatPicker: some View {
         Picker("Format", selection: $viewModel.currentFormat) {
-            // Bullets always available if data exists
+            // Bullets - always show if data exists
             if video.summaryBullets != nil {
                 Text("Bullets").tag(SummaryFormat.bullets)
             }
 
-            // Steps - show for all, but check access on select
+            // Steps - show if data exists OR for free tier (to show teaser)
             if video.summarySteps != nil || !subscriptionViewModel.isPro {
-                HStack {
-                    Text("Steps")
-                    if !subscriptionViewModel.isPro {
-                        Image(systemName: "lock.fill")
-                            .font(.caption2)
-                    }
-                }
-                .tag(SummaryFormat.steps)
+                Text("Steps").tag(SummaryFormat.steps)
             }
 
-            // Cards - show for all, but check access on select
+            // Cards - show if data exists OR for free tier (to show teaser)
             if video.summaryCards != nil || !subscriptionViewModel.isPro {
-                HStack {
-                    Text("Cards")
-                    if !subscriptionViewModel.isPro {
-                        Image(systemName: "lock.fill")
-                            .font(.caption2)
-                    }
-                }
-                .tag(SummaryFormat.cards)
+                Text("Cards").tag(SummaryFormat.cards)
             }
         }
         .pickerStyle(.segmented)
-        .onChange(of: viewModel.currentFormat) { oldValue, newValue in
-            // Check Pro access when switching to Pro formats
-            if !subscriptionViewModel.isPro && (newValue == .steps || newValue == .cards) {
-                paywallFormat = newValue
-                showPaywall = true
-                // Revert to previous format
-                viewModel.currentFormat = oldValue
-            }
-        }
     }
 
     // MARK: - Content View

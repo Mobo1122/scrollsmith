@@ -24,6 +24,22 @@ struct RootNavigationView: View {
     @EnvironmentObject private var subscriptionViewModel: SubscriptionViewModel
     @EnvironmentObject private var uploadQueueService: UploadQueueService
 
+    // MARK: - Computed Properties
+
+    /// Dynamic navigation title based on current filter selection
+    private var navigationTitle: String {
+        if let type = navigationModel.selectedType {
+            return type.rawValue
+        }
+        if let playbookName = navigationModel.selectedPlaybookName {
+            return playbookName
+        }
+        if let tag = navigationModel.selectedTag {
+            return tag  // Tag name is the filter, use directly
+        }
+        return "Library"
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -35,6 +51,7 @@ struct RootNavigationView: View {
                 .environmentObject(authViewModel)
                 .environmentObject(subscriptionViewModel)
                 .environmentObject(uploadQueueService)
+                .environment(navigationModel)
         } detail: {
             detailContent
         }
@@ -52,9 +69,13 @@ struct RootNavigationView: View {
             ZStack {
                 switch navigationModel.selectedSection {
                 case .library:
-                    VideoFeedView()
-                        .navigationTitle("Library")
-                        .navigationBarTitleDisplayMode(.large)
+                    VideoFeedView(
+                        playbookId: navigationModel.selectedPlaybookId,
+                        showUncategorized: false,
+                        type: navigationModel.selectedType
+                    )
+                    .navigationTitle(navigationTitle)
+                    .navigationBarTitleDisplayMode(.large)
 
                 case .playbooks:
                     // PlaybookListView has its own NavigationStack internally.
@@ -217,7 +238,7 @@ private struct PlaybookListContent: View {
         .navigationDestination(for: String.self) { destination in
             switch destination {
             case "uncategorized":
-                VideoFeedView(playbookId: nil, showUncategorized: true)
+                VideoFeedView(playbookId: nil, showUncategorized: true, type: nil)
                     .navigationTitle("Uncategorized")
                     .navigationBarTitleDisplayMode(.large)
             default:

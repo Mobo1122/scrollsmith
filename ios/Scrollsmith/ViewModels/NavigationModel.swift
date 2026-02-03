@@ -1,5 +1,25 @@
 import SwiftUI
 
+/// Video type filter options for the Types sidebar section.
+enum VideoType: String, CaseIterable, Identifiable {
+    case youtube = "YouTube"
+    case cameraRoll = "Camera Roll"
+    case hasHabits = "Has Habits"
+
+    var id: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .youtube:
+            return "play.rectangle.fill"
+        case .cameraRoll:
+            return "photo.on.rectangle"
+        case .hasHabits:
+            return "checkmark.circle.fill"
+        }
+    }
+}
+
 /// Observable navigation state management for sidebar-based navigation.
 ///
 /// This class holds all navigation state including sidebar selection,
@@ -15,6 +35,20 @@ final class NavigationModel {
 
     /// Column visibility for NavigationSplitView.
     var columnVisibility: NavigationSplitViewVisibility = .automatic
+
+    // MARK: - Filter State
+
+    /// Currently selected video type filter (for Types section).
+    var selectedType: VideoType?
+
+    /// Currently selected playbook ID (for Playbooks section).
+    var selectedPlaybookId: UUID?
+
+    /// Currently selected playbook name (for display in navigation title).
+    var selectedPlaybookName: String?
+
+    /// Currently selected tag name (for Tags section).
+    var selectedTag: String?
 
     // MARK: - Navigation Paths
 

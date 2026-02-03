@@ -64,13 +64,16 @@ class TranscriptionOrchestrator: ObservableObject {
     /// Updates the upload's status as it progresses through stages.
     func process(_ upload: PendingUpload, context: ModelContext) async {
         let platform = upload.videoPlatform
+        print("DEBUG Orchestrator: Processing upload \(upload.id) - Platform: \(platform.rawValue)")
 
         do {
             let transcript: String
 
             switch platform {
             case .youtube:
+                print("DEBUG Orchestrator: Calling processYouTube for URL: \(upload.sourceURL)")
                 transcript = try await processYouTube(url: upload.sourceURL, upload: upload, context: context)
+                print("DEBUG Orchestrator: processYouTube completed successfully")
 
             case .tiktok, .instagram:
                 // v1: TikTok/IG URL not supported - show error
@@ -114,6 +117,7 @@ class TranscriptionOrchestrator: ObservableObject {
 
         } catch {
             // Update upload record with failure
+            print("DEBUG Orchestrator: Processing failed with error: \(error)")
             upload.uploadStatus = .failed
             upload.errorMessage = error.localizedDescription
             upload.retryCount += 1
@@ -129,12 +133,16 @@ class TranscriptionOrchestrator: ObservableObject {
         updateStatus(.transcribing, upload: upload, context: context)
         progress = 0.3
 
+        print("DEBUG Orchestrator: Calling API getYouTubeCaptions for URL: \(url)")
         let captionsResponse = try await APIClient.shared.getYouTubeCaptions(url: url)
+        print("DEBUG Orchestrator: API response - success: \(captionsResponse.success), videoId: \(captionsResponse.videoId?.uuidString ?? "nil"), errorType: \(captionsResponse.errorType ?? "nil"), error: \(captionsResponse.error ?? "nil")")
 
         if captionsResponse.success, let transcript = captionsResponse.transcript {
             // Got captions from API - video already created on backend
+            print("DEBUG Orchestrator: Got transcript from API (\(transcript.prefix(100))...)")
             if let videoId = captionsResponse.videoId {
                 upload.videoId = videoId
+                print("DEBUG Orchestrator: Set videoId on upload: \(videoId)")
             }
             progress = 1.0
             return transcript
@@ -143,9 +151,11 @@ class TranscriptionOrchestrator: ObservableObject {
         // v1: No fallback - just report unavailable
         // TODO v2: Fall back to download + on-device WhisperKit transcription
         if captionsResponse.errorType == "no_captions" {
+            print("DEBUG Orchestrator: No captions available for video")
             throw TranscriptionError.noCaptionsAvailable
         }
 
+        print("DEBUG Orchestrator: Transcription failed - errorType: \(captionsResponse.errorType ?? "nil"), error: \(captionsResponse.error ?? "Unknown error")")
         throw TranscriptionError.transcriptionFailed(
             NSError(domain: "YouTube", code: -1,
                     userInfo: [NSLocalizedDescriptionKey: captionsResponse.error ?? "Unknown error"])

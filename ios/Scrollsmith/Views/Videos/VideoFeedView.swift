@@ -10,10 +10,34 @@ struct VideoFeedView: View {
 
     let playbookId: UUID?
     let showUncategorized: Bool
+    let type: VideoType?
 
     @State private var videos: [VideoDTO] = []
     @State private var isLoading = false
     @State private var error: AppError?
+    @State private var playbookViewModel = PlaybookViewModel()
+    @State private var favoritesPlaybookId: UUID?
+
+    // MARK: - Filtered Videos
+
+    /// Apply client-side type filtering if a type is selected
+    private var filteredVideos: [VideoDTO] {
+        guard let type = type else { return videos }
+
+        return videos.filter { video in
+            switch type {
+            case .youtube:
+                return video.sourceUrl?.contains("youtube") == true ||
+                       video.sourceUrl?.contains("youtu.be") == true
+            case .cameraRoll:
+                return video.sourceUrl?.contains("camera_roll") == true
+            case .hasHabits:
+                // TODO: VideoDTO doesn't include habits data from backend
+                // This filter will work once backend adds habits array to video response
+                return false
+            }
+        }
+    }
 
     // MARK: - Body
 
@@ -38,6 +62,9 @@ struct VideoFeedView: View {
         }
         .task {
             await loadVideos()
+            // Load playbooks to find Favorites ID for swipe actions
+            await playbookViewModel.loadPlaybooks()
+            favoritesPlaybookId = playbookViewModel.playbooks.first(where: { $0.isSystem })?.id
         }
         .refreshable {
             await loadVideos()
@@ -56,11 +83,33 @@ struct VideoFeedView: View {
 
     private var feedList: some View {
         List {
-            ForEach(videos) { video in
+            ForEach(filteredVideos) { video in
                 NavigationLink(value: video) {
                     VideoFeedRow(video: video)
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                    Button {
+                        Task {
+                            HapticFeedback.notification(.success)
+                            await archiveVideo(video)
+                        }
+                    } label: {
+                        Label("Archive", systemImage: "archivebox")
+                    }
+                    .tint(.orange)
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button {
+                        Task {
+                            HapticFeedback.notification(.success)
+                            await toggleFavorite(video)
+                        }
+                    } label: {
+                        Label("Favorite", systemImage: "star.fill")
+                    }
+                    .tint(.yellow)
+                }
             }
         }
         .listStyle(.plain)
@@ -85,6 +134,59 @@ struct VideoFeedView: View {
             ])
         }
         isLoading = false
+    }
+
+    // MARK: - Video Actions
+
+    /// Archives a video (soft delete to Trash)
+    private func archiveVideo(_ video: VideoDTO) async {
+        do {
+            try await APIClient.shared.deleteVideo(id: video.id)
+            // Remove from local list immediately for instant feedback
+            videos.removeAll { $0.id == video.id }
+        } catch {
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "archiveVideo",
+                "videoId": video.id.uuidString
+            ])
+        }
+    }
+
+    /// Toggles favorite status by adding to Favorites playbook
+    private func toggleFavorite(_ video: VideoDTO) async {
+        guard let favoritesId = favoritesPlaybookId else {
+            // Favorites playbook not found, show error
+            self.error = AppError.unknown(message: "Favorites playbook not found")
+            return
+        }
+
+        do {
+            // For now, always add to Favorites
+            // TODO: Check if already in Favorites and remove if so (requires backend support)
+            try await APIClient.shared.assignVideoToPlaybook(
+                videoId: video.id,
+                playbookId: favoritesId
+            )
+        } catch {
+            self.error = AppError.from(error)
+            CrashReportingService.shared.captureError(error, context: [
+                "action": "toggleFavorite",
+                "videoId": video.id.uuidString,
+                "playbookId": favoritesId.uuidString
+            ])
+        }
+    }
+}
+
+// MARK: - Haptic Feedback Helper
+
+/// Haptic feedback helper for triggering system haptics
+enum HapticFeedback {
+    /// Trigger a notification haptic with the specified type
+    static func notification(_ type: UINotificationFeedbackGenerator.FeedbackType) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(type)
     }
 }
 
@@ -243,7 +345,7 @@ private struct VideoFeedSkeletonRow: View {
 extension VideoFeedView {
     /// Creates a VideoFeedView for "All Videos" view (Library).
     init() {
-        self.init(playbookId: nil, showUncategorized: false)
+        self.init(playbookId: nil, showUncategorized: false, type: nil)
     }
 }
 

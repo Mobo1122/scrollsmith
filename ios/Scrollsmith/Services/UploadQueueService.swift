@@ -65,17 +65,23 @@ class UploadQueueService: ObservableObject {
 
         do {
             let pending = try context.fetch(descriptor)
+            print("DEBUG UploadQueue: Found \(pending.count) pending uploads")
 
             for upload in pending {
+                print("DEBUG UploadQueue: Processing upload \(upload.id) - URL: \(upload.sourceURL), Platform: \(upload.platform), Status: \(upload.status)")
+
                 // Skip if too many retries
                 if upload.retryCount >= 3 {
+                    print("DEBUG UploadQueue: Skipping upload \(upload.id) - too many retries (\(upload.retryCount))")
                     continue
                 }
 
                 currentItem = upload
 
                 // Process through orchestrator
+                print("DEBUG UploadQueue: Calling orchestrator.process for upload \(upload.id)")
                 await orchestrator.process(upload, context: context)
+                print("DEBUG UploadQueue: Orchestrator finished for upload \(upload.id) - Final status: \(upload.status)")
 
                 // Reset orchestrator for next item
                 orchestrator.reset()
@@ -83,7 +89,7 @@ class UploadQueueService: ObservableObject {
                 await refreshPendingCount()
             }
         } catch {
-            print("Failed to process queue: \(error)")
+            print("DEBUG UploadQueue: Failed to process queue: \(error)")
         }
 
         currentItem = nil
