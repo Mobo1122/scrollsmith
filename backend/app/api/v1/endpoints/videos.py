@@ -445,11 +445,12 @@ async def summarize_video(
             detail="AI summarization service not configured. Contact support."
         )
 
-    # Fetch video
+    # Fetch video (exclude soft-deleted)
     result = await db.execute(
         select(Video).where(
             Video.id == video_id,
-            Video.user_id == current_user.id
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Exclude soft-deleted videos
         )
     )
     video = result.scalar_one_or_none()
@@ -682,11 +683,12 @@ async def update_summary(
     """
     import json
 
-    # Fetch video
+    # Fetch video (exclude soft-deleted)
     result = await db.execute(
         select(Video).where(
             Video.id == video_id,
-            Video.user_id == current_user.id
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Exclude soft-deleted videos
         )
     )
     video = result.scalar_one_or_none()
@@ -794,9 +796,13 @@ async def assign_video_to_playbook(
 
     Videos can belong to multiple Playbooks (many-to-many).
     """
-    # Verify video exists and belongs to user
+    # Verify video exists and belongs to user (exclude soft-deleted)
     video_result = await db.execute(
-        select(Video).where(Video.id == video_id, Video.user_id == current_user.id)
+        select(Video).where(
+            Video.id == video_id,
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Exclude soft-deleted videos
+        )
     )
     video = video_result.scalar_one_or_none()
     if video is None:
@@ -851,9 +857,13 @@ async def remove_video_from_playbook(
 
     Video remains in system, just unassigned from this Playbook.
     """
-    # Verify video belongs to user
+    # Verify video belongs to user (exclude soft-deleted)
     video_result = await db.execute(
-        select(Video).where(Video.id == video_id, Video.user_id == current_user.id)
+        select(Video).where(
+            Video.id == video_id,
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Exclude soft-deleted videos
+        )
     )
     if video_result.scalar_one_or_none() is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Video not found")
@@ -878,9 +888,13 @@ async def get_video_playbooks(
     db: AsyncSession = Depends(get_db),
 ) -> VideoPlaybooksResponse:
     """Get all Playbooks a video belongs to."""
-    # Verify video belongs to user
+    # Verify video belongs to user (exclude soft-deleted)
     video_result = await db.execute(
-        select(Video).where(Video.id == video_id, Video.user_id == current_user.id)
+        select(Video).where(
+            Video.id == video_id,
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Exclude soft-deleted videos
+        )
     )
     if video_result.scalar_one_or_none() is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Video not found")
@@ -908,9 +922,13 @@ async def update_video_tags(
     Tags are used for organization and appear in full-text search with highest weight.
     Maximum 20 tags per video.
     """
-    # Verify video exists and belongs to user
+    # Verify video exists and belongs to user (exclude soft-deleted)
     video_result = await db.execute(
-        select(Video).where(Video.id == video_id, Video.user_id == current_user.id)
+        select(Video).where(
+            Video.id == video_id,
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Exclude soft-deleted videos
+        )
     )
     video = video_result.scalar_one_or_none()
     if video is None:
@@ -952,7 +970,7 @@ async def search_videos(
 
     Results include highlighted matching text.
     """
-    # Build search query with optional Playbook filter
+    # Build search query with optional Playbook filter (exclude soft-deleted)
     if playbook_id:
         search_query = text("""
             SELECT v.id, v.source_url, v.summary_bullets, v.tags, v.created_at,
@@ -962,6 +980,7 @@ async def search_videos(
             FROM videos v
             JOIN video_playbooks vp ON vp.video_id = v.id
             WHERE v.user_id = :user_id
+              AND v.deleted_at IS NULL
               AND v.search_vector @@ plainto_tsquery('english', :q)
               AND vp.playbook_id = :playbook_id
             ORDER BY rank DESC
@@ -982,6 +1001,7 @@ async def search_videos(
                        'MaxWords=30, MinWords=15, StartSel=<mark>, StopSel=</mark>') AS highlight
             FROM videos v
             WHERE v.user_id = :user_id
+              AND v.deleted_at IS NULL
               AND v.search_vector @@ plainto_tsquery('english', :q)
             ORDER BY rank DESC
             LIMIT :limit OFFSET :skip
@@ -996,10 +1016,11 @@ async def search_videos(
     result = await db.execute(search_query, params)
     rows = result.mappings().all()
 
-    # Get total count
+    # Get total count (exclude soft-deleted)
     count_query = text("""
         SELECT COUNT(*) FROM videos v
         WHERE v.user_id = :user_id
+          AND v.deleted_at IS NULL
           AND v.search_vector @@ plainto_tsquery('english', :q)
     """)
     if playbook_id:
@@ -1007,6 +1028,7 @@ async def search_videos(
             SELECT COUNT(*) FROM videos v
             JOIN video_playbooks vp ON vp.video_id = v.id
             WHERE v.user_id = :user_id
+              AND v.deleted_at IS NULL
               AND v.search_vector @@ plainto_tsquery('english', :q)
               AND vp.playbook_id = :playbook_id
         """)
@@ -1036,6 +1058,62 @@ async def search_videos(
     return VideoSearchResponse(videos=videos, query=q, total=total)
 
 
+@router.get("/tags", response_model=list)
+async def get_all_tags(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> list:
+    """Get all unique tags with video counts.
+
+    Returns tags sorted by video count (most used first).
+    Only includes tags from active (non-deleted) videos.
+
+    Response format:
+    [
+        {
+            "id": "tag-name",
+            "name": "tag-name",
+            "videoCount": 5,
+            "createdAt": "2024-01-01T00:00:00Z"
+        },
+        ...
+    ]
+    """
+    # Aggregate tags from all non-deleted videos
+    # UNNEST tags array and group by tag name with counts
+    query = text("""
+        SELECT
+            tag AS id,
+            tag AS name,
+            COUNT(*) AS "videoCount",
+            MIN(v.created_at) AS "createdAt"
+        FROM videos v,
+        UNNEST(v.tags) AS tag
+        WHERE v.user_id = :user_id
+          AND v.deleted_at IS NULL
+          AND v.tags IS NOT NULL
+        GROUP BY tag
+        ORDER BY "videoCount" DESC, tag ASC
+    """)
+
+    result = await db.execute(query, {"user_id": current_user.id})
+    rows = result.mappings().all()
+
+    tags = [
+        {
+            "id": row["id"],
+            "name": row["name"],
+            "videoCount": row["videoCount"],
+            "createdAt": row["createdAt"].isoformat() if row["createdAt"] else None
+        }
+        for row in rows
+    ]
+
+    logger.info(f"Retrieved {len(tags)} unique tags for user {current_user.id}")
+
+    return tags
+
+
 @router.get("/{video_id}", response_model=VideoResponse)
 async def get_video(
     video_id: UUID,
@@ -1044,12 +1122,13 @@ async def get_video(
 ) -> VideoResponse:
     """Get a video by ID.
 
-    Only returns videos owned by the current user.
+    Only returns active (non-deleted) videos owned by the current user.
     """
     result = await db.execute(
         select(Video).where(
             Video.id == video_id,
-            Video.user_id == current_user.id
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Exclude soft-deleted videos
         )
     )
     video = result.scalar_one_or_none()
@@ -1071,6 +1150,7 @@ async def get_video(
         user_edited_summary=video.user_edited_summary,
         tags=video.tags,
         created_at=video.created_at,
+        deleted_at=video.deleted_at,
     )
 
 
@@ -1080,55 +1160,108 @@ async def list_videos(
     db: AsyncSession = Depends(get_db),
     playbook_id: Optional[UUID] = Query(None, description="Filter by Playbook ID"),
     uncategorized: bool = Query(False, description="Show only videos not in any Playbook"),
+    deleted: bool = Query(False, description="Show only soft-deleted videos (Recently Deleted)"),
+    tag: Optional[str] = Query(None, description="Filter by tag name"),
     skip: int = Query(0, ge=0, description="Number of videos to skip"),
     limit: int = Query(20, ge=1, le=100, description="Maximum number of videos to return"),
 ) -> VideoListResponse:
-    """List videos with optional Playbook filtering.
+    """List videos with optional filtering.
 
-    - No filters: all user's videos
-    - playbook_id: videos in specific Playbook
-    - uncategorized=true: videos not in any Playbook
+    - No filters: all user's active (non-deleted) videos
+    - playbook_id: videos in specific Playbook (non-deleted)
+    - uncategorized=true: videos not in any Playbook (non-deleted)
+    - deleted=true: soft-deleted videos from last 30 days (Recently Deleted)
+    - tag: videos with specific tag (non-deleted)
+
+    Note: By default, soft-deleted videos are excluded from all queries.
     """
-    if uncategorized:
-        # Videos with no Playbook associations
+    # Handle deleted videos filter (Recently Deleted)
+    if deleted:
+        # Show only soft-deleted videos from last 30 days
         count_query = text("""
             SELECT COUNT(*) FROM videos v
             WHERE v.user_id = :user_id
+              AND v.deleted_at IS NOT NULL
+              AND v.deleted_at > NOW() - INTERVAL '30 days'
+        """)
+        videos_query = text("""
+            SELECT v.* FROM videos v
+            WHERE v.user_id = :user_id
+              AND v.deleted_at IS NOT NULL
+              AND v.deleted_at > NOW() - INTERVAL '30 days'
+            ORDER BY v.deleted_at DESC
+            LIMIT :limit OFFSET :skip
+        """)
+        params = {"user_id": current_user.id, "limit": limit, "skip": skip}
+    elif uncategorized:
+        # Videos with no Playbook associations (exclude deleted)
+        count_query = text("""
+            SELECT COUNT(*) FROM videos v
+            WHERE v.user_id = :user_id
+              AND v.deleted_at IS NULL
               AND NOT EXISTS (SELECT 1 FROM video_playbooks vp WHERE vp.video_id = v.id)
         """)
         videos_query = text("""
             SELECT v.* FROM videos v
             WHERE v.user_id = :user_id
+              AND v.deleted_at IS NULL
               AND NOT EXISTS (SELECT 1 FROM video_playbooks vp WHERE vp.video_id = v.id)
             ORDER BY v.created_at DESC
             LIMIT :limit OFFSET :skip
         """)
         params = {"user_id": current_user.id, "limit": limit, "skip": skip}
     elif playbook_id:
-        # Videos in specific Playbook
+        # Videos in specific Playbook (exclude deleted)
         count_query = text("""
             SELECT COUNT(*) FROM videos v
             JOIN video_playbooks vp ON vp.video_id = v.id
-            WHERE v.user_id = :user_id AND vp.playbook_id = :playbook_id
+            WHERE v.user_id = :user_id
+              AND v.deleted_at IS NULL
+              AND vp.playbook_id = :playbook_id
         """)
         videos_query = text("""
             SELECT v.* FROM videos v
             JOIN video_playbooks vp ON vp.video_id = v.id
-            WHERE v.user_id = :user_id AND vp.playbook_id = :playbook_id
+            WHERE v.user_id = :user_id
+              AND v.deleted_at IS NULL
+              AND vp.playbook_id = :playbook_id
             ORDER BY v.created_at DESC
             LIMIT :limit OFFSET :skip
         """)
         params = {"user_id": current_user.id, "playbook_id": playbook_id, "limit": limit, "skip": skip}
+    elif tag:
+        # Videos with specific tag (exclude deleted)
+        count_query = text("""
+            SELECT COUNT(*) FROM videos v
+            WHERE v.user_id = :user_id
+              AND v.deleted_at IS NULL
+              AND :tag = ANY(v.tags)
+        """)
+        videos_query = text("""
+            SELECT v.* FROM videos v
+            WHERE v.user_id = :user_id
+              AND v.deleted_at IS NULL
+              AND :tag = ANY(v.tags)
+            ORDER BY v.created_at DESC
+            LIMIT :limit OFFSET :skip
+        """)
+        params = {"user_id": current_user.id, "tag": tag, "limit": limit, "skip": skip}
     else:
-        # All videos (original behavior)
+        # All videos (exclude deleted)
         count_result = await db.execute(
-            select(func.count()).select_from(Video).where(Video.user_id == current_user.id)
+            select(func.count()).select_from(Video).where(
+                Video.user_id == current_user.id,
+                Video.deleted_at == None
+            )
         )
         total = count_result.scalar_one()
 
         result = await db.execute(
             select(Video)
-            .where(Video.user_id == current_user.id)
+            .where(
+                Video.user_id == current_user.id,
+                Video.deleted_at == None
+            )
             .order_by(Video.created_at.desc())
             .offset(skip)
             .limit(limit)
@@ -1148,6 +1281,7 @@ async def list_videos(
                     user_edited_summary=v.user_edited_summary,
                     tags=v.tags,
                     created_at=v.created_at,
+                    deleted_at=v.deleted_at,
                 )
                 for v in videos
             ],
@@ -1173,6 +1307,7 @@ async def list_videos(
             tags=v["tags"],
             created_at=v["created_at"],
             user_edited_summary=v["user_edited_summary"],
+            deleted_at=v.get("deleted_at"),
         ) for v in videos],
         total=total
     )
@@ -1184,9 +1319,101 @@ async def delete_video(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> None:
-    """Delete a video.
+    """Soft delete a video (moves to Recently Deleted for 30 days).
 
     Only allows deletion of videos owned by the current user.
+    Video will be permanently deleted after 30 days by background job.
+    Use DELETE /videos/{video_id}/permanent for immediate permanent deletion.
+    """
+    result = await db.execute(
+        select(Video).where(
+            Video.id == video_id,
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Only allow deleting non-deleted videos
+        )
+    )
+    video = result.scalar_one_or_none()
+
+    if video is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Video not found or already deleted"
+        )
+
+    # Soft delete by setting deleted_at timestamp
+    video.deleted_at = datetime.now(timezone.utc)
+    await db.commit()
+
+    logger.info(f"Soft deleted video {video_id} for user {current_user.id} (30-day retention)")
+
+
+@router.patch("/{video_id}/restore", response_model=VideoResponse)
+async def restore_video(
+    video_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> VideoResponse:
+    """Restore a soft-deleted video from Recently Deleted.
+
+    Clears the deleted_at timestamp, making the video active again.
+    Only works on videos deleted within last 30 days.
+    """
+    result = await db.execute(
+        select(Video).where(
+            Video.id == video_id,
+            Video.user_id == current_user.id,
+            Video.deleted_at != None  # Only restore deleted videos
+        )
+    )
+    video = result.scalar_one_or_none()
+
+    if video is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Deleted video not found"
+        )
+
+    # Check if video is within 30-day restore window
+    if video.deleted_at:
+        days_since_deletion = (datetime.now(timezone.utc) - video.deleted_at).days
+        if days_since_deletion > 30:
+            raise HTTPException(
+                status_code=status.HTTP_410_GONE,
+                detail="Video was deleted more than 30 days ago and cannot be restored"
+            )
+
+    # Restore by clearing deleted_at
+    video.deleted_at = None
+    await db.commit()
+    await db.refresh(video)
+
+    logger.info(f"Restored video {video_id} for user {current_user.id}")
+
+    return VideoResponse(
+        id=video.id,
+        source_url=video.source_url,
+        thumbnail_url=_extract_thumbnail_url(video.source_url),
+        transcript=video.transcript,
+        summary_bullets=video.summary_bullets,
+        summary_steps=video.summary_steps,
+        summary_cards=video.summary_cards,
+        user_edited_summary=video.user_edited_summary,
+        tags=video.tags,
+        created_at=video.created_at,
+        deleted_at=video.deleted_at,
+    )
+
+
+@router.delete("/{video_id}/permanent", status_code=status.HTTP_204_NO_CONTENT)
+async def permanently_delete_video(
+    video_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> None:
+    """Permanently delete a video immediately (bypasses 30-day retention).
+
+    This is irreversible. Video is immediately removed from database.
+    Can be used on both active and soft-deleted videos.
     """
     result = await db.execute(
         select(Video).where(
@@ -1202,10 +1429,11 @@ async def delete_video(
             detail="Video not found"
         )
 
+    # Hard delete
     await db.delete(video)
     await db.commit()
 
-    logger.info(f"Deleted video {video_id} for user {current_user.id}")
+    logger.info(f"Permanently deleted video {video_id} for user {current_user.id}")
 
 
 # ============================================================
@@ -1219,9 +1447,10 @@ async def bulk_delete_videos(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> BulkDeleteResponse:
-    """Delete multiple videos at once.
+    """Soft delete multiple videos at once (moves to Recently Deleted).
 
     Only deletes videos owned by the current user.
+    Videos will be permanently deleted after 30 days.
     Returns count of actually deleted videos.
     Maximum 100 videos per request.
 
@@ -1231,28 +1460,36 @@ async def bulk_delete_videos(
         request: List of video IDs to delete (1-100)
 
     Returns:
-        Count and IDs of actually deleted videos
+        Count and IDs of actually soft-deleted videos
 
     Raises:
         404: No matching videos found
     """
-    # Use SQLAlchemy bulk delete for efficiency
-    stmt = sa_delete(Video).where(
-        Video.id.in_(request.video_ids),
-        Video.user_id == current_user.id
-    ).returning(Video.id)
+    # Fetch videos to soft delete (exclude already deleted)
+    result = await db.execute(
+        select(Video).where(
+            Video.id.in_(request.video_ids),
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Only soft delete non-deleted videos
+        )
+    )
+    videos = result.scalars().all()
 
-    result = await db.execute(stmt, execution_options={"synchronize_session": False})
-    deleted_ids = [row[0] for row in result.fetchall()]
-    await db.commit()
-
-    if not deleted_ids:
+    if not videos:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No matching videos found"
         )
 
-    logger.info(f"Bulk deleted {len(deleted_ids)} videos for user {current_user.id}")
+    # Soft delete by setting deleted_at
+    deleted_ids = []
+    for video in videos:
+        video.deleted_at = datetime.now(timezone.utc)
+        deleted_ids.append(video.id)
+
+    await db.commit()
+
+    logger.info(f"Bulk soft deleted {len(deleted_ids)} videos for user {current_user.id}")
 
     return BulkDeleteResponse(
         deleted_count=len(deleted_ids),
@@ -1298,11 +1535,12 @@ async def bulk_move_to_playbook(
             detail="Playbook not found"
         )
 
-    # Verify videos belong to user
+    # Verify videos belong to user (exclude soft-deleted)
     videos_result = await db.execute(
         select(Video.id).where(
             Video.id.in_(request.video_ids),
-            Video.user_id == current_user.id
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Exclude soft-deleted videos
         )
     )
     valid_video_ids = [row[0] for row in videos_result.fetchall()]
@@ -1351,6 +1589,7 @@ async def bulk_add_to_favorites(
 
     Convenience endpoint that finds user's Favorites Playbook automatically.
     Creates Favorites Playbook if somehow missing (shouldn't happen normally).
+    Only adds active (non-deleted) videos.
 
     Args:
         request: List of video IDs to add to Favorites (1-100)
@@ -1384,11 +1623,12 @@ async def bulk_add_to_favorites(
         await db.refresh(favorites)
         logger.info(f"Created missing Favorites playbook for user {current_user.id}")
 
-    # Verify videos belong to user
+    # Verify videos belong to user (exclude soft-deleted)
     videos_result = await db.execute(
         select(Video.id).where(
             Video.id.in_(request.video_ids),
-            Video.user_id == current_user.id
+            Video.user_id == current_user.id,
+            Video.deleted_at == None  # Exclude soft-deleted videos
         )
     )
     valid_video_ids = [row[0] for row in videos_result.fetchall()]

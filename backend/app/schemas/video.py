@@ -44,6 +44,7 @@ class VideoResponse(BaseModel):
     user_edited_summary: bool = False
     tags: Optional[List[str]] = None
     created_at: datetime
+    deleted_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

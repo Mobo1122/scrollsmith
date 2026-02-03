@@ -70,6 +70,11 @@ class Video(Base):
         server_default=func.now(),
         nullable=False,
     )
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        index=True,  # Index for performance when filtering deleted videos
+    )
 
     # Relationships
     user: Mapped["User"] = relationship(
