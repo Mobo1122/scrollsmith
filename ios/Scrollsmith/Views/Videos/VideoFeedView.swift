@@ -96,11 +96,28 @@ struct VideoFeedRow: View {
 
     /// Derive a display title from available data
     private var displayTitle: String {
-        // Try to extract meaningful title
+        // Priority 1: Use first parsed bullet as title (truncated to first sentence)
+        if let bullets = video.parsedBullets, !bullets.isEmpty {
+            let firstBullet = bullets[0]
+            // Take first sentence or first 60 chars for compact display
+            if let sentenceEnd = firstBullet.range(of: ".") {
+                let title = String(firstBullet[..<sentenceEnd.lowerBound])
+                return title.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            // No period found, truncate to 60 chars
+            if firstBullet.count > 60 {
+                let truncated = String(firstBullet.prefix(60))
+                return truncated.trimmingCharacters(in: .whitespacesAndNewlines) + "..."
+            }
+            return firstBullet.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        // Priority 2: Use tags if available
         if let tags = video.tags, !tags.isEmpty {
             return tags.first ?? "Video"
         }
 
+        // Priority 3: Derive from source URL
         if let sourceUrl = video.sourceUrl {
             if sourceUrl.contains("youtube") {
                 return "YouTube Video"
@@ -109,15 +126,16 @@ struct VideoFeedRow: View {
             }
         }
 
+        // Fallback
         return "Video"
     }
 
     /// Derive description from summary bullets
     private var displayDescription: String {
-        if let bullets = video.summaryBullets, !bullets.isEmpty {
-            // Return first line as preview
-            let firstLine = bullets.components(separatedBy: "\n").first ?? bullets
-            return firstLine.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Use parsedBullets which correctly handles JSON format {"bullets": [...], "tags": [...]}
+        if let bullets = video.parsedBullets, !bullets.isEmpty {
+            // Return first bullet as preview (already clean text)
+            return bullets[0]
         }
         return "Processing..."
     }
@@ -145,6 +163,7 @@ struct VideoFeedRow: View {
         HStack(alignment: .top, spacing: 12) {
             // Thumbnail with Kingfisher caching
             KFImage(URL(string: video.thumbnailUrl ?? ""))
+                .cancelOnDisappear(true)  // Critical: cancel download when scrolled off-screen
                 .placeholder {
                     // Fallback while loading or if no URL
                     RoundedRectangle(cornerRadius: 8)
@@ -160,7 +179,6 @@ struct VideoFeedRow: View {
                 .frame(width: 100, height: 60)
                 .cornerRadius(8)
                 .clipped()
-                .cancelOnDisappear(true)  // Critical: cancel download when scrolled off-screen
 
             // Content
             VStack(alignment: .leading, spacing: 4) {

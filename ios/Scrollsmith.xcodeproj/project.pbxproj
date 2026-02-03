@@ -30,6 +30,7 @@
 		AAAA11042F2A000001234567 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = AAAA11032F2A000001234567 /* Mixpanel */; };
 		AAAA11062F2A000001234568 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAA11052F2A000001234568 /* AnalyticsService.swift */; };
 		BBBB22042F2B000001234567 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = BBBB22032F2B000001234567 /* Sentry */; };
+		DDDD33042F2D000001234567 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = DDDD33032F2D000001234567 /* Kingfisher */; };
 		CE17CB4B2F29815E0054BABF /* ErrorHandlingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB4A2F29815E0054BABF /* ErrorHandlingService.swift */; };
 		CE17CB502F29819D0054BABF /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB4D2F29819D0054BABF /* MailView.swift */; };
 		CE17CB512F29819D0054BABF /* LegalDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17CB4E2F29819D0054BABF /* LegalDocumentView.swift */; };
@@ -280,6 +281,7 @@
 				CE781F162F2506E700D238A3 /* RevenueCat in Frameworks */,
 				AAAA11042F2A000001234567 /* Mixpanel in Frameworks */,
 				BBBB22042F2B000001234567 /* Sentry in Frameworks */,
+				DDDD33042F2D000001234567 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -624,7 +626,7 @@
 				CE781F172F2506E700D238A3 /* RevenueCatUI */,
 				AAAA11032F2A000001234567 /* Mixpanel */,
 				BBBB22032F2B000001234567 /* Sentry */,
-			DDDD33032F2D000001234567 /* Kingfisher */,
+				DDDD33032F2D000001234567 /* Kingfisher */,
 			);
 			productName = Scrollsmith;
 			productReference = A0000010 /* Scrollsmith.app */;
@@ -678,6 +680,7 @@
 				BBBB22022F2B000001234567 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				CE781F142F2506E500D238A3 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 				AAAA11022F2A000001234567 /* XCRemoteSwiftPackageReference "mixpanel-swift" */,
+				DDDD33022F2D000001234567 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = A0000032 /* Products */;
 			projectDirPath = "";
